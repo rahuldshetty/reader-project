@@ -1,0 +1,36 @@
+use tauri_plugin_sql::{Migration, MigrationKind};
+
+pub fn fetch_migrations() -> Vec<tauri_plugin_sql::Migration> {
+    return vec![
+        // Define your migrations here
+        Migration {
+            version: 1,
+            description: "feeds_table",
+            sql: "
+                CREATE TABLE feeds (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    title TEXT NOT NULL,
+                    url MEDIUMTEXT NOT NULL UNIQUE,
+                );
+            ",
+            kind: MigrationKind::Up,
+        },
+        Migration {
+            version: 1,
+            description: "create_initial_tables",
+            sql: "
+                CREATE TABLE articles (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    feed_id INTEGER NOT NULL,
+                    title TEXT NOT NULL,
+                    link TEXT NOT NULL,
+                    image_url MEDIUMTEXT,
+                    pub_date TEXT NOT NULL,
+                    read BOOLEAN NOT NULL DEFAULT 0,
+                    FOREIGN KEY(feed_id) REFERENCES feeds(id) ON DELETE CASCADE
+                );
+            ",
+            kind: MigrationKind::Up,
+        }
+    ];
+}
