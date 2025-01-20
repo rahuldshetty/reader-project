@@ -1,11 +1,11 @@
 <script>
-    let {name, url, favicon} = $props();
+    let {title, url, favicon} = $props();
 </script>
 
 <li class="flex items-center gap-2 p-4 cursor-pointer hover:bg-gray-800">
     {#if favicon}
         <img
-            src={favicon} alt={name}
+            src={favicon} alt={title}
             class="w-6 h-6 object-cover"
         >
     {:else}
@@ -13,5 +13,5 @@
         <path d="M3.75 3A1.75 1.75 0 0 0 2 4.75v3.26a3.235 3.235 0 0 1 1.75-.51h12.5c.644 0 1.245.188 1.75.51V6.75A1.75 1.75 0 0 0 16.25 5h-4.836a.25.25 0 0 1-.177-.073L9.823 3.513A1.75 1.75 0 0 0 8.586 3H3.75ZM3.75 9A1.75 1.75 0 0 0 2 10.75v4.5c0 .966.784 1.75 1.75 1.75h12.5A1.75 1.75 0 0 0 18 15.25v-4.5A1.75 1.75 0 0 0 16.25 9H3.75Z" />
     </svg>
     {/if}
-    <span class="text-sm font-medium truncate text-slate-400">{name}</span>
+    <span class="text-sm font-medium truncate text-slate-400">{title}</span>
 </li>
