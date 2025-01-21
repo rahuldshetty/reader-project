@@ -15,7 +15,7 @@
 
 <AddFeedModal/>
 
-<div class="w-1/6 bg-gray-600 border-r">
+<div class="w-1/6 bg-gray-100 border-r">
     <h2 class="text-xl font-bold p-4">RSS Feeds</h2>
     <ul class="h-4/5">
       {#each $feeds_store as feed}

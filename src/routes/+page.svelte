@@ -1,5 +1,6 @@
 <script lang='ts'>
-  import RssFeed from "../lib/feed/rss_feed.svelte";
+  import Titlebar from "$lib/components/titlebar.svelte";
+  import RssFeed from "$lib/feed/rss_feed.svelte";
 
   let news = [
     { id: 1, title: "The Last Migrant Caravans Before Trump’s Inauguration", summary: "A Times photographer made two trips to southern Mexico to follow groups of migrants as they walked toward the United States.", url: "https://www.nytimes.com/card/2025/01/18/world/americas/mexico-migrants-border-trump" },
@@ -13,7 +14,9 @@
   };
 </script>
 
-<div class="flex h-screen overflow-hidden">
+<Titlebar/>
+
+<div class="flex h-screen overflow-hidden" style="padding-top: var(--titlebar-height);">
   <!-- First Column: RSS Feeds -->
   <RssFeed/>
 
