@@ -3,3 +3,8 @@ https://feeder.co/
 https://dribbble.com/shots/11834251-Elytra-for-Web-is-now-in-Public-Beta
 https://dribbble.com/shots/7271234-Feedly-Dark-Theme
 https://play.google.com/store/apps/details?id=com.vanniktech.rssreader&hl=en_IN
+
+
+Similar Tools
+- https://github.com/yang991178/fluent-reader
+- 

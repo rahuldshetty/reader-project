@@ -9,7 +9,8 @@ pub fn fetch_migrations() -> Vec<tauri_plugin_sql::Migration> {
             sql: "CREATE TABLE feeds (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     title TEXT NOT NULL,
-                    url TEXT NOT NULL UNIQUE
+                    url TEXT NOT NULL UNIQUE,
+                    favicon TEXT
                 );",
             kind: MigrationKind::Up,
         },
@@ -27,6 +28,6 @@ pub fn fetch_migrations() -> Vec<tauri_plugin_sql::Migration> {
                     FOREIGN KEY(feed_id) REFERENCES feeds(id) ON DELETE CASCADE
                 );",
             kind: MigrationKind::Up,
-        }
+        },
     ];
 }

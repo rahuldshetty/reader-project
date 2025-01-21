@@ -1,5 +1,5 @@
 <script>
-    import AddFeedModal from "./add_feed_modal.svelte";
+    import FeedModal from "./feed_modal.svelte";
     import FeedItem from "./feed_item.svelte";
     
     import { fetch_feed } from "$lib/db";
@@ -13,7 +13,7 @@
     });
 </script>
 
-<AddFeedModal/>
+<FeedModal/>
 
 <div class="w-1/6 bg-gray-100 border-r">
     <h2 class="text-xl font-bold p-4">RSS Feeds</h2>

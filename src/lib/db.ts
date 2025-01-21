@@ -12,9 +12,9 @@ export const fetch_feed = async () => {
     return result;
 }
 
-export const add_feed = async (title:String, url:String) => {
+export const add_feed = async (title:String, url:String, favicon: String) => {
     await db.execute(
-        "INSERT into feeds (title, url) VALUES ($1, $2)",
-        [title, url],
+        "INSERT into feeds (title, url, favicon) VALUES ($1, $2, $3)",
+        [title, url, favicon],
     );
 }
