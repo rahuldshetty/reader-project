@@ -1,17 +1,41 @@
 <script lang='ts'>
   import Titlebar from "$lib/components/titlebar.svelte";
   import RssFeed from "$lib/feed/rss_feed.svelte";
+  import PostFeed from "$lib/post/post_feed.svelte";
 
-  let news = [
-    { id: 1, title: "The Last Migrant Caravans Before Trump’s Inauguration", summary: "A Times photographer made two trips to southern Mexico to follow groups of migrants as they walked toward the United States.", url: "https://www.nytimes.com/card/2025/01/18/world/americas/mexico-migrants-border-trump" },
+  import { feeds_store, posts_store, selected_post } from "$lib/store";
+  import { fetch_feed } from "$lib/db";
+  import { fetchRSSMetadata } from "$lib/utils"; 
 
-    { id: 2, title: "Trump’s Return Has Unnerved World Leaders. But Not India.", summary: "An upward trajectory in relations is “almost inevitable,” the U.S. ambassador, Eric Garcetti, said in an interview before leaving his post.", url: "https://www.nytimes.com/2025/01/18/world/asia/india-eric-garcetti-interview.html" },
-  ];
+  import { onMount } from "svelte";
+
   let selectedNews = $state('');
 
-  const openNews = (newsItem) => {
-    selectedNews = newsItem;
-  };
+  const fetchPosts = async (feeds) => {
+    const posts = []
+
+    for(let feed of feeds){
+      const feedMatadata = await fetchRSSMetadata(feed.url);
+      if(feedMatadata)
+        for(var post of feedMatadata.posts){
+          posts.push({
+            id: posts.length,
+            title: post.title,
+            link: post.link,
+            pubDate: post.pubDate,
+            feed_id: feed.id
+          })
+        }
+    }
+
+    return posts;
+  }
+
+  // on load defaults
+  onMount( async () => {
+    $feeds_store = await fetch_feed();
+    $posts_store = await fetchPosts($feeds_store);
+  });
 </script>
 
 <Titlebar/>
@@ -21,28 +45,15 @@
   <RssFeed/>
 
   <!-- Second Column: News List -->
-  <div class="w-1/4 bg-white border-r">
-    <h2 class="text-xl font-bold p-4">All Posts</h2>
-    <ul>
-      {#each news as item}
-        <li
-          class="p-4 border-b hover:bg-gray-100 cursor-pointer"
-          on:click={() => openNews(item)}
-        >
-          <h3 class="text-lg font-semibold">{item.title}</h3>
-          <p class="text-sm text-gray-600">{item.summary}</p>
-        </li>
-      {/each}
-    </ul>
-  </div>
+  <PostFeed/>
 
   <!-- Third Column: Webpage Preview -->
-  <div class="w-2/4 bg-gray-50">
-    {#if selectedNews}
+  <div class="w-full bg-gray-50">
+    {#if $selected_post}
       <iframe
-        src={"https://www.removepaywall.com/search?url=" + selectedNews.url}
+        src={$selected_post.link}
         class="w-full h-full border-none"
-        title={selectedNews.title}
+        title={$selected_post.title}
       ></iframe>
     {:else}
       <p class="p-4 text-gray-600">Select a news item to preview</p>

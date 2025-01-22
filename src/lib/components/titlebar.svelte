@@ -4,7 +4,7 @@
     const appWindow = getCurrentWindow();
 </script>
 
-<div data-tauri-drag-region class="titlebar">
+<div data-tauri-drag-region class="titlebar bg-indigo-50">
     <button class="titlebar-button" id="titlebar-minimize" on:click={appWindow.minimize}>
         <img
             src="https://api.iconify.design/mdi:window-minimize.svg"
@@ -25,7 +25,6 @@
 <style>
 .titlebar {
     height: var(--titlebar-height);
-    background: #394ec2;
     user-select: none;
     display: flex;
     justify-content: flex-end;

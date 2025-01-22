@@ -10,7 +10,8 @@ export const fetchRSSMetadata = async (url:string) => {
     return {
         name: fetchName(rssText),
         text: rssText,
-        favicon: await fetchFavIcon(url, rssText)
+        favicon: await fetchFavIcon(url, rssText),
+        posts: fetchPosts(rssText)
     }
 }
 
@@ -66,4 +67,39 @@ const fetchFavIcon = async (rssUrl:string, rssText:string) => {
     }
 
     return '';
+}
+
+const fetchPosts = (rssText:string) => {
+    const posts: { title: string; link: string; description: string; pubDate: string | null; }[] = [];
+
+    const parser = new DOMParser();
+    const rssDoc = parser.parseFromString(rssText, "application/xml");
+
+    // Determine the type of feed (RSS or Atom)
+    const isRSS = !!rssDoc.querySelector("channel > item");
+    const isAtom = !!rssDoc.querySelector("feed > entry");
+
+    if (isRSS){
+        const items = rssDoc.querySelectorAll("channel > item");
+        items.forEach(item => {
+            posts.push({
+                title: item.querySelector("title")?.textContent?.trim() || "",
+                link: item.querySelector("link")?.textContent?.trim() || "",
+                description: item.querySelector("description")?.textContent?.trim() || "",
+                pubDate: item.querySelector("pubDate")?.textContent?.trim() || null,
+            });
+        });
+    } else if(isAtom){
+        const entries = rssDoc.querySelectorAll("feed > entry");
+        entries.forEach(entry => {
+            posts.push({
+                title: entry.querySelector("title")?.textContent?.trim() || "",
+                link: entry.querySelector("link")?.getAttribute("href") || "",
+                description: entry.querySelector("summary")?.textContent?.trim() || "",
+                pubDate: entry.querySelector("updated")?.textContent?.trim() || null,
+            });
+        });
+    }
+
+    return posts;
 }

@@ -2,15 +2,8 @@
     import FeedModal from "./feed_modal.svelte";
     import FeedItem from "./feed_item.svelte";
     
-    import { fetch_feed } from "$lib/db";
     import { feeds_store } from "$lib/store";
-    import { onMount } from "svelte";
 
-    // on load default
-    // { id: 0, title: "New York Times (World)", url: "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"}
-    onMount( async () => {
-      $feeds_store = await fetch_feed();
-    });
 </script>
 
 <FeedModal/>
@@ -18,8 +11,9 @@
 <div class="w-1/6 bg-gray-100 border-r">
     <h2 class="text-xl font-bold p-4">RSS Feeds</h2>
     <ul class="h-4/5">
+      <FeedItem id={-1} title="All Posts"/>
       {#each $feeds_store as feed}
-        <FeedItem title={feed.title} favicon={feed.favicon} url={feed.url}/>
+        <FeedItem id={feed.id} title={feed.title} favicon={feed.favicon} url={feed.url}/>
       {/each}
     </ul>
 
