@@ -3,13 +3,11 @@
   import RssFeed from "$lib/feed/rss_feed.svelte";
   import PostFeed from "$lib/post/post_feed.svelte";
 
-  import { feeds_store, posts_store, selected_post } from "$lib/store";
+  import { feeds_store, posts_store, selected_post, is_loading_feed, is_loading_posts } from "$lib/store";
   import { fetch_feed, add_posts, fetch_posts } from "$lib/db";
   import { fetchRSSMetadata } from "$lib/utils"; 
 
   import { onMount } from "svelte";
-
-  let selectedNews = $state('');
 
   const syncPostsInDB = async (feeds:{id:Number, url:string, title:string, favicon:string}[]) => {
     // Updates post entires in DB
@@ -36,9 +34,16 @@
 
   // on load defaults
   onMount( async () => {
+    $is_loading_feed = true;
+    $is_loading_posts = true;
+
     $feeds_store = await fetch_feed();
+    $is_loading_feed = false;
+
     await syncPostsInDB($feeds_store);
     $posts_store = await fetch_posts();
+    $is_loading_posts = false;
+
   });
 </script>
 
@@ -58,6 +63,7 @@
         src={$selected_post.link}
         class="w-full h-full border-none"
         title={$selected_post.title}
+        sandbox="allow-scripts allow-forms"
       ></iframe>
     {:else}
       <p class="p-4 text-gray-600">Select a news item to preview</p>
