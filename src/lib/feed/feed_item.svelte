@@ -14,7 +14,7 @@
 <!-- svelte-ignore event_directive_deprecated -->
 <li class="flex items-center cursor-pointer gap-2 p-2 text-slate-800 hover:bg-indigo-950 hover:text-slate-200
     {
-        $selected_feed_id == id ? "bg-indigo-700 text-slate-100": ""
+        $selected_feed_id == id ? "bg-indigo-700 text-slate-200": ""
     }
     "
     on:click={update_feed_id}

@@ -8,6 +8,8 @@
   import { fetchRSSMetadata } from "$lib/utils"; 
 
   import { onMount } from "svelte";
+  import WebIframe from "$lib/content_view/web_iframe.svelte";
+    import ParserView from "$lib/content_view/parser_view.svelte";
 
   const syncPostsInDB = async (feeds:{id:Number, url:string, title:string, favicon:string}[]) => {
     // Updates post entires in DB
@@ -59,12 +61,7 @@
   <!-- Third Column: Webpage Preview -->
   <div class="w-full bg-gray-50">
     {#if $selected_post}
-      <iframe
-        src={$selected_post.link}
-        class="w-full h-full border-none"
-        title={$selected_post.title}
-        sandbox="allow-scripts allow-forms"
-      ></iframe>
+      <WebIframe link={$selected_post.link} title={$selected_post.title}/>
     {:else}
       <p class="p-4 text-gray-600">Select a news item to preview</p>
     {/if}
