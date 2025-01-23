@@ -1,7 +1,11 @@
 import { fetch } from '@tauri-apps/plugin-http';
 
 export const fetchRSSMetadata = async (url:string) => {
+    if(!validateURL(url)){
+        return null;
+    }
     const response = await fetch(url);
+    console.log(response);
     if (response.status != 200) {
         return null;
     }
@@ -70,7 +74,7 @@ const fetchFavIcon = async (rssUrl:string, rssText:string) => {
 }
 
 const fetchPosts = (rssText:string) => {
-    const posts: { title: string; link: string; description: string; pubDate: string | null; }[] = [];
+    const posts: { title: string; link: string; description: string; pubDate: string }[] = [];
 
     const parser = new DOMParser();
     const rssDoc = parser.parseFromString(rssText, "application/xml");
@@ -86,7 +90,7 @@ const fetchPosts = (rssText:string) => {
                 title: item.querySelector("title")?.textContent?.trim() || "",
                 link: item.querySelector("link")?.textContent?.trim() || "",
                 description: item.querySelector("description")?.textContent?.trim() || "",
-                pubDate: item.querySelector("pubDate")?.textContent?.trim() || null,
+                pubDate: item.querySelector("pubDate")?.textContent?.trim() || "",
             });
         });
     } else if(isAtom){
@@ -96,10 +100,18 @@ const fetchPosts = (rssText:string) => {
                 title: entry.querySelector("title")?.textContent?.trim() || "",
                 link: entry.querySelector("link")?.getAttribute("href") || "",
                 description: entry.querySelector("summary")?.textContent?.trim() || "",
-                pubDate: entry.querySelector("updated")?.textContent?.trim() || null,
+                pubDate: entry.querySelector("updated")?.textContent?.trim() || "",
             });
         });
     }
 
     return posts;
+}
+
+const validateURL = (url:string) => {
+    const uri = new URL(url);
+    if(!uri.protocol.startsWith("https")){
+        return false;
+    }
+    return true;
 }

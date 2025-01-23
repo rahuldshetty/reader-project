@@ -1,19 +1,45 @@
 <script>
-    import { add_feed } from "$lib/db";
-    import { feeds_store } from "$lib/store";
+    import { add_feed, add_posts, fetch_posts } from "$lib/db";
+    import { feeds_store, selected_feed_id, posts_store } from "$lib/store";
     import { fetchRSSMetadata } from "$lib/utils";
 
     let feedName = $state('');
     let feedURL = $state('');
     let feedIcon = $state('');
+    let feedPosts = $state([]);
+    let feedId = $state(-1);
 
     async function addFeed() {
       if (feedName.trim() !== "") {
-        await add_feed(feedName, feedURL, feedIcon);
+        const id = await add_feed(feedName, feedURL, feedIcon);
+        if(id){
+          feedId = id;
+        } else{
+          console.error("Unable to add data to feed table");
+          return;
+        }
         $feeds_store = [
             ...$feeds_store,
             { id: $feeds_store.length + 1, title: feedName, url: feedURL, favicon: feedIcon}
         ]
+        $selected_feed_id = feedId;
+        
+        // Insert posts into DB
+        if(feedPosts){
+          const posts = []
+          for(var post of feedPosts){
+            posts.push({
+              title: post.title,
+              link: post.link,
+              pubDate: post.pubDate,
+              feed_id: feedId
+            })
+          }
+          await add_posts(posts);
+        }
+        
+        $posts_store = await fetch_posts();
+
         feedURL = "";
         feedName = "";
         feedIcon = "";
@@ -25,6 +51,7 @@
       if(response){
         feedName = response.name
         feedIcon = response.favicon
+        feedPosts = response.posts
       }
       
     }

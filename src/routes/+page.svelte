@@ -4,14 +4,15 @@
   import PostFeed from "$lib/post/post_feed.svelte";
 
   import { feeds_store, posts_store, selected_post } from "$lib/store";
-  import { fetch_feed } from "$lib/db";
+  import { fetch_feed, add_posts, fetch_posts } from "$lib/db";
   import { fetchRSSMetadata } from "$lib/utils"; 
 
   import { onMount } from "svelte";
 
   let selectedNews = $state('');
 
-  const fetchPosts = async (feeds) => {
+  const syncPostsInDB = async (feeds:{id:Number, url:string, title:string, favicon:string}[]) => {
+    // Updates post entires in DB
     const posts = []
 
     for(let feed of feeds){
@@ -19,7 +20,6 @@
       if(feedMatadata)
         for(var post of feedMatadata.posts){
           posts.push({
-            id: posts.length,
             title: post.title,
             link: post.link,
             pubDate: post.pubDate,
@@ -27,14 +27,18 @@
           })
         }
     }
+    
+    console.log("Posts to Insert: ", posts.length)
 
-    return posts;
+    if(posts.length > 0)
+      await add_posts(posts);
   }
 
   // on load defaults
   onMount( async () => {
     $feeds_store = await fetch_feed();
-    $posts_store = await fetchPosts($feeds_store);
+    await syncPostsInDB($feeds_store);
+    $posts_store = await fetch_posts();
   });
 </script>
 

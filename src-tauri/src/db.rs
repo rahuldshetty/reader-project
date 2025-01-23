@@ -21,7 +21,7 @@ pub fn fetch_migrations() -> Vec<tauri_plugin_sql::Migration> {
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     feed_id INTEGER NOT NULL,
                     title TEXT NOT NULL,
-                    link TEXT NOT NULL,
+                    link TEXT NOT NULL UNIQUE,
                     image_url TEXT,
                     pub_date TEXT,
                     read BOOLEAN NOT NULL DEFAULT 0,

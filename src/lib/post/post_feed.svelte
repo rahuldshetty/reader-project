@@ -1,6 +1,7 @@
 <script>
   import { derived } from "svelte/store";
-  import { posts_store, selected_feed_id, selected_post} from "$lib/store";
+  import { posts_store, selected_feed_id} from "$lib/store";
+  import PostItem from "./post_item.svelte";
 
   // Filter posts by selected feed id
   const filtered_posts = derived(
@@ -12,16 +13,9 @@
 </script>
 
 <div class="w-1/4 bg-white border-r overflow-auto ">
-    <h2 class="text-xl font-bold p-4">All Posts</h2>
     <ul>
       {#each $filtered_posts as post}
-        <li
-          class="p-4 border-b hover:bg-gray-100 cursor-pointer"
-          on:click={() => $selected_post = post}
-        >
-          <h3 class="text-sm font-semibold">{post.title}</h3>
-          <p class="text-xs text-gray-600">{post.pubDate}</p>
-        </li>
+        <PostItem post={post} />
       {/each}
     </ul>
 </div>
