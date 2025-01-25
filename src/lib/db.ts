@@ -1,6 +1,6 @@
 import Database from '@tauri-apps/plugin-sql';
 
-import { DB_PATH } from '$lib/constants';
+import { DB_PATH, DB_ORDER_ENUM } from '$lib/constants';
 import { convertToTimeStringForDB, escape_title } from "$lib/utils";
 
 
@@ -60,11 +60,11 @@ export const add_posts = async (posts:{title: string, link: string, pubDate: str
 }
 
 
-export const fetch_posts = async () => {
+export const fetch_posts = async (sort_by: DB_ORDER_ENUM = DB_ORDER_ENUM.NEWEST) => {
     const result = await db.select(
         `
         SELECT id, feed_id, title, link, pub_date as pubDate, read from articles
-        ORDER BY pub_date DESC
+        ORDER BY pub_date ${sort_by}
         `
     );
     console.log("DB: FETCH POSTS")

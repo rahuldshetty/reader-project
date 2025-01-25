@@ -1,3 +1,4 @@
+import { DB_ORDER_ENUM } from './constants';
 import { writable } from 'svelte/store';
 
 export const feeds_store = writable([]);
@@ -6,6 +7,7 @@ export const selected_feed_id = writable(-1);
 
 export const posts_store = writable([]);
 
+export const posts_sort_by = writable(DB_ORDER_ENUM.NEWEST);
 export const selected_post = writable({});
 
 

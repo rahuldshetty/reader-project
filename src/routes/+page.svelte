@@ -3,9 +3,9 @@
   import RssFeed from "$lib/feed/rss_feed.svelte";
   import PostFeed from "$lib/post/post_feed.svelte";
 
-  import { feeds_store, posts_store, selected_post, is_loading_feed, is_loading_posts, user_settings } from "$lib/store";
+  import { feeds_store, posts_store, selected_post, is_loading_feed, is_loading_posts, posts_sort_by, user_settings } from "$lib/store";
   import { fetch_feed, add_posts, fetch_posts } from "$lib/db";
-  import { fetchRSSMetadata, isTimeExpired } from "$lib/utils"; 
+  import { fetchRSSMetadata, isTimeExpired } from "$lib/utils";
 
   import { onMount } from "svelte";
   import WebIframe from "$lib/content_view/web_iframe.svelte";
@@ -46,7 +46,7 @@
     $is_loading_feed = false;
 
     await syncPostsInDB($feeds_store);
-    $posts_store = await fetch_posts();
+    $posts_store = await fetch_posts($posts_sort_by);
     $is_loading_posts = false;
 
   });
