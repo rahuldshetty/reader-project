@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import { fetch } from '@tauri-apps/plugin-http';
 
 export const fetchRSSMetadata = async (url:string) => {
@@ -118,7 +119,6 @@ const validateURL = (url:string) => {
 
 
 export const isTimeExpired = (time:string, expiry_in_seconds:number) => {
-    console.log(time, expiry_in_seconds);
     if(!time){
         return true;
     }
@@ -162,4 +162,21 @@ export const timeAgo = (dateString:string) => {
     } else {
         return `${years} years ago`;
     }
+}
+
+export const convertToTimeStringForDB = (dateString: string) => {
+    const date = dayjs(dateString);
+    return date.toISOString();
+}
+
+export const escape_title = (str:string) => {
+    return str.replace(/[']/g, function (char) {
+        switch (char) {
+            case "'":
+                return '"'; // prepends a backslash to backslash, percent,
+                                  // and double/single quotes
+            default:
+                return char;
+        }
+    });
 }

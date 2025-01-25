@@ -1,6 +1,7 @@
 import Database from '@tauri-apps/plugin-sql';
 
 import { DB_PATH } from '$lib/constants';
+import { convertToTimeStringForDB, escape_title } from "$lib/utils";
 
 
 const db = await Database.load(DB_PATH);
@@ -29,13 +30,18 @@ export const add_posts = async (posts:{title: string, link: string, pubDate: str
     // Create a Set to track feeds that were updated
     const feedsSet = new Set();
 
+
     for(const [i, post] of posts.entries()){
-        value_string += `(${post.feed_id}, "${post.title}", "${post.link}", "${post.pubDate}")`
+        const date = convertToTimeStringForDB(post.pubDate);
+
+        value_string += `(${post.feed_id}, '${escape_title(post.title)}', '${post.link}', '${date}')`;
+        
         if(i != posts.length - 1){
             value_string += ",\n"
         }
         feedsSet.add(post.feed_id);
     }
+
     await db.execute(
         `INSERT OR IGNORE INTO articles (feed_id, title, link, pub_date) VALUES ${value_string}`
     );
@@ -56,7 +62,10 @@ export const add_posts = async (posts:{title: string, link: string, pubDate: str
 
 export const fetch_posts = async () => {
     const result = await db.select(
-        "SELECT id, feed_id, title, link, pub_date as pubDate, read from articles"
+        `
+        SELECT id, feed_id, title, link, pub_date as pubDate, read from articles
+        ORDER BY pub_date DESC
+        `
     );
     console.log("DB: FETCH POSTS")
     return result;
