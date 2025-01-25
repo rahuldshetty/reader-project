@@ -1,5 +1,6 @@
 <script>
     import { selected_post } from "$lib/store";
+    import { timeAgo } from "$lib/utils";
     const {post} = $props();
 
 </script>
@@ -14,5 +15,5 @@
     on:click={() => $selected_post = post}
 >
     <h3 class="text-sm font-semibold">{post.title}</h3>
-    <p class="text-xs text-gray-600">{post.pubDate}</p>
+    <p class="text-xs text-gray-600">{timeAgo(post.pubDate)}</p>
 </li>
