@@ -10,7 +10,8 @@ pub fn fetch_migrations() -> Vec<tauri_plugin_sql::Migration> {
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     title TEXT NOT NULL,
                     url TEXT NOT NULL UNIQUE,
-                    favicon TEXT
+                    favicon TEXT,
+                    last_refresh_time TEXT
                 );",
             kind: MigrationKind::Up,
         },

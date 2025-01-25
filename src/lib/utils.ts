@@ -115,3 +115,23 @@ const validateURL = (url:string) => {
     }
     return true;
 }
+
+
+export const isTimeExpired = (time:string, expiry_in_seconds:number) => {
+    console.log(time, expiry_in_seconds);
+    if(!time){
+        return true;
+    }
+
+    const lastRefreshTime = new Date(time);
+    const currentTime = new Date();
+    const timeDifference= currentTime - lastRefreshTime;
+
+    const expiryDifference = expiry_in_seconds * 1000;
+
+    if(timeDifference > expiryDifference){
+        return true;
+    }
+
+    return false;
+} 

@@ -3,29 +3,32 @@
   import RssFeed from "$lib/feed/rss_feed.svelte";
   import PostFeed from "$lib/post/post_feed.svelte";
 
-  import { feeds_store, posts_store, selected_post, is_loading_feed, is_loading_posts } from "$lib/store";
+  import { feeds_store, posts_store, selected_post, is_loading_feed, is_loading_posts, user_settings } from "$lib/store";
   import { fetch_feed, add_posts, fetch_posts } from "$lib/db";
-  import { fetchRSSMetadata } from "$lib/utils"; 
+  import { fetchRSSMetadata, isTimeExpired } from "$lib/utils"; 
 
   import { onMount } from "svelte";
   import WebIframe from "$lib/content_view/web_iframe.svelte";
-    import ParserView from "$lib/content_view/parser_view.svelte";
+  import ParserView from "$lib/content_view/parser_view.svelte";
 
-  const syncPostsInDB = async (feeds:{id:Number, url:string, title:string, favicon:string}[]) => {
+  const syncPostsInDB = async (feeds:{id:Number, url:string, title:string, favicon:string, last_refresh_time:string}[]) => {
     // Updates post entires in DB
     const posts = []
 
     for(let feed of feeds){
-      const feedMatadata = await fetchRSSMetadata(feed.url);
-      if(feedMatadata)
-        for(var post of feedMatadata.posts){
-          posts.push({
-            title: post.title,
-            link: post.link,
-            pubDate: post.pubDate,
-            feed_id: feed.id
-          })
+      if(isTimeExpired(feed.last_refresh_time, $user_settings.last_refresh_time)){
+        const feedMatadata = await fetchRSSMetadata(feed.url);
+        if(feedMatadata){
+          for(var post of feedMatadata.posts){
+            posts.push({
+              title: post.title,
+              link: post.link,
+              pubDate: post.pubDate,
+              feed_id: feed.id
+            })
+          }
         }
+      }
     }
     
     console.log("Posts to Insert: ", posts.length)
