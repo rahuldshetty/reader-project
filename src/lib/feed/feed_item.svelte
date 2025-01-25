@@ -12,9 +12,9 @@
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore event_directive_deprecated -->
-<li class="flex items-center cursor-pointer gap-2 p-2 text-slate-800 hover:bg-indigo-950 hover:text-slate-200
+<li class="flex items-center cursor-pointer gap-2 p-2 text-text1 hover:bg-primary2 hover:text-text3
     {
-        $selected_feed_id == id ? "bg-indigo-700 text-slate-200": ""
+        $selected_feed_id == id ? "bg-primary2 text-text3": ""
     }
     "
     on:click={update_feed_id}

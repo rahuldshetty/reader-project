@@ -15,7 +15,7 @@
   
 </script>
 
-<div class="w-1/4 bg-white border-r overflow-auto ">
+<div class="w-1/4 bg-background2 border-r overflow-auto ">
     
     {#if $is_loading_posts}
     <div class="w-full h-full cursor-default flex flex-col items-center justify-center gap-10">
