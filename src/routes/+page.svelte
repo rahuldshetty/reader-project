@@ -3,9 +3,10 @@
   import RssFeed from "$lib/feed/rss_feed.svelte";
   import PostFeed from "$lib/post/post_feed.svelte";
 
-  import { feeds_store, posts_store, selected_post, is_loading_feed, is_loading_posts, posts_sort_by, user_settings } from "$lib/store";
+  import { SETTINGS } from "$lib/constants";
+  import { feeds_store, posts_store, selected_post, is_loading_feed, is_loading_posts, posts_sort_by } from "$lib/store";
   import { fetch_feed, add_posts, fetch_posts } from "$lib/db";
-  import { fetchRSSMetadata, isTimeExpired } from "$lib/utils";
+  import { fetchRSSMetadata, isTimeExpired, fetch_user_setting } from "$lib/utils";
 
   import { onMount } from "svelte";
   import WebIframe from "$lib/content_view/web_iframe.svelte";
@@ -15,8 +16,10 @@
     // Updates post entires in DB
     const posts = []
 
+    const time_in_seconds = (await fetch_user_setting(SETTINGS.LAST_REFRESH_TIME)) * 60 * 60;
+
     for(let feed of feeds){
-      if(isTimeExpired(feed.last_refresh_time, $user_settings.last_refresh_time)){
+      if(isTimeExpired(feed.last_refresh_time, time_in_seconds)){
         const feedMatadata = await fetchRSSMetadata(feed.url);
         if(feedMatadata){
           for(var post of feedMatadata.posts){

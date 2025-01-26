@@ -1,4 +1,6 @@
 import { DB_ORDER_ENUM } from './constants';
+
+import { load } from '@tauri-apps/plugin-store';
 import { writable } from 'svelte/store';
 
 export const feeds_store = writable([]);
@@ -14,7 +16,4 @@ export const selected_post = writable({});
 export const is_loading_feed = writable(false);
 export const is_loading_posts = writable(false);
 
-
-export const user_settings = writable({
-    "last_refresh_time": 4 * 60 * 60
-})
+export const user_settings = await load('settings.json', { autoSave: true });

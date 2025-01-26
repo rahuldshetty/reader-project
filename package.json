@@ -17,6 +17,7 @@
     "@tauri-apps/plugin-http": "~2",
     "@tauri-apps/plugin-opener": "^2",
     "@tauri-apps/plugin-sql": "~2",
+    "@tauri-apps/plugin-store": "~2",
     "dayjs": "^1.11.13"
   },
   "devDependencies": {

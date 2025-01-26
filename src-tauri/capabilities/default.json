@@ -19,9 +19,16 @@
     "sql:allow-select",
     "sql:allow-close",
     "http:default",
+    "store:default",
     {
       "identifier": "http:default",
-      "allow": [{ "url": "https://*" }]
-    }
+      "allow": [
+        {
+          "url": "https://*"
+        }
+      ]
+    },
+    "store:default",
+    "store:default"
   ]
 }

@@ -1,6 +1,9 @@
 import dayjs from 'dayjs'
 import { fetch } from '@tauri-apps/plugin-http';
 
+import { user_settings } from '$lib/store';
+import { SETTINGS } from '$lib/constants';
+
 export const fetchRSSMetadata = async (url:string) => {
     if(!validateURL(url)){
         return null;
@@ -180,3 +183,15 @@ export const escape_title = (str:string) => {
         }
     });
 }
+
+export const fetch_user_setting = async (key: string) => {
+    const val = await user_settings.get(key);
+    if(val) return val;
+    switch(key){
+        case SETTINGS.LAST_REFRESH_TIME: 
+            return 4;
+        case SETTINGS.DARK_MODE:
+            return false;
+    }
+}
+
