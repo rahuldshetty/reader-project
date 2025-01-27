@@ -44,6 +44,7 @@
         feedURL = "";
         feedName = "";
         feedIcon = "";
+        feedPosts = [];
       }
     }
 

@@ -72,7 +72,7 @@ export const fetch_posts = async (sort_by: DB_ORDER_ENUM = DB_ORDER_ENUM.NEWEST)
 
 export const read_post = async(id: number) => {
     await db.execute(
-        `UPDATE articles SET read = 1 WHERE id = ${id}`
+        `UPDATE articles SET read = 1 WHERE id = ${id} and read = 0`
     );
 }
 

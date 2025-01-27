@@ -2,15 +2,16 @@
     import { read_post } from "$lib/db";
     import { selected_post, feed_unread_post_count } from "$lib/store";
     import { timeAgo } from "$lib/utils";
+
     const {post} = $props();
     let post_read = $state(post.read == 1);
 
     const handleSelectPost = async () => {
         $selected_post = post;
         if(!post_read){
+            await read_post(post.id);
             $feed_unread_post_count[post.feed_id] -= 1
             post_read = true;
-            await read_post(post.id);
         }
     }
 
