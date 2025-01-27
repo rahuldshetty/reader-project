@@ -3,6 +3,11 @@
 
     let {id, title, url, favicon} = $props();
 
+    const count = $derived(
+        id != -1 ? 
+        $feed_unread_post_count[id]:
+        Object.values($feed_unread_post_count).reduce((acc, value) => acc + value, 0)
+    );
 
     const update_feed_id = () =>{
         $selected_feed_id = id
@@ -31,9 +36,9 @@
     </svg>
     {/if}
     <span class="text-sm truncate">{title}</span>
-    {#if id in $feed_unread_post_count &&  $feed_unread_post_count[id] != 0}
+    {#if count != 0}
         <div class="flex grow justify-end">
-            {$feed_unread_post_count[id]}
+            {count}
         </div>
     {/if}
 </li>
