@@ -1,7 +1,8 @@
 <script>
-    import {selected_feed_id} from "$lib/store";
+    import { selected_feed_id, feed_unread_post_count} from "$lib/store";
 
     let {id, title, url, favicon} = $props();
+
 
     const update_feed_id = () =>{
         $selected_feed_id = id
@@ -30,4 +31,9 @@
     </svg>
     {/if}
     <span class="text-sm truncate">{title}</span>
+    {#if id in $feed_unread_post_count &&  $feed_unread_post_count[id] != 0}
+        <div class="flex grow justify-end">
+            {$feed_unread_post_count[id]}
+        </div>
+    {/if}
 </li>

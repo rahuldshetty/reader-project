@@ -1,8 +1,8 @@
 <script>
   import { derived } from "svelte/store";
   import { DB_ORDER_ENUM } from "$lib/constants";
-  import { fetch_posts } from "$lib/db";
-  import { posts_store, selected_feed_id, is_loading_posts, posts_sort_by} from "$lib/store";
+  import { fetch_posts, fetch_unread_post_counts } from "$lib/db";
+  import { posts_store, selected_feed_id, is_loading_posts, posts_sort_by, feed_unread_post_count} from "$lib/store";
   import PostItem from "$lib/post/post_item.svelte";
 
   import empty_logo from "$lib/assets/empty_logo.svg"
@@ -18,6 +18,7 @@
   const sortPosts = async () => {
     $posts_sort_by = ($posts_sort_by === DB_ORDER_ENUM.NEWEST) ? DB_ORDER_ENUM.OLDEST : DB_ORDER_ENUM.NEWEST;
     $posts_store = await fetch_posts($posts_sort_by);
+    $feed_unread_post_count = await fetch_unread_post_counts();
   }
   
 </script>

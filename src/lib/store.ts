@@ -4,6 +4,7 @@ import { load } from '@tauri-apps/plugin-store';
 import { writable } from 'svelte/store';
 
 export const feeds_store = writable([]);
+export const feed_unread_post_count = writable({});
 
 export const selected_feed_id = writable(-1);
 

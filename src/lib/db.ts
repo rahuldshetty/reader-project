@@ -1,5 +1,4 @@
 import Database from '@tauri-apps/plugin-sql';
-
 import { DB_PATH, DB_ORDER_ENUM } from '$lib/constants';
 import { convertToTimeStringForDB, escape_title } from "$lib/utils";
 
@@ -69,4 +68,25 @@ export const fetch_posts = async (sort_by: DB_ORDER_ENUM = DB_ORDER_ENUM.NEWEST)
     );
     console.log("DB: FETCH POSTS")
     return result;
+}
+
+export const read_post = async(id: number) => {
+    await db.execute(
+        `UPDATE articles SET read = 1 WHERE id = ${id}`
+    );
+}
+
+export const fetch_unread_post_counts = async() => {
+    const results = await db.select(
+        `SELECT feed_id as id, count(*) as count from articles where read=0 group by feed_id`
+    );
+    
+    let id2count = {};
+    for(var post of results){
+        id2count[post.id] = post.count;
+    }
+
+    console.log(id2count)
+
+    return id2count;
 }

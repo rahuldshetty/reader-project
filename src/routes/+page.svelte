@@ -4,8 +4,8 @@
   import PostFeed from "$lib/post/post_feed.svelte";
 
   import { SETTINGS } from "$lib/constants";
-  import { feeds_store, posts_store, selected_post, is_loading_feed, is_loading_posts, posts_sort_by } from "$lib/store";
-  import { fetch_feed, add_posts, fetch_posts } from "$lib/db";
+  import { feeds_store, posts_store, selected_post, is_loading_feed, is_loading_posts, posts_sort_by, feed_unread_post_count } from "$lib/store";
+  import { fetch_feed, add_posts, fetch_posts, fetch_unread_post_counts } from "$lib/db";
   import { fetchRSSMetadata, isTimeExpired, fetch_user_setting } from "$lib/utils";
 
   import { onMount } from "svelte";
@@ -50,6 +50,7 @@
 
     await syncPostsInDB($feeds_store);
     $posts_store = await fetch_posts($posts_sort_by);
+    $feed_unread_post_count = await fetch_unread_post_counts();
     $is_loading_posts = false;
 
   });
