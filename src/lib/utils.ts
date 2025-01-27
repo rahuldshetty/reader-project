@@ -8,9 +8,14 @@ export const fetchRSSMetadata = async (url:string) => {
     if(!validateURL(url)){
         return null;
     }
-    const response = await fetch(url);
-    console.log(response);
-    if (response.status != 200) {
+    let response;
+    try{
+        response = await fetch(url);
+    } catch(except){
+        console.log("Failed Response:", response);
+    }
+    
+    if (response == null || response.status != 200) {
         return null;
     }
     const rssText = await response.text();

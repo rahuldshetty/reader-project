@@ -1,17 +1,27 @@
 <script>
     import { read_post } from "$lib/db";
-    import { selected_post, feed_unread_post_count } from "$lib/store";
+    import { selected_post, feed_unread_post_count, posts_store } from "$lib/store";
     import { timeAgo } from "$lib/utils";
 
-    const {post} = $props();
-    let post_read = $state(post.read == 1);
+    const { post } = $props();
+
+    const postIndex = $derived(post.rowid);
+    const postId = $derived(post.id);
+    const postFeedId = $derived(post.feed_id);
+    const postTitle = $derived(post.title);
+    const postDate = $derived(timeAgo(post.pubDate));
+
+    const isPostSelected = $derived($selected_post && $selected_post.id == post.id)
+
+    let post_read = $derived(post.read == 1);
 
     const handleSelectPost = async () => {
         $selected_post = post;
+        
         if(!post_read){
-            await read_post(post.id);
-            $feed_unread_post_count[post.feed_id] -= 1
-            post_read = true;
+            await read_post(postId);
+            $feed_unread_post_count[postFeedId] -= 1;
+            $posts_store[postIndex].read = 1;
         }
     }
 
@@ -20,14 +30,12 @@
 
 <li
     class="p-4 border-b hover:bg-gray-100 cursor-pointer
-    {
-        ($selected_post && $selected_post.id == post.id) ? "bg-slate-100" : ""
-    }
+    { isPostSelected ? "bg-slate-100" : ""}
     "
     on:click={handleSelectPost}
 >
-    <h3 class="text-sm font-semibold">{post.title}</h3>
-    <p class="text-xs text-gray-600">{timeAgo(post.pubDate)}</p>
+    <h3 class="text-sm font-semibold">{postTitle}</h3>
+    <p class="text-xs text-gray-600">{postDate}</p>
     {#if !post_read}
         <div class="text-xs text-primary2 font-extrabold relative">
             <p class="absolute right-0 bottom-0">

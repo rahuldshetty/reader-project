@@ -66,8 +66,17 @@ export const fetch_posts = async (sort_by: DB_ORDER_ENUM = DB_ORDER_ENUM.NEWEST)
         ORDER BY pub_date ${sort_by}
         `
     );
-    console.log("DB: FETCH POSTS")
-    return result;
+    let results = []
+
+    for(let i=0;i<result.length;i++){
+        results.push({
+            ...result[i],
+            rowid: i
+        })
+    }
+    console.log("DB FETCH POSTS")
+
+    return results;
 }
 
 export const read_post = async(id: number) => {
