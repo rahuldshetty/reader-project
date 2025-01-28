@@ -1,6 +1,6 @@
 <script>
     import { read_post } from "$lib/db";
-    import { selected_post, feed_unread_post_count, posts_store } from "$lib/store";
+    import { selected_post, feed_unread_post_count, posts_by_feed_store } from "$lib/store";
     import { timeAgo } from "$lib/utils";
 
     const { post } = $props();
@@ -21,7 +21,7 @@
         if(!post_read){
             await read_post(postId);
             $feed_unread_post_count[postFeedId] -= 1;
-            $posts_store[postIndex].read = 1;
+            $posts_by_feed_store[postFeedId][postIndex].read = 1;
         }
     }
 
