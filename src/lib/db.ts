@@ -55,26 +55,49 @@ export const add_posts = async (posts:{title: string, link: string, pubDate: str
     }
     
     console.log("DB: ADD POSTS");
-    console.log("DB: REFRESH FEED LRT")
+    console.log("DB: REFRESH FEED LRT");
 }
 
 
-export const fetch_posts = async (sort_by: DB_ORDER_ENUM = DB_ORDER_ENUM.NEWEST) => {
-    const result = await db.select(
-        `
+export const fetch_posts = async (
+    sort_by: DB_ORDER_ENUM = DB_ORDER_ENUM.NEWEST,
+    last_id: number | null = null,
+    feed_id: number = -1,
+    existing_store_size:number = 0, // Refers to size of posts_store
+    limit: number = 20,
+) => {
+    let whereCondition = "WHERE 1=1 ";
+    if(last_id != null){
+        if(sort_by == DB_ORDER_ENUM.NEWEST){
+            whereCondition += `AND id < ${last_id} `
+        } else{
+            whereCondition += `AND id > ${last_id} `
+        }
+    }
+
+    if(feed_id != -1){
+        whereCondition += `AND feed_id=${feed_id} `
+    }
+
+    const query = `
         SELECT id, feed_id, title, link, pub_date as pubDate, read from articles
-        ORDER BY pub_date ${sort_by}
-        `
-    );
-    let results = []
+        ${whereCondition}
+        ORDER BY datetime(pub_date) ${sort_by}
+        LIMIT ${limit}
+    `
+
+    console.log("SQL:", query);
+
+    const result = await db.select(query);
+    let results = [];
 
     for(let i=0;i<result.length;i++){
         results.push({
             ...result[i],
-            rowid: i
+            rowid: existing_store_size + i
         })
     }
-    console.log("DB FETCH POSTS")
+    console.log("DB FETCH POSTS:", results.length);
 
     return results;
 }

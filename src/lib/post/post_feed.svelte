@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from "svelte";
   import { derived } from "svelte/store";
   import { DB_ORDER_ENUM } from "$lib/constants";
   import { fetch_posts, fetch_unread_post_counts } from "$lib/db";
@@ -7,6 +8,26 @@
 
   import empty_logo from "$lib/assets/empty_logo.svg"
   import searching_logo from "$lib/assets/searching.svg"
+  
+
+  let sentinel;
+
+  onMount(()=>{
+    const observer = new IntersectionObserver(async (entries) => {
+      if (entries[0].isIntersecting) {
+        const last_id = $filtered_posts[$filtered_posts.length - 1].id || null;
+        const new_posts = await fetch_posts($posts_sort_by, last_id, $selected_feed_id, $filtered_posts.length);
+        $posts_store = [
+          ...$posts_store,
+          ...new_posts
+        ]
+      }
+    }, { threshold: 1.0 });
+
+    if (sentinel) observer.observe(sentinel);
+    
+    return () => observer.disconnect();
+  });
 
   // Filter posts by selected feed id
   const filtered_posts = derived(
@@ -17,7 +38,7 @@
 
   const sortPosts = async () => {
     $posts_sort_by = ($posts_sort_by === DB_ORDER_ENUM.NEWEST) ? DB_ORDER_ENUM.OLDEST : DB_ORDER_ENUM.NEWEST;
-    $posts_store = await fetch_posts($posts_sort_by);
+    $posts_store = await fetch_posts($posts_sort_by, null, $selected_feed_id, $filtered_posts.length);
     $feed_unread_post_count = await fetch_unread_post_counts();
   }
   
@@ -59,6 +80,8 @@
         {#each $filtered_posts as post}
           <PostItem post={post} />
         {/each}
+
+        <li bind:this={sentinel} aria-hidden="true" />
       </ul>
   </div>
 </div>
