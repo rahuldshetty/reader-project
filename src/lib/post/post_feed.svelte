@@ -21,23 +21,54 @@
     const observer = new IntersectionObserver(
       async (entries) => {
         if (entries[0].isIntersecting) {
-          if($selected_feed_id != -1){
+          // When user wants to scroll down on a selected feed
+          if ($selected_feed_id != -1) {
             const cur_posts = $posts_by_feed_store[$selected_feed_id];
-            const last_id =cur_posts[cur_posts.length - 1].id;
+            const last_id = cur_posts[cur_posts.length - 1].id;
             const new_posts = await fetch_posts(
               $posts_sort_by,
               last_id,
               $selected_feed_id,
               $posts_by_feed_store[$selected_feed_id].length,
             );
-            console.log("New Posts:", new_posts)
-            posts_by_feed_store.update((curValue)=>{
+            console.log("New Posts:", new_posts);
+            posts_by_feed_store.update((curValue) => {
               curValue[$selected_feed_id] = [
                 ...curValue[$selected_feed_id],
                 ...new_posts,
-              ]
+              ];
               return curValue;
-            })
+            });
+          } else {
+            // When user wants to scroll down on "all posts"
+            // then find the last_id by comparing all ids 
+            let no_of_posts = 0;
+            let newPost = {}
+            for (const [feed_id, posts] of Object.entries($posts_by_feed_store)) {
+              no_of_posts += posts.length;
+              newPost[feed_id] = [];
+            }
+            
+            const new_posts = await fetch_posts(
+              $posts_sort_by,
+              null,
+              $selected_feed_id,
+              0,
+              no_of_posts + 20,
+            );
+
+            new_posts.forEach((post)=>{
+              newPost[post.feed_id].push({
+                ...post,
+                rowid: newPost[post.feed_id].length
+              });
+            });
+
+            $posts_by_feed_store = newPost;
+            
+            console.log("New Posts:", $posts_by_feed_store);
+            $feed_unread_post_count = await fetch_unread_post_counts();
+
           }
         }
       },
@@ -74,11 +105,7 @@
       $posts_sort_by === DB_ORDER_ENUM.NEWEST
         ? DB_ORDER_ENUM.OLDEST
         : DB_ORDER_ENUM.NEWEST;
-    const posts = await fetch_posts(
-      $posts_sort_by,
-      null,
-      $selected_feed_id,
-    );
+    const posts = await fetch_posts($posts_sort_by, null, $selected_feed_id);
     $posts_by_feed_store[$selected_feed_id] = posts;
     $feed_unread_post_count = await fetch_unread_post_counts();
   };

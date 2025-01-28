@@ -118,7 +118,5 @@ export const fetch_unread_post_counts = async () => {
         id2count[post.id] = post.count;
     }
 
-    console.log(id2count)
-
     return id2count;
 }
