@@ -1,5 +1,6 @@
 <script>
-    import { selected_feed_id, feed_unread_post_count} from "$lib/store";
+    import { fetch_posts } from "$lib/db";
+    import { selected_feed_id, feed_unread_post_count, posts_sort_by, posts_by_feed_store } from "$lib/store";
 
     let {id, title, url, favicon} = $props();
 
@@ -9,8 +10,10 @@
         Object.values($feed_unread_post_count).reduce((acc, value) => acc + value, 0)
     );
 
-    const update_feed_id = () =>{
-        $selected_feed_id = id
+    const update_feed_id = async () =>{
+        $selected_feed_id = id;
+        const posts = await fetch_posts($posts_sort_by, null, $selected_feed_id);
+        $posts_by_feed_store[$selected_feed_id] = posts;
     }
 
 </script>

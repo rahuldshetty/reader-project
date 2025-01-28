@@ -1,6 +1,6 @@
 <script>
     import { add_feed, add_posts, fetch_posts, fetch_unread_post_counts } from "$lib/db";
-    import { feeds_store, selected_feed_id, posts_store, is_loading_posts, posts_sort_by, feed_unread_post_count} from "$lib/store";
+    import { feeds_store, selected_feed_id, is_loading_posts, posts_sort_by, feed_unread_post_count} from "$lib/store";
     import { fetchRSSMetadata } from "$lib/utils";
 
     let feedName = $state('');
@@ -38,7 +38,6 @@
           await add_posts(posts);
         }
         $is_loading_posts = true;
-        $posts_store = await fetch_posts($posts_sort_by);
         $feed_unread_post_count = await fetch_unread_post_counts();
         $is_loading_posts = false;
         feedURL = "";

@@ -8,7 +8,6 @@ export const feed_unread_post_count = writable({});
 
 export const selected_feed_id = writable(-2);
 
-export const posts_store = writable([]);
 export const posts_by_feed_store = writable({});
 
 export const posts_sort_by = writable(DB_ORDER_ENUM.NEWEST);

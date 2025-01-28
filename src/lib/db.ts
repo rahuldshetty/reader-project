@@ -63,7 +63,7 @@ export const fetch_posts = async (
     sort_by: DB_ORDER_ENUM = DB_ORDER_ENUM.NEWEST,
     last_id: number | null = null,
     feed_id: number = -1,
-    existing_store_size: number = 0, // Refers to size of posts_store
+    existing_store_size: number = 0, // Refers to size of existing items in the list
     limit: number = 20,
 ) => {
     let whereCondition = "WHERE 1=1 ";
