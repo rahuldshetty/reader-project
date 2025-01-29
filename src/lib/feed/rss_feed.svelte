@@ -11,7 +11,7 @@
 <SettingsModal/>
 
 <div class="w-2/6 bg-background1 border-r flex flex-col h-screen">
-    <h2 class="text-xl font-bold p-4">RSS Feeds</h2>
+    <h2 class="text-xl font-bold p-4">Reader Project</h2>
     <ul class="flex-grow overflow-auto">
       <FeedItem id={-1} title="All Posts" url={null} favicon={null}/>
       {#each $feeds_store as feed}
