@@ -1,4 +1,5 @@
 <script>
+    import { fade } from 'svelte/transition';
     import { fetch_posts } from "$lib/db";
     import { selected_feed_id, feed_unread_post_count, posts_sort_by, posts_by_feed_store } from "$lib/store";
 
@@ -22,10 +23,12 @@
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore event_directive_deprecated -->
 <li class="flex items-center cursor-pointer gap-2 p-2 text-text1 hover:bg-primary2 hover:text-text3
+    rounded ml-2 mr-2 mt-1 
     {
         $selected_feed_id == id ? "bg-primary2 text-text3": ""
     }
     "
+    transition:fade={{delay:400, duration:1200}}
     on:click={update_feed_id}
 >
     {#if favicon}

@@ -111,7 +111,7 @@
   };
 </script>
 
-<div class="flex flex-col w-1/4">
+<div class="flex flex-col w-2/5">
   <div class="shrink border-br p-2">
     <button
       class="text-text2 font-semibold flex flex-row gap-2 justify-center items-center"

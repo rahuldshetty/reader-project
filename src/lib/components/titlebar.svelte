@@ -33,6 +33,7 @@
     left: 0;
     right: 0;
     z-index: 1000;
+    background: #F5F5F5;
 }
 
 .titlebar-button {
@@ -49,7 +50,7 @@
 }
 
 .titlebar-button:hover {
-    background: #5bbec3;
+    background: #5C6BC0;
 }
 
 .titlebar img {

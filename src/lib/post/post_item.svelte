@@ -1,4 +1,5 @@
 <script>
+    import { slide } from 'svelte/transition';
     import { read_post } from "$lib/db";
     import { selected_post, feed_unread_post_count, posts_by_feed_store } from "$lib/store";
     import { timeAgo } from "$lib/utils";
@@ -28,9 +29,10 @@
 </script>
 
 
-<li
+<li 
+    transition:slide={{delay:200, duration:500}}
     class="p-4 border-b hover:bg-gray-100 cursor-pointer
-    { isPostSelected ? "bg-slate-100" : ""}
+    { isPostSelected ? "bg-slate-100 backdrop-blur-sm" : ""}
     "
     on:click={handleSelectPost}
 >
