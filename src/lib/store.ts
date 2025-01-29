@@ -6,6 +6,7 @@ import { writable } from 'svelte/store';
 export const feeds_store = writable([]);
 export const feed_unread_post_count = writable({});
 
+export const is_adding_new_feed = writable(true);
 export const selected_feed_id = writable(-2);
 
 export const posts_by_feed_store = writable({});

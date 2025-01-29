@@ -22,6 +22,22 @@ export const add_feed = async (title: String, url: String, favicon: String) => {
     return response.lastInsertId;
 }
 
+export const update_feed = async (title, feed_id) => {
+    await db.execute(
+        `UPDATE feeds SET title = $1 WHERE id = $2`,
+        [title, feed_id],
+    );
+    console.log("DB: UPDATE FEED:")
+}
+
+export const delete_feed = async (feed_id) => {
+    await db.execute(
+        `DELETE FROM feeds WHERE id = $1`,
+        [feed_id],
+    );
+    console.log("DB: UPDATE FEED:")
+}
+
 export const add_posts = async (posts: { title: string, link: string, pubDate: string, feed_id: Number }[]) => {
     // Track individual posts to insert into DB
     let value_string = ""

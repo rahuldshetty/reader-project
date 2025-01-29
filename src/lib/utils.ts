@@ -118,11 +118,14 @@ const fetchPosts = (rssText:string) => {
 }
 
 const validateURL = (url:string) => {
-    const uri = new URL(url);
-    if(!uri.protocol.startsWith("https")){
-        return false;
+    if(url){
+        const uri = new URL(url);
+        if(!uri.protocol.startsWith("https")){
+            return false;
+        }
+        return true;
     }
-    return true;
+    return false;
 }
 
 

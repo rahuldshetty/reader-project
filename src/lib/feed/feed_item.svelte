@@ -1,5 +1,5 @@
 <script>
-    import { fade } from 'svelte/transition';
+    import { fade, slide } from 'svelte/transition';
     import { fetch_posts } from "$lib/db";
     import { selected_feed_id, feed_unread_post_count, posts_sort_by, posts_by_feed_store } from "$lib/store";
 
@@ -28,7 +28,8 @@
         $selected_feed_id == id ? "bg-primary2 text-text3": ""
     }
     "
-    transition:fade={{delay:400, duration:1200}}
+    in:fade={{delay:300, duration:500}}
+    out:slide
     on:click={update_feed_id}
 >
     {#if favicon}
