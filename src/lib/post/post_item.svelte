@@ -32,7 +32,7 @@
 <li 
     transition:slide={{delay:200, duration:500}}
     class="p-4 border-b hover:bg-gray-100 cursor-pointer
-    { isPostSelected ? "bg-slate-100 backdrop-blur-sm" : ""}
+    { isPostSelected ? "bg-slate-100" : ""}
     "
     on:click={handleSelectPost}
 >
