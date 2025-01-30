@@ -4,7 +4,7 @@
 
 > This project is currently **under active development**. Features may change, and some parts may be incomplete. Feedback and contributions are welcome!
 
-![Demo](./docs/media/demo-beta.jpg)
+![Demo](./media/demo-beta.jpg)
 
 ## ✨ Features
 
@@ -14,12 +14,6 @@
 - 📁 Offline Storage - Persist articles in an SQLite database.
 - 🎨 Modern UI - Built with Tailwind CSS for a smooth experience.
 - 📰 Content Extraction - Load and display article contents efficiently.
-
-
-## 🛠️ Tech Stack
-- Frontend: SvelteKit + Tailwind CSS
-- Backend: Tauri (Rust)
-- Database: SQLite
 
 ## 🤝 Contributing
 Contributions are welcome! Feel free to open issues or submit pull requests.
