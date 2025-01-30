@@ -17,5 +17,6 @@ export const selected_post = writable({});
 
 export const is_loading_feed = writable(false);
 export const is_loading_posts = writable(false);
+export const is_loading_post_content = writable(false);
 
 export const user_settings = await load('settings.json', { autoSave: true });

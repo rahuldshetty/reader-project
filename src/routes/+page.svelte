@@ -110,9 +110,9 @@
   <PostFeed />
 
   <!-- Third Column: Webpage Preview -->
-  <div class="w-full bg-gray-50">
+  <div class="w-full  bg-gray-50">
     {#if $selected_post}
-      <WebIframe link={$selected_post.link} title={$selected_post.title} />
+      <ParserView link={$selected_post.link} title={$selected_post.title} />
     {:else}
       <p class="p-4 text-gray-600">Select a news item to preview</p>
     {/if}

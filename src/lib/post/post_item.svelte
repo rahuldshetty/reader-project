@@ -1,7 +1,7 @@
 <script>
     import { slide } from 'svelte/transition';
     import { read_post } from "$lib/db";
-    import { selected_post, feed_unread_post_count, posts_by_feed_store } from "$lib/store";
+    import { selected_post, feed_unread_post_count, posts_by_feed_store, is_loading_post_content } from "$lib/store";
     import { timeAgo } from "$lib/utils";
 
     const { post } = $props();
@@ -18,6 +18,7 @@
 
     const handleSelectPost = async () => {
         $selected_post = post;
+        $is_loading_post_content = true;
         
         if(!post_read){
             await read_post(postId);

@@ -13,6 +13,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@postlight/parser": "^2.2.3",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-http": "~2",
     "@tauri-apps/plugin-opener": "^2",
