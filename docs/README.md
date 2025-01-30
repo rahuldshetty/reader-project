@@ -1,6 +1,6 @@
 # reader-project
 
-**reader-project** is a privacy-focused desktop application built with Tauri, SvelteKit and Tailwind. It allows users to aggregate and read RSS feeds seamlessly.
+**reader-project** is a privacy-focused RSS aggregator built with Tauri, SvelteKit and Tailwind.
 
 > This project is currently **under active development**. Features may change, and some parts may be incomplete. Feedback and contributions are welcome!
 
