@@ -10,3 +10,5 @@ export enum SETTINGS {
     LAST_REFRESH_TIME = "LAST_REFRESH_TIME",
     DARK_MODE = "DARK_MODE",
 }
+
+export const NO_OF_POST_PULLS_PER_TIME = 20;

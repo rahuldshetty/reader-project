@@ -14,6 +14,8 @@
   import empty_logo from "$lib/assets/empty_logo.svg";
   import searching_logo from "$lib/assets/searching.svg";
     import PostFilter from "./post_filter.svelte";
+    import EmptyState from "$lib/components/empty_state.svelte";
+    import { NO_OF_POST_PULLS_PER_TIME } from "$lib/constants";
 
   let sentinel;
 
@@ -30,15 +32,13 @@
               last_id,
               $selected_feed_id,
               $posts_by_feed_store[$selected_feed_id].length,
+              NO_OF_POST_PULLS_PER_TIME,
             );
-            console.log("New Posts:", new_posts);
-            posts_by_feed_store.update((curValue) => {
-              curValue[$selected_feed_id] = [
-                ...curValue[$selected_feed_id],
-                ...new_posts,
-              ];
-              return curValue;
-            });
+
+            $posts_by_feed_store[$selected_feed_id] = [
+              ...$posts_by_feed_store[$selected_feed_id],
+              ...new_posts
+            ];
           } else {
             // When user wants to scroll down on "all posts"
             // then find the last_id by comparing all ids 
@@ -54,7 +54,7 @@
               null,
               $selected_feed_id,
               0,
-              no_of_posts + 20,
+              no_of_posts + NO_OF_POST_PULLS_PER_TIME,
             );
 
             new_posts.forEach((post)=>{
@@ -117,12 +117,7 @@
         <p class="text-xs">Loading Posts</p>
       </div>
     {:else if $filtered_posts?.length == 0}
-      <div
-        class="w-full h-screen cursor-default flex flex-col items-center justify-center gap-10"
-      >
-        <img src={empty_logo} class="object-contain w-32" alt="Not Found" />
-        <p class="text-xs">Could not find posts</p>
-      </div>
+      <EmptyState message="Could not find posts"/>
     {/if}
 
     <ul>

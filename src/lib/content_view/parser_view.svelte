@@ -6,7 +6,8 @@
 
     import { selected_post, is_loading_post_content } from '$lib/store';
     
-    import ContentLoadingState from './content_loading_state.svelte';
+    import ContentLoadingState from '$lib/content_view/content_loading_state.svelte';
+    import EmptyState from '$lib/components/empty_state.svelte';
 
     let parsed = $state({});
 
@@ -49,7 +50,7 @@
 {#if $is_loading_post_content}
     <ContentLoadingState/>
 {:else if !$selected_post.link}
-    Empty State
+    <EmptyState message="Select a post to get reading"/>
 {:else}
     <div>
         <h1 class="text-2xl font-semibold">

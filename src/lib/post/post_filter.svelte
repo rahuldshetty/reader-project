@@ -1,5 +1,5 @@
 <script>
-    import { DB_ORDER_ENUM } from "$lib/constants";
+    import { DB_ORDER_ENUM, NO_OF_POST_PULLS_PER_TIME } from "$lib/constants";
     import {
         posts_by_feed_store,
         selected_feed_id,
@@ -13,7 +13,7 @@
         $posts_sort_by === DB_ORDER_ENUM.NEWEST
             ? DB_ORDER_ENUM.OLDEST
             : DB_ORDER_ENUM.NEWEST;
-        const posts = await fetch_posts($posts_sort_by, null, $selected_feed_id);
+        const posts = await fetch_posts($posts_sort_by, null, $selected_feed_id, 0, NO_OF_POST_PULLS_PER_TIME);
         $posts_by_feed_store[$selected_feed_id] = posts;
         $feed_unread_post_count = await fetch_unread_post_counts();
     };

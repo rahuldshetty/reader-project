@@ -114,6 +114,7 @@ export const fetch_posts = async (
         })
     }
     console.log("DB FETCH POSTS:", results.length);
+    console.log("DB DEBUG:", results);
 
     return results;
 }

@@ -3,7 +3,7 @@
   import RssFeed from "$lib/feed/rss_feed.svelte";
   import PostFeed from "$lib/post/post_feed.svelte";
 
-  import { SETTINGS } from "$lib/constants";
+  import { NO_OF_POST_PULLS_PER_TIME, SETTINGS } from "$lib/constants";
   import {
     feeds_store,
     selected_post,
@@ -46,7 +46,9 @@
       (await fetch_user_setting(SETTINGS.LAST_REFRESH_TIME)) * 60 * 60;
 
     for (let feed of feeds) {
-      if (isTimeExpired(feed.last_refresh_time, time_in_seconds)) {
+      const expiredTime = isTimeExpired(feed.last_refresh_time, time_in_seconds);
+      console.log("Time Expired:", expiredTime);
+      if (expiredTime) {
         const feedMatadata = await fetchRSSMetadata(feed.url);
         if (feedMatadata) {
           for (var post of feedMatadata.posts) {
@@ -80,7 +82,13 @@
 
     await syncPostsInDB($feeds_store);
 
-    const posts = await fetch_posts($posts_sort_by);
+    const posts = await fetch_posts(
+      $posts_sort_by,
+      null,
+      -1,
+      0,
+      NO_OF_POST_PULLS_PER_TIME,
+    );
     
     posts.forEach((post)=>{
       $posts_by_feed_store[post.feed_id].push({

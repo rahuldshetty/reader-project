@@ -2,6 +2,7 @@
     import { fade, slide } from 'svelte/transition';
     import { fetch_posts } from "$lib/db";
     import { selected_feed_id, feed_unread_post_count, posts_sort_by, posts_by_feed_store } from "$lib/store";
+    import { NO_OF_POST_PULLS_PER_TIME } from '$lib/constants';
 
     let {id, title, url, favicon} = $props();
 
@@ -13,7 +14,7 @@
 
     const update_feed_id = async () =>{
         $selected_feed_id = id;
-        const posts = await fetch_posts($posts_sort_by, null, $selected_feed_id);
+        const posts = await fetch_posts($posts_sort_by, null, $selected_feed_id, 0, NO_OF_POST_PULLS_PER_TIME);
         $posts_by_feed_store[$selected_feed_id] = posts;
     }
 
