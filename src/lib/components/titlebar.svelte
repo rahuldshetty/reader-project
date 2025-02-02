@@ -5,19 +5,19 @@
 </script>
 
 <div data-tauri-drag-region class="titlebar bg-indigo-50">
-    <button class="titlebar-button" id="titlebar-minimize" on:click={appWindow.minimize}>
+    <button class="titlebar-button" id="titlebar-minimize" onclick={appWindow.minimize}>
         <img
             src="https://api.iconify.design/mdi:window-minimize.svg"
             alt="minimize"
         />
     </button>
-    <button class="titlebar-button" id="titlebar-maximize" on:click={appWindow.toggleMaximize}>
+    <button class="titlebar-button" id="titlebar-maximize" onclick={appWindow.toggleMaximize}>
         <img
             src="https://api.iconify.design/mdi:window-maximize.svg"
             alt="maximize"
         />
     </button>
-    <button class="titlebar-button" id="titlebar-close" on:click={appWindow.close}>
+    <button class="titlebar-button" id="titlebar-close" onclick={appWindow.close}>
         <img src="https://api.iconify.design/mdi:close.svg" alt="close" />
     </button>
 </div>

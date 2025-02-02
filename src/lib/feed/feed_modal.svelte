@@ -122,7 +122,7 @@
       placeholder="Enter RSS URL"
       class="w-full px-3 py-2 border rounded-lg mb-4"
       bind:value={feedURL}
-      on:change={handleFeedURLChange}
+      onchange={handleFeedURLChange}
       disabled={!$is_adding_new_feed}
     />
 
@@ -147,7 +147,7 @@
     <div class="flex justify-end gap-2">
       <button
         class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-        on:click={async () => {
+        onclick={async () => {
           if($is_adding_new_feed){
             await addFeed();
           } else {
@@ -165,7 +165,7 @@
       
       <button
         class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-800"
-        on:click={async () => {
+        onclick={async () => {
           await deleteFeed();
           document.getElementById("addFeedModal").classList.add("hidden");
         }}
@@ -176,7 +176,7 @@
 
       <button
         class="px-4 py-2 text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300"
-        on:click={() =>
+        onclick={() =>
           document.getElementById("addFeedModal").classList.add("hidden")}
       >
         Cancel

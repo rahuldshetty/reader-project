@@ -30,7 +30,7 @@
     <!-- svelte-ignore a11y_consider_explicit_label -->
     <button
       class="absolute top-14 -right-6 flex items-center justify-center w-8 h-8 rounded-full bg-background1  transition-all duration-300"
-      on:click={() => $minimize_feeds = !$minimize_feeds}
+      onclick={() => $minimize_feeds = !$minimize_feeds}
     >
       <svg
         class="w-5 h-5 transition-transform duration-300"
@@ -62,7 +62,7 @@
   {#if !$minimize_feeds}
     <div class="h-72 flex flex-col justify-center items-center">
       <button
-        on:click={() => {
+        onclick={() => {
           $is_adding_new_feed = true;
           document.getElementById("addFeedModal")?.classList.remove("hidden");
         }}
@@ -92,7 +92,7 @@
 
       {#if $selected_feed_id != -1}
         <button
-          on:click={() => {
+          onclick={() => {
             $is_adding_new_feed = false;
             document.getElementById("addFeedModal")?.classList.remove("hidden");
           }}
@@ -122,7 +122,7 @@
       {/if}
 
       <button
-        on:click={() =>
+        onclick={() =>
           document.getElementById("settingModal")?.classList.remove("hidden")}
         class="
           m-2 w-6/12

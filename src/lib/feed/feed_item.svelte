@@ -31,7 +31,7 @@
     "
     in:fade={{delay:300, duration:500}}
     out:slide
-    on:click={update_feed_id}
+    onclick={update_feed_id}
 >
     {#if favicon}
         <img

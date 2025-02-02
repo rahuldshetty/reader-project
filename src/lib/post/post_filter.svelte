@@ -23,7 +23,7 @@
 <div class="shrink border-br p-2">
     <button
         class="text-text2 font-semibold flex flex-row gap-2 justify-center items-center"
-        on:click={sortPosts}
+        onclick={sortPosts}
     >
         {#if $posts_sort_by === DB_ORDER_ENUM.NEWEST}
         <!-- Down Arrow -->

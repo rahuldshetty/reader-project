@@ -35,7 +35,7 @@
     class="p-4 border-b hover:bg-gray-100 cursor-pointer
     { isPostSelected ? "bg-slate-100" : ""}
     "
-    on:click={handleSelectPost}
+    onclick={handleSelectPost}
 >
     <h3 class="text-sm font-semibold">{postTitle}</h3>
     <p class="text-xs text-gray-600">{postDate}</p>

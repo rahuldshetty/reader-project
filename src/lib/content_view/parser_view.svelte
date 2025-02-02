@@ -60,7 +60,7 @@
             <div class="text-sm text-slate-500">{`${timeToRead(parsed.word_count)} min read`}</div>
             ·
             <div class="flex grow-0"
-                on:click={()=>openURLInBrowser(parsed.url)}
+                onclick={()=>openURLInBrowser(parsed.url)}
             >
                 <!-- Earth Logo -->
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="fill-text1 hover:fill-primary2 size-6 cursor-pointer">

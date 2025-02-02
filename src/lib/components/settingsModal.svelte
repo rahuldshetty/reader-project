@@ -54,14 +54,14 @@
     <div class="flex justify-end gap-2">
       <button
         class="px-4 py-2 text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300"
-        on:click={() =>
+        onclick={() =>
           document.getElementById("settingModal")?.classList.add("hidden")}
       >
         Cancel
       </button>
       <button
         class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-        on:click={saveSettings}
+        onclick={saveSettings}
       >
         Save
       </button>
