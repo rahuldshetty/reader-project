@@ -26,13 +26,14 @@
           // When user wants to scroll down on a selected feed
           if ($selected_feed_id != -1) {
             const cur_posts = $posts_by_feed_store[$selected_feed_id];
-            const last_id = cur_posts[cur_posts.length - 1].id;
+            const lastPubDate = cur_posts[cur_posts.length - 1].pubDate;
             const new_posts = await fetch_posts(
               $posts_sort_by,
-              last_id,
+              null,
               $selected_feed_id,
               $posts_by_feed_store[$selected_feed_id].length,
               NO_OF_POST_PULLS_PER_TIME,
+              lastPubDate,
             );
 
             $posts_by_feed_store[$selected_feed_id] = [

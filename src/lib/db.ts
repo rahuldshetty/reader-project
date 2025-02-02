@@ -22,7 +22,7 @@ export const add_feed = async (title: String, url: String, favicon: String) => {
     return response.lastInsertId;
 }
 
-export const update_feed = async (title, feed_id) => {
+export const update_feed = async (title:string, feed_id:number) => {
     await db.execute(
         `UPDATE feeds SET title = $1 WHERE id = $2`,
         [title, feed_id],
@@ -30,7 +30,7 @@ export const update_feed = async (title, feed_id) => {
     console.log("DB: UPDATE FEED:")
 }
 
-export const delete_feed = async (feed_id) => {
+export const delete_feed = async (feed_id:number) => {
     await db.execute(
         `DELETE FROM feeds WHERE id = $1`,
         [feed_id],
@@ -81,6 +81,7 @@ export const fetch_posts = async (
     feed_id: number = -1,
     existing_store_size: number = 0, // Refers to size of existing items in the list
     limit: number = 20,
+    lastPubDate: string = "",
 ) => {
     let whereCondition = "WHERE 1=1 ";
     if (last_id != null) {
@@ -88,6 +89,14 @@ export const fetch_posts = async (
             whereCondition += `AND id < ${last_id} `
         } else {
             whereCondition += `AND id > ${last_id} `
+        }
+    }
+
+    if(lastPubDate != ""){
+        if (sort_by == DB_ORDER_ENUM.NEWEST) {
+            whereCondition += `AND datetime(pub_date) < datetime("${lastPubDate}") `
+        } else {
+            whereCondition += `AND datetime(pub_date) > datetime("${lastPubDate}") `
         }
     }
 
