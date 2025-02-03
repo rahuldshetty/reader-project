@@ -7,7 +7,7 @@
 
     import ContentLoadingState from "$lib/content_view/content_loading_state.svelte";
     import EmptyState from "$lib/components/empty_state.svelte";
-    import { mercury_parser } from "$lib/content_view/parsers";
+    import { mercury_parser, morzilla_readability_parser } from "$lib/content_view/parsers";
 
     let parsed = $state({});
 
@@ -30,6 +30,8 @@
             console.log(webpage_content);
 
             parsed = await mercury_parser(curValue.link, webpage_content);
+            // parsed = await morzilla_readability_parser(curValue.link, webpage_content);
+            console.log("PARSED:", JSON.stringify(parsed));
 
             $is_loading_post_content = false;
         }
@@ -79,9 +81,9 @@
             </div>
         </div>
 
-        {#if parsed.lead_image_url}
+        {#if parsed.image}
             <img
-                src={parsed.lead_image_url}
+                src={parsed.image}
                 alt={parsed.title}
                 class="rounded-md object-cover"
             />
