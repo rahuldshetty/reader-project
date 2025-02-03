@@ -67,7 +67,8 @@
 
             $posts_by_feed_store = newPost;
             
-            console.log("New Posts:", $posts_by_feed_store);
+            console.log("New Posts:");
+            console.debug(JSON.stringify($posts_by_feed_store))
             $feed_unread_post_count = await fetch_unread_post_counts();
 
           }

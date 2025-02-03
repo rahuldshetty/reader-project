@@ -12,7 +12,8 @@ export const fetchRSSMetadata = async (url:string) => {
     try{
         response = await fetch(url);
     } catch(except){
-        console.log("Failed Response:", response);
+        console.log("Failed Response:");
+        console.log(JSON.stringify(response));
     }
     
     if (response == null || response.status != 200) {

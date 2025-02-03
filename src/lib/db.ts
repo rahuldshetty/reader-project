@@ -111,7 +111,7 @@ export const fetch_posts = async (
         LIMIT ${limit}
     `
 
-    console.log("SQL:", query);
+    console.log("SQL:" + query);
 
     const result = await db.select(query);
     let results = [];
@@ -122,8 +122,9 @@ export const fetch_posts = async (
             rowid: existing_store_size + i
         })
     }
-    console.log("DB FETCH POSTS:", results.length);
-    console.log("DB DEBUG:", results);
+    console.log("DB FETCH POSTS:" + results.length);
+    console.log("DB DEBUG:");
+    console.log(JSON.stringify(results));
 
     return results;
 }

@@ -29,6 +29,7 @@
   import { onMount } from "svelte";
   import WebIframe from "$lib/content_view/web_iframe.svelte";
   import ParserView from "$lib/content_view/parser_view.svelte";
+  import "$lib/logging";
 
   const syncPostsInDB = async (
     feeds: {
@@ -47,7 +48,7 @@
 
     for (let feed of feeds) {
       const expiredTime = isTimeExpired(feed.last_refresh_time, time_in_seconds);
-      console.log("Time Expired:", expiredTime);
+      console.log("Time Expired:" + expiredTime);
       if (expiredTime) {
         const feedMatadata = await fetchRSSMetadata(feed.url);
         if (feedMatadata) {
@@ -63,7 +64,7 @@
       }
     }
 
-    console.log("Posts to Insert: ", posts.length);
+    console.log("Posts to Insert: "+ posts.length);
 
     if (posts.length > 0) await add_posts(posts);
   };
@@ -101,7 +102,8 @@
     $feed_unread_post_count = await fetch_unread_post_counts();
     $is_loading_posts = false;
 
-    console.log("POSTS BY FEED:", $posts_by_feed_store);
+    console.log("POSTS BY FEED:");
+    console.debug(JSON.stringify($posts_by_feed_store));
   });
 </script>
 

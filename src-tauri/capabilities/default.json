@@ -30,6 +30,7 @@
     },
     "store:default",
     "store:default",
-    "opener:default"
+    "opener:default",
+    "log:default"
   ]
 }
