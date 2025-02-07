@@ -31,8 +31,6 @@
 
             parsed = await mercury_parser(curValue.link, webpage_content);
             // parsed = await morzilla_readability_parser(curValue.link, webpage_content);
-            console.log("PARSED:", JSON.stringify(parsed));
-
             $is_loading_post_content = false;
         }
     });

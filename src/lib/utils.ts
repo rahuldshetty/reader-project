@@ -4,18 +4,18 @@ import { fetch } from '@tauri-apps/plugin-http';
 import { user_settings } from '$lib/store';
 import { SETTINGS } from '$lib/constants';
 
-export const fetchRSSMetadata = async (url:string) => {
-    if(!validateURL(url)){
+export const fetchRSSMetadata = async (url: string) => {
+    if (!validateURL(url)) {
         return null;
     }
     let response;
-    try{
+    try {
         response = await fetch(url);
-    } catch(except){
+    } catch (except) {
         console.log("Failed Response:");
         console.log(JSON.stringify(response));
     }
-    
+
     if (response == null || response.status != 200) {
         return null;
     }
@@ -29,13 +29,13 @@ export const fetchRSSMetadata = async (url:string) => {
     }
 }
 
-const fetchName = (rssText:string) => {
+const fetchName = (rssText: string) => {
     const parser = new DOMParser();
     const rssDoc = parser.parseFromString(rssText, "application/xml");
     var channelTitle;
-    if(rssDoc.querySelector("channel > title")){
+    if (rssDoc.querySelector("channel > title")) {
         channelTitle = rssDoc.querySelector("channel > title");
-    } else if (rssDoc.querySelector("feed > title")){
+    } else if (rssDoc.querySelector("feed > title")) {
         channelTitle = rssDoc.querySelector("feed > title");
     } else {
         return ""
@@ -46,13 +46,13 @@ const fetchName = (rssText:string) => {
     return ""
 }
 
-const fetchFavIcon = async (rssUrl:string, rssText:string) => {
+const fetchFavIcon = async (rssUrl: string, rssText: string) => {
     // Fetch the HTML page of the RSS feed's origin
     const baseUrl = new URL(rssUrl).origin;
 
     const response = await fetch(baseUrl);
     if (response.status != 200) {
-      return '';
+        return '';
     }
 
     const htmlText = await response.text();
@@ -60,10 +60,10 @@ const fetchFavIcon = async (rssUrl:string, rssText:string) => {
     //  Parse the HTML to find favicon links
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlText, "text/html");
-    
+
     const faviconLink = Array.from(
         doc.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"], link[rel="icon"]')
-      )
+    )
         .map(link => ({
             href: link.getAttribute("href"),
             sizes: link.getAttribute("sizes") || "",
@@ -74,7 +74,7 @@ const fetchFavIcon = async (rssUrl:string, rssText:string) => {
             const bSize = parseInt(b.sizes.split("x")[0]) || 0;
             return bSize - aSize;
         })[0]; // Pick the largest
-    
+
     if (faviconLink && faviconLink.href) {
         const faviconUrl = new URL(faviconLink.href, baseUrl).href; // Resolve relative URLs
         return faviconUrl;
@@ -83,7 +83,7 @@ const fetchFavIcon = async (rssUrl:string, rssText:string) => {
     return '';
 }
 
-const fetchPosts = (rssText:string) => {
+const fetchPosts = (rssText: string) => {
     const posts: { title: string; link: string; description: string; pubDate: string }[] = [];
 
     const parser = new DOMParser();
@@ -93,7 +93,7 @@ const fetchPosts = (rssText:string) => {
     const isRSS = !!rssDoc.querySelector("channel > item");
     const isAtom = !!rssDoc.querySelector("feed > entry");
 
-    if (isRSS){
+    if (isRSS) {
         const items = rssDoc.querySelectorAll("channel > item");
         items.forEach(item => {
             posts.push({
@@ -103,7 +103,7 @@ const fetchPosts = (rssText:string) => {
                 pubDate: item.querySelector("pubDate")?.textContent?.trim() || "",
             });
         });
-    } else if(isAtom){
+    } else if (isAtom) {
         const entries = rssDoc.querySelectorAll("feed > entry");
         entries.forEach(entry => {
             posts.push({
@@ -118,10 +118,10 @@ const fetchPosts = (rssText:string) => {
     return posts;
 }
 
-const validateURL = (url:string) => {
-    if(url){
+const validateURL = (url: string) => {
+    if (url) {
         const uri = new URL(url);
-        if(!uri.protocol.startsWith("https")){
+        if (!uri.protocol.startsWith("https")) {
             return false;
         }
         return true;
@@ -130,25 +130,25 @@ const validateURL = (url:string) => {
 }
 
 
-export const isTimeExpired = (time:string, expiry_in_seconds:number) => {
-    if(!time){
+export const isTimeExpired = (time: string, expiry_in_seconds: number) => {
+    if (!time) {
         return true;
     }
 
     const lastRefreshTime = new Date(time);
     const currentTime = new Date();
-    const timeDifference= currentTime - lastRefreshTime;
+    const timeDifference = currentTime - lastRefreshTime;
 
     const expiryDifference = expiry_in_seconds * 1000;
 
-    if(timeDifference > expiryDifference){
+    if (timeDifference > expiryDifference) {
         return true;
     }
 
     return false;
-} 
+}
 
-export const timeAgo = (dateString:string) => {
+export const timeAgo = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
 
@@ -181,12 +181,12 @@ export const convertToTimeStringForDB = (dateString: string) => {
     return date.toISOString();
 }
 
-export const escape_title = (str:string) => {
+export const escape_title = (str: string) => {
     return str.replace(/[']/g, function (char) {
         switch (char) {
             case "'":
                 return '"'; // prepends a backslash to backslash, percent,
-                                  // and double/single quotes
+            // and double/single quotes
             default:
                 return char;
         }
@@ -195,12 +195,29 @@ export const escape_title = (str:string) => {
 
 export const fetch_user_setting = async (key: string) => {
     const val = await user_settings.get(key);
-    if(val) return val;
-    switch(key){
-        case SETTINGS.LAST_REFRESH_TIME: 
+    if (val) return val;
+    switch (key) {
+        case SETTINGS.LAST_REFRESH_TIME:
             return 4;
         case SETTINGS.DARK_MODE:
             return false;
     }
 }
 
+export const generateShortUuid = (length = 8) => {
+    const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let uuid = '';
+    if (window.crypto && window.crypto.getRandomValues) {
+        const randomValues = new Uint8Array(length);
+        window.crypto.getRandomValues(randomValues);
+        for (let i = 0; i < length; i++) {
+            uuid += chars.charAt(randomValues[i] % chars.length);
+        }
+    } else {
+        // Fallback to Math.random() if crypto API is not available
+        for (let i = 0; i < length; i++) {
+            uuid += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+    }
+    return uuid;
+}

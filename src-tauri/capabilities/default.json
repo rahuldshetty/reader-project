@@ -31,6 +31,25 @@
     "store:default",
     "store:default",
     "opener:default",
-    "log:default"
+    "log:default",
+    "shell:default",
+    "shell:allow-open",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "name": "binaries/app",
+          "sidecar": true,
+          "args": [
+            {
+              "validator": ".+"
+            },
+            {
+              "validator": ".+"
+            }
+          ]
+        }
+      ]
+    }
   ]
 }

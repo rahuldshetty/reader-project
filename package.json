@@ -19,9 +19,9 @@
     "@tauri-apps/plugin-http": "~2",
     "@tauri-apps/plugin-log": "~2",
     "@tauri-apps/plugin-opener": "^2",
+    "@tauri-apps/plugin-shell": "~2",
     "@tauri-apps/plugin-sql": "~2",
     "@tauri-apps/plugin-store": "~2",
-    "cheerio": "1.0.0",
     "dayjs": "^1.11.13",
     "linkedom": "^0.18.7",
     "vite-plugin-node-polyfills": "^0.23.0"

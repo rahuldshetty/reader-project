@@ -1,4 +1,4 @@
-import Parser from "@postlight/parser";
+import { Command } from '@tauri-apps/plugin-shell';
 import { Readability } from "@mozilla/readability";
 import { parseHTML } from 'linkedom';
 
@@ -14,15 +14,21 @@ interface ContentParser {
   (url: string, html: string): Promise<ParsedResult | null>;
 }
 
+const runSideCar = async (url:string) => {
+    const command = Command.sidecar('binaries/app', ["parse", url]);
+    const output = await command.execute();
+    console.log(output);
+
+    const response = JSON.parse(output.stdout);
+    console.log("Found response from sidecar:")
+    console.log(response)
+    return response;
+}
+
 export const mercury_parser:ContentParser = async (url: string, html: string) => {
-    console.log("Trying to parse with mercury...");  
+    console.log("Trying to parse with mercury...");
     try {
-        const document = await Parser.parse(url, {
-            html: html,
-            fetchAllPages: false
-        });
-        console.log("Parsed Result:");
-        console.log(JSON.stringify(document));
+        const document = await runSideCar(url);
         return {
             title: document.title,
             content: document.content,

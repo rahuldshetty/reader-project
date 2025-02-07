@@ -1,0 +1,16 @@
+{
+  "name": "sidecar-app",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@yao-pkg/pkg": "^6.3.0",
+    "esbuild": "0.24.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@postlight/parser": "^2.2.3"
+  }
+}
