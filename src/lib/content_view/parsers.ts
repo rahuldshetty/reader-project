@@ -15,12 +15,11 @@ interface ContentParser {
 }
 
 export const mercury_parser:ContentParser = async (url: string, html: string) => {
-    console.log("Trying to parse with mercury...");
-
+    console.log("Trying to parse with mercury...");  
     try {
         const document = await Parser.parse(url, {
             html: html,
-            fetchAllPages: false 
+            fetchAllPages: false
         });
         console.log("Parsed Result:");
         console.log(JSON.stringify(document));
