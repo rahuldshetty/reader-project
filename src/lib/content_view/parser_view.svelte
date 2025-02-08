@@ -9,6 +9,8 @@
     import EmptyState from "$lib/components/empty_state.svelte";
     import { mercury_parser, morzilla_readability_parser } from "$lib/content_view/parsers";
 
+    import { ttsWorker } from "$lib/experimental/audio_tts";
+
     let parsed = $state({});
 
     const fetch_web_content = async (url: string) => {
@@ -40,6 +42,63 @@
     const openURLInBrowser = async (url: string) => {
         await openUrl(url);
     };
+
+    function extractContent(s:string, space=false) {
+        var span= document.createElement('span');
+        span.innerHTML= s;
+        if(space) {
+            var children= span.querySelectorAll('*');
+            for(var i = 0 ; i < children.length ; i++) {
+            if(children[i].textContent)
+                children[i].textContent+= ' ';
+            else
+                children[i].innerText+= ' ';
+            }
+        }
+        s = [span.textContent || span.innerText].toString().replace(/ +/g,' ');
+        console.log(`CLEAN HTML: ${s}`)
+        return s;
+    };
+
+    const playAudio = async () => {
+        console.log("TTS: STARTING")
+        if(parsed && parsed.content)
+            ttsWorker.postMessage({
+                type: "generate",
+                text: extractContent(parsed.content),
+                voice: "af_heart",
+            });
+    }
+
+    const onMessageReceived = (e) => {
+        switch (e.data.status) {
+            case "device":
+                console.log(`Loading model (device="${e.data.device}")`);
+                break;
+            case "ready":
+                console.log("ready voice:");
+                console.log(e.data.voices);
+                break;
+            case "error":
+                console.error(e.data.data);
+                break;
+            case "complete":
+                console.log("TTS: COMPLETE")
+                const { audio, text } = e.data;
+                // Generation complete: re-enable the "Generate" button
+                console.log(audio);
+
+                const audio_player = new Audio(audio);
+                audio_player.play();
+                
+                audio.onended = () => URL.revokeObjectURL(audio);
+
+                break;
+        }
+    };
+
+    ttsWorker.addEventListener('message', onMessageReceived);
+
 </script>
 
 <div class="m-5 overflow-auto h-screen">
@@ -55,6 +114,15 @@
             <div class="flex flex-row items-center mb-2 mt-2 gap-2">
                 <div class="text-sm text-slate-500">
                     {`${timeToRead(parsed.word_count)} min read`}
+                </div>
+                ·
+                <div class="flex grow-0"
+                    onclick={playAudio}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="fill-text1 hover:fill-primary2 size-6 cursor-pointer">
+                        <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06ZM18.584 5.106a.75.75 0 0 1 1.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 0 1-1.06-1.06 8.25 8.25 0 0 0 0-11.668.75.75 0 0 1 0-1.06Z" />
+                        <path d="M15.932 7.757a.75.75 0 0 1 1.061 0 6 6 0 0 1 0 8.486.75.75 0 0 1-1.06-1.061 4.5 4.5 0 0 0 0-6.364.75.75 0 0 1 0-1.06Z" />
+                      </svg>                      
                 </div>
                 ·
                 <div
