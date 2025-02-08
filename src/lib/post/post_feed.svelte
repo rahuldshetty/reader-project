@@ -8,6 +8,7 @@
     is_loading_posts,
     posts_sort_by,
     feed_unread_post_count,
+    unread_posts_only,
   } from "$lib/store";
   import PostItem from "$lib/post/post_item.svelte";
 
@@ -34,6 +35,7 @@
                 $selected_feed_id,
                 $posts_by_feed_store[$selected_feed_id].length,
                 NO_OF_POST_PULLS_PER_TIME,
+                $unread_posts_only,
                 lastPubDate,
               );
 
@@ -60,6 +62,7 @@
               $selected_feed_id,
               0,
               no_of_posts + NO_OF_POST_PULLS_PER_TIME,
+              $unread_posts_only
             );
 
             new_posts.forEach((post) => {

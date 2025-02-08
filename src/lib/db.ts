@@ -22,7 +22,7 @@ export const add_feed = async (title: String, url: String, favicon: String) => {
     return response.lastInsertId;
 }
 
-export const update_feed = async (title:string, feed_id:number) => {
+export const update_feed = async (title: string, feed_id: number) => {
     await db.execute(
         `UPDATE feeds SET title = $1 WHERE id = $2`,
         [title, feed_id],
@@ -30,7 +30,7 @@ export const update_feed = async (title:string, feed_id:number) => {
     console.log("DB: UPDATE FEED:")
 }
 
-export const delete_feed = async (feed_id:number) => {
+export const delete_feed = async (feed_id: number) => {
     await db.execute(
         `DELETE FROM feeds WHERE id = $1`,
         [feed_id],
@@ -81,6 +81,7 @@ export const fetch_posts = async (
     feed_id: number = -1,
     existing_store_size: number = 0, // Refers to size of existing items in the list
     limit: number = 20,
+    unread: boolean = false,
     lastPubDate: string = "",
 ) => {
     let whereCondition = "WHERE 1=1 ";
@@ -92,7 +93,7 @@ export const fetch_posts = async (
         }
     }
 
-    if(lastPubDate != ""){
+    if (lastPubDate != "") {
         if (sort_by == DB_ORDER_ENUM.NEWEST) {
             whereCondition += `AND datetime(pub_date) < datetime("${lastPubDate}") `
         } else {
@@ -103,6 +104,9 @@ export const fetch_posts = async (
     if (feed_id != -1) {
         whereCondition += `AND feed_id=${feed_id} `
     }
+
+    if(unread)
+        whereCondition += `AND read=0 `
 
     const query = `
         SELECT id, feed_id, title, link, pub_date as pubDate, read from articles

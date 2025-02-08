@@ -13,6 +13,7 @@ export const selected_feed_id = writable(-2);
 export const posts_by_feed_store = writable({});
 
 export const posts_sort_by = writable(DB_ORDER_ENUM.NEWEST);
+export const unread_posts_only = writable(false);
 export const selected_post = writable({});
 
 

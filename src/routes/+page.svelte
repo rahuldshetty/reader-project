@@ -12,7 +12,8 @@
     posts_sort_by,
     feed_unread_post_count,
     posts_by_feed_store,
-    selected_feed_id
+    selected_feed_id,
+    unread_posts_only,
   } from "$lib/store";
   import {
     fetch_feed,
@@ -92,6 +93,7 @@
       -1,
       0,
       NO_OF_POST_PULLS_PER_TIME,
+      $unread_posts_only
     );
     
     posts.forEach((post)=>{
