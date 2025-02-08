@@ -13,9 +13,9 @@
 
   import empty_logo from "$lib/assets/empty_logo.svg";
   import searching_logo from "$lib/assets/searching.svg";
-    import PostFilter from "./post_filter.svelte";
-    import EmptyState from "$lib/components/empty_state.svelte";
-    import { NO_OF_POST_PULLS_PER_TIME } from "$lib/constants";
+  import PostFilter from "./post_filter.svelte";
+  import EmptyState from "$lib/components/empty_state.svelte";
+  import { NO_OF_POST_PULLS_PER_TIME } from "$lib/constants";
 
   let sentinel;
 
@@ -25,31 +25,35 @@
         if (entries[0].isIntersecting) {
           // When user wants to scroll down on a selected feed
           if ($selected_feed_id != -1) {
-            const cur_posts = $posts_by_feed_store[$selected_feed_id];
-            const lastPubDate = cur_posts[cur_posts.length - 1].pubDate;
-            const new_posts = await fetch_posts(
-              $posts_sort_by,
-              null,
-              $selected_feed_id,
-              $posts_by_feed_store[$selected_feed_id].length,
-              NO_OF_POST_PULLS_PER_TIME,
-              lastPubDate,
-            );
+            if ($posts_by_feed_store[$selected_feed_id]) {
+              const cur_posts = $posts_by_feed_store[$selected_feed_id];
+              const lastPubDate = cur_posts[cur_posts.length - 1].pubDate;
+              const new_posts = await fetch_posts(
+                $posts_sort_by,
+                null,
+                $selected_feed_id,
+                $posts_by_feed_store[$selected_feed_id].length,
+                NO_OF_POST_PULLS_PER_TIME,
+                lastPubDate,
+              );
 
-            $posts_by_feed_store[$selected_feed_id] = [
-              ...$posts_by_feed_store[$selected_feed_id],
-              ...new_posts
-            ];
+              $posts_by_feed_store[$selected_feed_id] = [
+                ...$posts_by_feed_store[$selected_feed_id],
+                ...new_posts,
+              ];
+            }
           } else {
             // When user wants to scroll down on "all posts"
-            // then find the last_id by comparing all ids 
+            // then find the last_id by comparing all ids
             let no_of_posts = 0;
-            let newPost = {}
-            for (const [feed_id, posts] of Object.entries($posts_by_feed_store)) {
+            let newPost = {};
+            for (const [feed_id, posts] of Object.entries(
+              $posts_by_feed_store,
+            )) {
               no_of_posts += posts.length;
               newPost[feed_id] = [];
             }
-            
+
             const new_posts = await fetch_posts(
               $posts_sort_by,
               null,
@@ -58,19 +62,17 @@
               no_of_posts + NO_OF_POST_PULLS_PER_TIME,
             );
 
-            new_posts.forEach((post)=>{
+            new_posts.forEach((post) => {
               newPost[post.feed_id].push({
                 ...post,
-                rowid: newPost[post.feed_id].length
+                rowid: newPost[post.feed_id].length,
               });
             });
 
             $posts_by_feed_store = newPost;
-            
-            console.log("New Posts:");
-            console.debug(JSON.stringify($posts_by_feed_store))
-            $feed_unread_post_count = await fetch_unread_post_counts();
 
+            // Update no. of unread posts
+            $feed_unread_post_count = await fetch_unread_post_counts();
           }
         }
       },
@@ -105,12 +107,14 @@
 
 <div class="flex flex-col w-2/5">
   {#if $filtered_posts?.length != 0}
-    <PostFilter/>
+    <PostFilter />
   {/if}
 
-  <div class="bg-background2 border-r {
-      $filtered_posts?.length != 0 ? "overflow-auto": ""
-    }">
+  <div
+    class="bg-background2 border-r {$filtered_posts?.length != 0
+      ? 'overflow-auto'
+      : ''}"
+  >
     {#if $is_loading_posts}
       <div
         class="w-full h-screen cursor-default flex flex-col items-center justify-center gap-10"
@@ -119,7 +123,7 @@
         <p class="text-xs">Loading Posts</p>
       </div>
     {:else if $filtered_posts?.length == 0}
-      <EmptyState message="Could not find posts"/>
+      <EmptyState message="Could not find posts" />
     {/if}
 
     <ul>

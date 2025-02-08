@@ -19,6 +19,7 @@
     add_posts,
     fetch_posts,
     fetch_unread_post_counts,
+    delete_expired_posts,
   } from "$lib/db";
   import {
     fetchRSSMetadata,
@@ -71,6 +72,8 @@
 
   // on load defaults
   onMount(async () => {
+    await delete_expired_posts(await fetch_user_setting(SETTINGS.POST_EXPIRY_TIME));
+
     $is_loading_feed = true;
     $is_loading_posts = true;
 

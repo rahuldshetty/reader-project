@@ -23,13 +23,15 @@
         return time;
     };
 
-    selected_post.subscribe(async (curValue) => {
-        if (curValue) {
-            let webpage_content = await fetch_web_content(curValue.link);
-            console.log("WEB CONTENT:");
-            console.log(webpage_content);
+    const cleanHTML = (html:string)=>{
+        const cleanedHtml = html.replace(/\s*class="[^"]*"/g, '');
 
-            parsed = await mercury_parser(curValue.link, webpage_content);
+        return cleanedHtml;
+    }
+
+    selected_post.subscribe(async (curValue) => {
+        if (curValue && curValue.link) {
+            parsed = await mercury_parser(curValue.link, "");
             // parsed = await morzilla_readability_parser(curValue.link, webpage_content);
             $is_loading_post_content = false;
         }
@@ -91,7 +93,7 @@
             class="mt-4 mr-4 indent-0 text-text1 text-base font-normal leading-relaxed text-justify mb-20"
         >
             <article>
-                {@html parsed.content}
+                {@html cleanHTML(parsed.content)}
             </article>
         </div>
     {/if}

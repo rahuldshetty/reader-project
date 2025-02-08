@@ -147,3 +147,12 @@ export const fetch_unread_post_counts = async () => {
 
     return id2count;
 }
+
+export const delete_expired_posts = async (days: number) => {
+    // Deletes posts in DB that are older than 
+    // the specified no. of "days" parameter
+    const result = await db.execute(
+        `DELETE FROM articles WHERE datetime(pub_date) <= date('now','-${days} day')`
+    );
+    console.log(`DB: DELETED ${result.rowsAffected} EXPIRED POSTS`)
+}

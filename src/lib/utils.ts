@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { fetch } from '@tauri-apps/plugin-http';
 
 import { user_settings } from '$lib/store';
-import { SETTINGS } from '$lib/constants';
+import { SETTINGS, POST_EXPIRY_TIME, LAST_REFRESH_TIME } from '$lib/constants';
 
 export const fetchRSSMetadata = async (url: string) => {
     if (!validateURL(url)) {
@@ -198,9 +198,11 @@ export const fetch_user_setting = async (key: string) => {
     if (val) return val;
     switch (key) {
         case SETTINGS.LAST_REFRESH_TIME:
-            return 4;
+            return LAST_REFRESH_TIME;
         case SETTINGS.DARK_MODE:
             return false;
+        case SETTINGS.POST_EXPIRY_TIME:
+            return POST_EXPIRY_TIME;
     }
 }
 
