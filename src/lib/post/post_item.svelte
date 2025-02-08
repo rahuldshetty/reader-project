@@ -41,7 +41,7 @@
     <p class="text-xs text-gray-600">{postDate}</p>
     {#if !post_read}
         <div class="text-xs text-primary2 font-extrabold relative">
-            <p class="absolute right-0 bottom-0">
+            <p class="absolute right-0 bottom-0 z-0">
                 NEW
             </p>
         </div>

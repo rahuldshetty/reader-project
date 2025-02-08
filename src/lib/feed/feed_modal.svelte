@@ -22,12 +22,22 @@
   let feedPosts = $state([]);
   let feedId = $state(-1);
 
+  is_adding_new_feed.subscribe((is_adding_feed)=>{
+    if(is_adding_feed){
+      feedName = ""
+      feedURL = ""
+      feedIcon = ""
+    }
+  })
+
   selected_feed_id.subscribe((feed_id)=>{
-    for(const feed of $feeds_store){
-      if(feed.id == feed_id){
-        feedName = feed.title;
-        feedURL = feed.url;
-        return;
+    if(!$is_adding_new_feed){
+      for(const feed of $feeds_store){
+        if(feed.id == feed_id){
+          feedName = feed.title;
+          feedURL = feed.url;
+          return;
+        }
       }
     }
   })
@@ -105,7 +115,7 @@
 
 <div
   id="addFeedModal"
-  class="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center hidden"
+  class="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center hidden z-10"
 >
   <div class="bg-white p-6 rounded-lg shadow-lg w-96">
     <h2 class="text-lg font-bold mb-4">
