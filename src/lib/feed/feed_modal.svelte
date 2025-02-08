@@ -1,11 +1,13 @@
 <script>
+  import { NO_OF_POST_PULLS_PER_TIME } from "$lib/constants";
   import {
     fetch_feed,
     add_feed,
     update_feed,
     add_posts,
     fetch_unread_post_counts,
-    delete_feed
+    delete_feed,
+    fetch_posts,
   } from "$lib/db";
   import {
     feeds_store,
@@ -13,6 +15,9 @@
     is_loading_posts,
     is_adding_new_feed,
     feed_unread_post_count,
+    posts_by_feed_store,
+    posts_sort_by,
+    unread_posts_only,
   } from "$lib/store";
   import { fetchRSSMetadata } from "$lib/utils";
 
@@ -22,27 +27,27 @@
   let feedPosts = $state([]);
   let feedId = $state(-1);
 
-  is_adding_new_feed.subscribe((is_adding_feed)=>{
-    if(is_adding_feed){
-      feedName = ""
-      feedURL = ""
-      feedIcon = ""
+  is_adding_new_feed.subscribe((is_adding_feed) => {
+    if (is_adding_feed) {
+      feedName = "";
+      feedURL = "";
+      feedIcon = "";
     }
-  })
+  });
 
-  selected_feed_id.subscribe((feed_id)=>{
-    if(!$is_adding_new_feed){
-      for(const feed of $feeds_store){
-        if(feed.id == feed_id){
+  selected_feed_id.subscribe((feed_id) => {
+    if (!$is_adding_new_feed) {
+      for (const feed of $feeds_store) {
+        if (feed.id == feed_id) {
           feedName = feed.title;
           feedURL = feed.url;
           return;
         }
       }
     }
-  })
+  });
 
-  async function updateFeed(){
+  async function updateFeed() {
     await update_feed(feedName, $selected_feed_id);
     $feeds_store = await fetch_feed();
     feedURL = "";
@@ -51,7 +56,7 @@
     feedPosts = [];
   }
 
-  async function deleteFeed(){
+  async function deleteFeed() {
     await delete_feed($selected_feed_id);
     $feeds_store = await fetch_feed();
     feedURL = "";
@@ -72,13 +77,12 @@
       $feeds_store = [
         ...$feeds_store,
         {
-          id: $feeds_store.length + 1,
+          id: feedId,
           title: feedName,
           url: feedURL,
           favicon: feedIcon,
         },
       ];
-      $selected_feed_id = feedId;
 
       // Insert posts into DB
       if (feedPosts) {
@@ -94,7 +98,18 @@
         await add_posts(posts);
       }
       $is_loading_posts = true;
+
+      $posts_by_feed_store[feedId] = await fetch_posts(
+        $posts_sort_by,
+        null,
+        feedId,
+        0,
+        NO_OF_POST_PULLS_PER_TIME,
+        $unread_posts_only,
+      );
       $feed_unread_post_count = await fetch_unread_post_counts();
+      $selected_feed_id = feedId;
+
       $is_loading_posts = false;
       feedURL = "";
       feedName = "";
@@ -158,7 +173,7 @@
       <button
         class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
         onclick={async () => {
-          if($is_adding_new_feed){
+          if ($is_adding_new_feed) {
             await addFeed();
           } else {
             await updateFeed();
@@ -166,13 +181,13 @@
           document.getElementById("addFeedModal").classList.add("hidden");
         }}
       >
-      {#if $is_adding_new_feed}
-        Add
-      {:else}
-        Save
-      {/if}
+        {#if $is_adding_new_feed}
+          Add
+        {:else}
+          Save
+        {/if}
       </button>
-      
+
       <button
         class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-800"
         onclick={async () => {
@@ -182,7 +197,6 @@
       >
         Delete
       </button>
-
 
       <button
         class="px-4 py-2 text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300"

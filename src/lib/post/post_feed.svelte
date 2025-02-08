@@ -109,9 +109,7 @@
 </script>
 
 <div class="flex flex-col w-2/5">
-  {#if $filtered_posts?.length != 0}
-    <PostFilter />
-  {/if}
+  <PostFilter/>
 
   <div
     class="bg-background2 border-r {$filtered_posts?.length != 0

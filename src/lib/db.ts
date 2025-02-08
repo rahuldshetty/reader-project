@@ -15,7 +15,7 @@ export const fetch_feed = async () => {
 
 export const add_feed = async (title: String, url: String, favicon: String) => {
     const response = await db.execute(
-        "INSERT into feeds (title, url, favicon) VALUES ($1, $2, $3)",
+        "INSERT into feeds (title, url, favicon) VALUES ($1, $2, $3) RETURNING id",
         [title, url, favicon],
     );
     console.log("DB: ADD FEED")
