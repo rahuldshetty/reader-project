@@ -42,8 +42,8 @@
             m-2 w-1/3 
             flex flex-col gap-1
             items-center
-            text-text1 py-2 px-4 rounded-md
-            {$selected_feed_id == -1? "text-slate-300 cursor-not-allowed": "hover:text-primary1"}
+            py-2 px-4 rounded-md
+            {$selected_feed_id == -1? "text-slate-300 cursor-not-allowed": "text-text1 hover:text-primary1"}
             "
         >
             <!-- Plus Icon -->

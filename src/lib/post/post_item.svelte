@@ -17,6 +17,11 @@
     let post_read = $derived(post.read == 1);
 
     const handleSelectPost = async () => {
+        if($is_loading_post_content){
+            // Prevent user from clicking post while one is already loading
+            return;
+        }
+
         $selected_post = post;
         $is_loading_post_content = true;
         
@@ -32,8 +37,9 @@
 
 <li 
     transition:slide={{delay:200, duration:500}}
-    class="p-4 border-b hover:bg-gray-100 cursor-pointer
+    class="p-4 border-b hover:bg-gray-100
     { isPostSelected ? "bg-slate-100" : ""}
+    { $is_loading_post_content ? "cursor-default" : "cursor-pointer"}
     "
     onclick={handleSelectPost}
 >
