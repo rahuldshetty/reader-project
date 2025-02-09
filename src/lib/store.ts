@@ -15,7 +15,7 @@ export const posts_by_feed_store = writable({});
 export const posts_sort_by = writable(DB_ORDER_ENUM.NEWEST);
 export const unread_posts_only = writable(false);
 export const selected_post = writable({});
-
+export const is_playing_tts = writable(false);
 
 export const is_loading_feed = writable(false);
 export const is_loading_posts = writable(false);
