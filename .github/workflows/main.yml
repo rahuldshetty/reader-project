@@ -1,9 +1,7 @@
 name: 'Release Version'
 
 on:
-  push:
-    tags:
-    - 'v*'
+  workflow_dispatch:
 
 jobs:
   publish-tauri:
@@ -41,9 +39,9 @@ jobs:
         run: |
           cd sidecar-app
           bun install
-          .\node_modules\.bin\esbuild index.js --bundle --outfile=out.js --platform=node
-          pkg --output app out.js
-          node move-app-bundle.js
+          bun x esbuild index.js --bundle --outfile=out.js --platform=node
+          bun x pkg --output app out.js
+          bun move-app-bundle.js
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable # Set this to dtolnay/rust-toolchain@nightly
