@@ -9,7 +9,9 @@ if (!targetTriple) {
   console.error('Failed to determine platform target triple');
 }
 
-fs.mkdir('../src-tauri/binaries/')
+fs.mkdirSync('../src-tauri/binaries/', {
+  recursive: true
+})
 
 fs.renameSync(
   `app${ext}`,
