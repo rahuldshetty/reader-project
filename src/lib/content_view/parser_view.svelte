@@ -101,6 +101,9 @@
 
 <style>
     article :global {
+        * {
+            max-width: 65rem;
+        }
         p {
             padding-top: 0.5em;
         }

@@ -16,7 +16,7 @@
 
 <div
   class="bg-background1 border-r flex flex-col h-screen
-  {$minimize_feeds ? '' : 'w-2/6'}
+  {$minimize_feeds ? '' : 'w-1/6'}
 "
 >
   {#if !$minimize_feeds}
