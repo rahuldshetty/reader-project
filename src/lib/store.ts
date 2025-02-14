@@ -22,3 +22,5 @@ export const is_loading_posts = writable(false);
 export const is_loading_post_content = writable(false);
 
 export const user_settings = new LazyStore('settings.json', { autoSave: true });
+
+export const darkMode = writable(true);

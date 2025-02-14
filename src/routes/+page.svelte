@@ -14,6 +14,7 @@
     posts_by_feed_store,
     selected_feed_id,
     unread_posts_only,
+    darkMode,
   } from "$lib/store";
   import {
     fetch_feed,
@@ -49,7 +50,10 @@
       (await fetch_user_setting(SETTINGS.LAST_REFRESH_TIME)) * 60 * 60;
 
     for (let feed of feeds) {
-      const expiredTime = isTimeExpired(feed.last_refresh_time, time_in_seconds);
+      const expiredTime = isTimeExpired(
+        feed.last_refresh_time,
+        time_in_seconds,
+      );
       console.log("Time Expired:" + expiredTime);
       if (expiredTime) {
         const feedMatadata = await fetchRSSMetadata(feed.url);
@@ -66,14 +70,17 @@
       }
     }
 
-    console.log("Posts to Insert: "+ posts.length);
+    console.log("Posts to Insert: " + posts.length);
 
     if (posts.length > 0) await add_posts(posts);
   };
 
   // on load defaults
   onMount(async () => {
-    await delete_expired_posts(await fetch_user_setting(SETTINGS.POST_EXPIRY_TIME));
+    $darkMode = await fetch_user_setting(SETTINGS.DARK_MODE);
+    await delete_expired_posts(
+      await fetch_user_setting(SETTINGS.POST_EXPIRY_TIME),
+    );
 
     $is_loading_feed = true;
     $is_loading_posts = true;
@@ -81,7 +88,7 @@
     $feeds_store = await fetch_feed();
     $is_loading_feed = false;
 
-    for(const feed of $feeds_store){
+    for (const feed of $feeds_store) {
       $posts_by_feed_store[feed.id] = [];
     }
 
@@ -93,13 +100,13 @@
       -1,
       0,
       NO_OF_POST_PULLS_PER_TIME,
-      $unread_posts_only
+      $unread_posts_only,
     );
-    
-    posts.forEach((post)=>{
+
+    posts.forEach((post) => {
       $posts_by_feed_store[post.feed_id].push({
         ...post,
-        rowid: $posts_by_feed_store[post.feed_id].length
+        rowid: $posts_by_feed_store[post.feed_id].length,
       });
     });
     $selected_feed_id = -1;
@@ -112,24 +119,26 @@
   });
 </script>
 
-<Titlebar />
+<div class={$darkMode ? "dark" : "light"}>
+  <Titlebar />
 
-<div
-  class="flex h-screen overflow-hidden"
-  style="padding-top: var(--titlebar-height);"
->
-  <!-- First Column: RSS Feeds -->
-  <RssFeed />
+  <div
+    class="flex h-screen overflow-hidden"
+    style="padding-top: var(--titlebar-height);"
+  >
+    <!-- First Column: RSS Feeds -->
+    <RssFeed />
 
-  <!-- Second Column: News List -->
-  <PostFeed />
+    <!-- Second Column: News List -->
+    <PostFeed />
 
-  <!-- Third Column: Webpage Preview -->
-  <div class="w-full  bg-gray-50">
-    {#if $selected_post}
-      <ParserView link={$selected_post.link} title={$selected_post.title} />
-    {:else}
-      <p class="p-4 text-gray-600">Select a news item to preview</p>
-    {/if}
+    <!-- Third Column: Webpage Preview -->
+    <div class="w-full bg-background2">
+      {#if $selected_post}
+        <ParserView link={$selected_post.link} title={$selected_post.title} />
+      {:else}
+        <p class="p-4 text-gray-600">Select a news item to preview</p>
+      {/if}
+    </div>
   </div>
 </div>

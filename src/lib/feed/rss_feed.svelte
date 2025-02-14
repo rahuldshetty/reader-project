@@ -15,15 +15,17 @@
 <SettingsModal />
 
 <div
-  class="bg-background1 border-r flex flex-col h-screen
+  class="bg-background1 flex flex-col h-screen
   {$minimize_feeds ? '' : 'w-1/6'}
 "
 >
-  {#if !$minimize_feeds}
-    <h2 class="text-xl font-bold p-4">Reader Project</h2>
-  {:else}
-    <h2 class="text-xl font-bold p-4">R</h2>
-  {/if}
+  <div class="text-primary1">
+    {#if !$minimize_feeds}
+      <h2 class="text-xl font-bold p-4">Reader Project</h2>
+    {:else}
+      <h2 class="text-xl font-bold p-4">R</h2>
+    {/if}
+  </div>
 
   <FeedExpand />
 

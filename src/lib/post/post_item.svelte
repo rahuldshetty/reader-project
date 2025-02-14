@@ -30,15 +30,17 @@
 </script>
 
 
+<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
 <li 
     transition:slide={{delay:200, duration:500}}
-    class="p-4 border-b hover:bg-gray-100 cursor-pointer
-    { isPostSelected ? "bg-slate-100" : ""}
+    class="p-4 border-b hover:bg-gray-100 hover:text-text2 cursor-pointer
+    { isPostSelected ? "bg-slate-100" : "text-text1"}
     "
     onclick={handleSelectPost}
 >
     <h3 class="text-sm font-semibold">{postTitle}</h3>
-    <p class="text-xs text-gray-600">{postDate}</p>
+    <p class="text-xs text-text2">{postDate}</p>
     {#if !post_read}
         <div class="text-xs text-primary2 font-extrabold relative">
             <p class="absolute right-0 bottom-0 z-0">

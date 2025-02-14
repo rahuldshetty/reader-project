@@ -1,4 +1,6 @@
 <script lang="ts">
+    import "$lib/styles/scrollbar.css";
+    
     import { fetch } from "@tauri-apps/plugin-http";
     import { openUrl } from "@tauri-apps/plugin-opener";
     import { derived } from "svelte/store";
@@ -49,7 +51,7 @@
         <EmptyState message="Select a post to get reading" />
     {:else}
         <div>
-            <h1 class="text-2xl font-semibold">
+            <h1 class="text-2xl text-text1 font-semibold">
                 {parsed.title}
             </h1>
             <div class="flex flex-row items-center mb-2 mt-2 gap-2">
@@ -80,30 +82,32 @@
                 </div>
             </div>
         </div>
+        
+        <div class="max-w-5xl">
+            {#if parsed.image}
+                <img
+                    src={parsed.image}
+                    alt={parsed.title}
+                    class="rounded-md object-cover"
+                />
+            {/if}
 
-        {#if parsed.image}
-            <img
-                src={parsed.image}
-                alt={parsed.title}
-                class="rounded-md object-cover"
-            />
-        {/if}
-
-        <div
-            class="mt-4 mr-4 indent-0 text-text1 text-base font-normal leading-relaxed text-justify mb-20"
-        >
-            <article>
-                {@html cleanHTML(parsed.content)}
-            </article>
+            <div
+                class="mt-4 mr-4 indent-0 text-text1 text-base font-normal leading-relaxed text-justify mb-20"
+            >
+                <article>
+                    {@html cleanHTML(parsed.content)}
+                </article>
+            </div>
         </div>
     {/if}
 </div>
 
 <style>
     article :global {
-        * {
+        /* * {
             max-width: 65rem;
-        }
+        } */
         p {
             padding-top: 0.5em;
         }

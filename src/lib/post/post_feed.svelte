@@ -1,4 +1,5 @@
 <script>
+  import "$lib/styles/scrollbar.css";
   import { onMount } from "svelte";
   import { derived } from "svelte/store";
   import { fetch_posts, fetch_unread_post_counts } from "$lib/db";
@@ -108,11 +109,12 @@
   );
 </script>
 
-<div class="flex flex-col w-2/5">
+<div class="flex flex-col w-2/5 
+  bg-background2">
   <PostFilter/>
 
   <div
-    class="bg-background2 border-r {$filtered_posts?.length != 0
+    class="{$filtered_posts?.length != 0
       ? 'overflow-auto'
       : ''}"
   >

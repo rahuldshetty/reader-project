@@ -1,21 +1,22 @@
 <script>
   import { SETTINGS, MODAL_TYPE } from "$lib/constants";
 
-  import { user_settings, selected_modal } from "$lib/store";
+  import { user_settings, selected_modal, darkMode } from "$lib/store";
   import { fetch_user_setting } from "$lib/utils";
   import { onMount } from "svelte";
 
   let last_refresh_time = $state(4);
-  let darkMode = $state(false);
+  let dark = $state(false);
 
   onMount(async () => {
     last_refresh_time = await fetch_user_setting(SETTINGS.LAST_REFRESH_TIME);
-    darkMode = await fetch_user_setting(SETTINGS.DARK_MODE);
+    dark = await fetch_user_setting(SETTINGS.DARK_MODE);
   });
 
   const saveSettings = async () => {
+    $darkMode = dark;
     await user_settings.set(SETTINGS.LAST_REFRESH_TIME, last_refresh_time);
-    await user_settings.set(SETTINGS.DARK_MODE, darkMode);
+    await user_settings.set(SETTINGS.DARK_MODE, dark);
     $selected_modal = MODAL_TYPE.NONE
   };
 </script>
@@ -50,7 +51,7 @@
         type="checkbox"
         placeholder="Enter name"
         class=" border rounded-lg ml-2"
-        bind:checked={darkMode}
+        bind:checked={dark}
       />
     </div>
 

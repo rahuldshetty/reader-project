@@ -34,7 +34,7 @@
             flex flex-col gap-1
             items-center
             py-2 px-4 rounded-md
-            {$selected_feed_id == -1? "text-slate-300 cursor-not-allowed": "text-text1 hover:text-primary1"}
+            {$selected_feed_id == -1? "text-text2 cursor-not-allowed": "text-text1 hover:text-primary1"}
             "
         >
             <!-- Edit Icon -->

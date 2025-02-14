@@ -1,0 +1,15 @@
+/* Scrollbar track (background) */
+::-webkit-scrollbar {
+    width: 0.6rem; /* Width of the scrollbar */
+}
+
+/* Scrollbar handle (thumb) */
+::-webkit-scrollbar-thumb {
+    background: hsl(var(--twc-primary1) / var(--twc-primary1-opacity, var(--tw-bg-opacity))); /* Change to any color */
+    /* border-radius: 7px; */
+}
+
+/* Scrollbar track when not in use */
+::-webkit-scrollbar-track {
+    background: hsl(var(--twc-background1) / var(--twc-background1-opacity, var(--tw-bg-opacity)));; /* Light gray background */
+}
