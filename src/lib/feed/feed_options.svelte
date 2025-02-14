@@ -1,8 +1,9 @@
 <script>
+    import { MODAL_TYPE } from "$lib/constants";
     import {
         selected_feed_id,
-        is_adding_new_feed,
         minimize_feeds,
+        selected_modal,
     } from "$lib/store";
 </script>
 
@@ -10,12 +11,7 @@
     <div class="h-36 flex flex-row justify-center items-center">
         <!-- Add Button -->
         <button
-            onclick={() => {
-                $is_adding_new_feed = true;
-                document
-                    .getElementById("addFeedModal")
-                    ?.classList.remove("hidden");
-            }}
+            onclick={() => $selected_modal = MODAL_TYPE.ADD}
             class="
           m-2 w-1/3
           flex flex-col gap-1
@@ -32,12 +28,7 @@
         <!-- Edit Button -->
         <button
             disabled={$selected_feed_id == -1}
-            onclick={() => {
-                $is_adding_new_feed = false;
-                document
-                    .getElementById("addFeedModal")
-                    ?.classList.remove("hidden");
-            }}
+            onclick={() => $selected_modal = MODAL_TYPE.UPDATE}
             class="
             m-2 w-1/3 
             flex flex-col gap-1
@@ -55,10 +46,7 @@
         </button>
 
         <button
-            onclick={() =>
-                document
-                    .getElementById("settingModal")
-                    ?.classList.remove("hidden")}
+        onclick={() => $selected_modal = MODAL_TYPE.SETTINGS}
             class="
           m-2 w-1/3
           flex flex-col gap-1

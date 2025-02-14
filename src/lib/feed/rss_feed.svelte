@@ -1,17 +1,17 @@
 <script>
-  import FeedModal from "$lib/feed/feed_modal.svelte";
   import FeedItem from "$lib/feed/feed_item.svelte";
 
-  import {
-    feeds_store,
-    minimize_feeds,
-  } from "$lib/store";
-  import SettingsModal from "$lib/components/settingsModal.svelte";
-    import FeedOptions from "./feed_options.svelte";
-    import FeedExpand from "./feed_expand.svelte";
+  import AddFeedModal from "$lib/components/modals/add_modal.svelte";
+  import UpdateFeedModal from "$lib/components/modals/update_modal.svelte";
+  import SettingsModal from "$lib/components/modals/settingsModal.svelte";
+
+  import { feeds_store, minimize_feeds } from "$lib/store"; 
+  import FeedOptions from "./feed_options.svelte";
+  import FeedExpand from "./feed_expand.svelte";
 </script>
 
-<FeedModal />
+<AddFeedModal />
+<UpdateFeedModal />
 <SettingsModal />
 
 <div
@@ -25,7 +25,7 @@
     <h2 class="text-xl font-bold p-4">R</h2>
   {/if}
 
-  <FeedExpand/>
+  <FeedExpand />
 
   <ul class="flex-grow overflow-auto">
     <FeedItem id={-1} title="All Posts" url={null} favicon={null} />
@@ -39,5 +39,5 @@
     {/each}
   </ul>
 
-  <FeedOptions/>
+  <FeedOptions />
 </div>

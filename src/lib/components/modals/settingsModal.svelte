@@ -1,7 +1,7 @@
 <script>
-  import { SETTINGS } from "$lib/constants";
+  import { SETTINGS, MODAL_TYPE } from "$lib/constants";
 
-  import { user_settings } from "$lib/store";
+  import { user_settings, selected_modal } from "$lib/store";
   import { fetch_user_setting } from "$lib/utils";
   import { onMount } from "svelte";
 
@@ -14,15 +14,17 @@
   });
 
   const saveSettings = async () => {
-    document.getElementById("settingModal")?.classList.add("hidden");
     await user_settings.set(SETTINGS.LAST_REFRESH_TIME, last_refresh_time);
     await user_settings.set(SETTINGS.DARK_MODE, darkMode);
+    $selected_modal = MODAL_TYPE.NONE
   };
 </script>
 
 <div
   id="settingModal"
-  class="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center hidden z-10"
+  class="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center z-10
+  {$selected_modal != MODAL_TYPE.SETTINGS ? "hidden":""}
+  "
 >
   <div class="bg-white p-6 rounded-lg shadow-lg w-96">
     <h2 class="text-lg font-bold mb-4">Settings</h2>
@@ -61,8 +63,10 @@
       </button>
       <button
         class="px-4 py-2 text-gray-600 bg-gray-200 rounded-lg hover:bg-gray-300"
-        onclick={() =>
-          document.getElementById("settingModal")?.classList.add("hidden")}
+        onclick={() =>{
+          console.log("CLOSING MODAL")
+          $selected_modal = MODAL_TYPE.NONE;
+        }}
       >
         Cancel
       </button>

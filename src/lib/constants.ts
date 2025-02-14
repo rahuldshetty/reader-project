@@ -6,6 +6,8 @@ export const DB_PATH = "sqlite:reader.db"
 
 export enum DB_ORDER_ENUM { NEWEST = "DESC", OLDEST = "ASC" }
 
+export enum MODAL_TYPE { NONE, ADD, UPDATE, SETTINGS }
+
 export enum SETTINGS {
     LAST_REFRESH_TIME = "LAST_REFRESH_TIME",
     DARK_MODE = "DARK_MODE",
