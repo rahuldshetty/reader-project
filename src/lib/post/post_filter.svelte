@@ -1,15 +1,19 @@
 <script>
     import { DB_ORDER_ENUM, NO_OF_POST_PULLS_PER_TIME } from "$lib/constants";
     import {
+        feeds_store,
         posts_by_feed_store,
         selected_feed_id,
         posts_sort_by,
         feed_unread_post_count,
         unread_posts_only,
+        is_loading_posts,
     } from "$lib/store";
     import { fetch_posts, fetch_unread_post_counts } from "$lib/db";
 
     const sortPosts = async () => {
+        $is_loading_posts = true;
+        
         $posts_sort_by =
             $posts_sort_by === DB_ORDER_ENUM.NEWEST
                 ? DB_ORDER_ENUM.OLDEST
@@ -22,8 +26,31 @@
             NO_OF_POST_PULLS_PER_TIME,
             $unread_posts_only
         );
-        $posts_by_feed_store[$selected_feed_id] = posts;
+
+        if($selected_feed_id != -1){
+            // Sorting a selected feed
+            $posts_by_feed_store[$selected_feed_id] = posts;
+        } else {
+            // Sorting "all feeds"
+            
+            let posts_to_be_updated = {}
+            
+            for(const feed of $feeds_store){
+                posts_to_be_updated[feed.id] = [];
+            }
+
+            posts.forEach((post)=>{
+                posts_to_be_updated[post.feed_id].push({
+                    ...post,
+                    rowid: posts_to_be_updated[post.feed_id].length
+                });
+            });
+
+            $posts_by_feed_store = posts_to_be_updated;
+        }
+        
         $feed_unread_post_count = await fetch_unread_post_counts();
+        $is_loading_posts = false;
     };
 
     const filterUnreads = async () => {

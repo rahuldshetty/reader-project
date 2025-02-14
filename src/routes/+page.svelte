@@ -42,7 +42,7 @@
       last_refresh_time: string;
     }[],
   ) => {
-    // Updates post entires in DB
+    // Adds new post entries to DB
     const posts = [];
 
     const time_in_seconds =
