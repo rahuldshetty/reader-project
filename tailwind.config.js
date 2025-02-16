@@ -18,7 +18,8 @@ export default {
         'background2': '#FFFFFF', // cards and content areas
         'text1': '#212121', // primary text
         'text2': '#757575', // secondary text or placeholders
-        'text3': '#ffffff'
+        'text3': '#ffffff',
+        'pre': '#cfd8dc',
       },
       dark: {
         'primary1': '#951dff', // title bars, buttons, and primary actions
@@ -29,7 +30,8 @@ export default {
         'background2': '#161e28', // cards and content areas
         'text1': '#ced0d4', // primary text
         'text2': '#757575', // secondary text or placeholders
-        'text3': '#00060c'
+        'text3': '#00060c',
+        'pre': '#546e7a',
       }
     })
   ],

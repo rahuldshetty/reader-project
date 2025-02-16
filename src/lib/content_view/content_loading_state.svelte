@@ -1,4 +1,4 @@
-<div class="animate-pulse flex-1">
+<div class="animate-pulse flex-1 mr-5">
     <div class="flex-1 space-y-6 py-1">
         <div class="flex items-center justify-center h-96 bg-gray-300 rounded-sm dark:bg-gray-700">
             <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">

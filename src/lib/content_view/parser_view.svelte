@@ -44,7 +44,7 @@
     };
 </script>
 
-<div class="m-5 overflow-auto h-screen">
+<div class="ml-5 mt-5 mb-5 overflow-auto h-screen">
     {#if $is_loading_post_content}
         <ContentLoadingState />
     {:else if !$selected_post.link}
@@ -59,6 +59,8 @@
                     {`${timeToRead(parsed.word_count)} min read`}
                 </div>
                 ·
+                <!-- svelte-ignore a11y_click_events_have_key_events -->
+                <!-- svelte-ignore a11y_no_static_element_interactions -->
                 <div
                     class="flex grow-0"
                     onclick={() => openURLInBrowser(parsed.url)}
@@ -83,8 +85,9 @@
             </div>
         </div>
         
-        <div class="max-w-5xl">
-            {#if parsed.image}
+        <!-- To set margin: max-w-6xl -->
+        <div class=""> 
+            {#if parsed.content && parsed.image && !(parsed.content.includes(parsed.image)) }
                 <img
                     src={parsed.image}
                     alt={parsed.title}
@@ -105,15 +108,59 @@
 
 <style>
     article :global {
-        /* * {
-            max-width: 65rem;
-        } */
-        p {
-            padding-top: 0.5em;
+        * {
+            @apply max-w-screen-2xl;
         }
+        p {
+            @apply text-text1 mt-3 mb-3 text-base antialiased font-normal tracking-wide;
+        }
+    
         a {
             pointer-events: none;
             cursor: default;
         }
+
+        h1 { @apply text-5xl font-medium text-text1 mt-4; }
+        h2 { @apply text-4xl font-medium text-text1 mt-4; }
+        h3 { @apply text-3xl font-medium text-text1 mt-4; }
+        h4 { @apply text-2xl font-medium text-text1 mt-4; }
+        h5 { @apply text-xl font-medium text-text1 mt-4; }
+        h6 { @apply text-base font-medium text-text1 mt-4; }
+
+        ul { @apply list-inside list-disc; }
+
+        code {
+            @apply text-sm font-mono;
+        }
+
+        pre{
+            @apply text-text1 bg-pre rounded-md p-4;
+        }
+        
+        /* Table Styling */
+        table{
+            @apply table w-1/2 text-sm text-left text-text1;
+        }
+
+        thead{
+            @apply table-header-group font-medium uppercase ;
+        }
+
+        th{
+            @apply px-6 py-3;
+        }
+
+        tr{
+            @apply table-row border-b;
+        }
+        
+        tbody{
+            @apply table-row-group;
+        }
+
+        td{
+            @apply table-cell px-2 py-1;
+        }
+
     }
 </style>
