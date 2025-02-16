@@ -14,7 +14,7 @@
     posts_by_feed_store,
     selected_feed_id,
     unread_posts_only,
-    darkMode,
+    themeMode,
   } from "$lib/store";
   import {
     fetch_feed,
@@ -77,7 +77,7 @@
 
   // on load defaults
   onMount(async () => {
-    $darkMode = await fetch_user_setting(SETTINGS.DARK_MODE);
+    $themeMode = await fetch_user_setting(SETTINGS.THEME_MODE);
     await delete_expired_posts(
       await fetch_user_setting(SETTINGS.POST_EXPIRY_TIME),
     );
@@ -119,7 +119,7 @@
   });
 </script>
 
-<div class={$darkMode ? "dark" : "light"}>
+<div class={$themeMode}>
   <Titlebar />
 
   <div

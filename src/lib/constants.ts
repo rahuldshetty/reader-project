@@ -10,10 +10,16 @@ export enum MODAL_TYPE { NONE, ADD, UPDATE, SETTINGS }
 
 export enum SETTINGS {
     LAST_REFRESH_TIME = "LAST_REFRESH_TIME",
-    DARK_MODE = "DARK_MODE",
+    THEME_MODE = "THEME_MODE",
 
     // Posts to clear from DB if they have passed this time
     POST_EXPIRY_TIME = "POST_EXPIRY_TIME", 
+}
+
+export enum THEMES{
+    // Values must match the color configs in tailwind.config.js
+    LIGHT = "light",
+    DARK = "dark"
 }
 
 export const NO_OF_POST_PULLS_PER_TIME = 20;

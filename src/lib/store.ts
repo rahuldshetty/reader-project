@@ -1,4 +1,4 @@
-import { DB_ORDER_ENUM, MODAL_TYPE } from '$lib/constants';
+import { DB_ORDER_ENUM, MODAL_TYPE, THEMES } from '$lib/constants';
 
 import { LazyStore } from '@tauri-apps/plugin-store';
 import { writable } from 'svelte/store';
@@ -23,4 +23,4 @@ export const is_loading_post_content = writable(false);
 
 export const user_settings = new LazyStore('settings.json', { autoSave: true });
 
-export const darkMode = writable(true);
+export const themeMode = writable(THEMES.LIGHT);

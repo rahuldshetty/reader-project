@@ -1,22 +1,22 @@
 <script>
-  import { SETTINGS, MODAL_TYPE } from "$lib/constants";
+  import { SETTINGS, MODAL_TYPE, THEMES } from "$lib/constants";
 
-  import { user_settings, selected_modal, darkMode } from "$lib/store";
-  import { fetch_user_setting } from "$lib/utils";
+  import { user_settings, selected_modal, themeMode } from "$lib/store";
+  import { capitalizeFirstLetter, fetch_user_setting } from "$lib/utils";
   import { onMount } from "svelte";
 
   let last_refresh_time = $state(4);
-  let dark = $state(false);
+  let theme = $state(THEMES.LIGHT);
 
   onMount(async () => {
     last_refresh_time = await fetch_user_setting(SETTINGS.LAST_REFRESH_TIME);
-    dark = await fetch_user_setting(SETTINGS.DARK_MODE);
+    theme = await fetch_user_setting(SETTINGS.THEME_MODE);
   });
 
   const saveSettings = async () => {
-    $darkMode = dark;
+    $themeMode = theme;
     await user_settings.set(SETTINGS.LAST_REFRESH_TIME, last_refresh_time);
-    await user_settings.set(SETTINGS.DARK_MODE, dark);
+    await user_settings.set(SETTINGS.THEME_MODE, theme);
     $selected_modal = MODAL_TYPE.NONE
   };
 </script>
@@ -42,20 +42,18 @@
       />
     </div>
 
-    <div class="flex items-center">
-      <label class="block text-sm flex gap-1">
-        <p>Enable</p>
-        <p class="font-medium">Dark Mode</p>
+    <div class="flex flex-col">
+      <label class="block text-sm flex gap-1 font-medium">
+        <p>Theme Mode</p>
       </label>
-      <input
-        type="checkbox"
-        placeholder="Enter name"
-        class=" border rounded-lg ml-2"
-        bind:checked={dark}
-      />
+      <select bind:value={theme} class="border-0 border-b-2  bg-transparent appearance-none border-neutral-500 focus:outline-none text-neutral-900 text-sm block w-full p-2.5 peer">
+      {#each Object.values(THEMES) as themeValue}
+        <option value={themeValue} class="">{capitalizeFirstLetter(themeValue)}</option>
+      {/each}
+      </select>
     </div>
 
-    <div class="flex justify-end gap-2">
+    <div class="flex justify-end gap-2 mt-10">
       <button
         class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
         onclick={saveSettings}

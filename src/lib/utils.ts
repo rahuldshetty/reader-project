@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { fetch } from '@tauri-apps/plugin-http';
 
 import { user_settings } from '$lib/store';
-import { SETTINGS, POST_EXPIRY_TIME, LAST_REFRESH_TIME } from '$lib/constants';
+import { SETTINGS, POST_EXPIRY_TIME, LAST_REFRESH_TIME, THEMES } from '$lib/constants';
 
 export const fetchRSSMetadata = async (url: string) => {
     if (!validateURL(url)) {
@@ -199,8 +199,8 @@ export const fetch_user_setting = async (key: string) => {
     switch (key) {
         case SETTINGS.LAST_REFRESH_TIME:
             return LAST_REFRESH_TIME;
-        case SETTINGS.DARK_MODE:
-            return false;
+        case SETTINGS.THEME_MODE:
+            return THEMES.LIGHT;
         case SETTINGS.POST_EXPIRY_TIME:
             return POST_EXPIRY_TIME;
     }
@@ -222,4 +222,8 @@ export const generateShortUuid = (length = 8) => {
         }
     }
     return uuid;
+}
+
+export function capitalizeFirstLetter(val:string) {
+    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 }
