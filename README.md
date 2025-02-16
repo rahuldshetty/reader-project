@@ -1,6 +1,11 @@
 # reader-project
 
+![GitHub Release](https://img.shields.io/github/v/release/rahuldshetty/reader-project?include_prereleases) ![GitHub License](https://img.shields.io/github/license/rahuldshetty/reader-project) ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/rahuldshetty/reader-project) 
+
+
+
 **reader-project** is a privacy-focused RSS aggregator built with Tauri, SvelteKit and Tailwind.
+
 
 > This project is currently **under active development**. Features may change, and some parts may be incomplete. Feedback and contributions are welcome!
 
