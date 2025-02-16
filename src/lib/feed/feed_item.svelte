@@ -76,10 +76,23 @@
     {#if !$minimize_feeds}
         <span class="text-sm truncate">{title}</span>
     {/if}
+    
+    {#if count && count != 0}
+        <!-- Count of unread posts -->
 
-    {#if !$minimize_feeds && count != 0}
-        <div class="flex grow justify-end">
-            {count}
-        </div>
+        <!-- When expanded -->
+        {#if !$minimize_feeds}
+            <div class="flex grow justify-end">
+                {count}
+            </div>
+        <!-- When minimized -->
+        {:else if $minimize_feeds}
+            <div class="relative inline-block">
+                <span class="absolute -top-4 -right-1 bg-red-400 w-2 h-2 inline-flex rounded-full animate-ping opacity-75"></span>
+                <span class="absolute -top-4 -right-1 bg-red-400 rounded-full h-2 w-2 text-xs text-slate-50 "></span>
+            </div>
+        {/if}
+    
     {/if}
+
 </li>
