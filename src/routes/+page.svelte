@@ -33,6 +33,7 @@
   import WebIframe from "$lib/content_view/web_iframe.svelte";
   import ParserView from "$lib/content_view/parser_view.svelte";
   import "$lib/logging";
+    import { invoke } from "@tauri-apps/api/core";
 
   const syncPostsInDB = async (
     feeds: {
@@ -116,6 +117,9 @@
 
     console.log("POSTS BY FEED:");
     console.debug(JSON.stringify($posts_by_feed_store));
+
+    // Set the frontend task as being completed
+    invoke('set_complete', {task: 'frontend'})
   });
 </script>
 

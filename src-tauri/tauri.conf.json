@@ -17,6 +17,17 @@
         "height": 768,
         "maximized": true,
         "resizable": true,
+        "decorations": false,
+        "label": "main",
+        "visible": false
+      },
+      {
+        "label": "splashscreen",
+        "url": "/splashscreen",
+        "width": 1024,
+        "height": 768,
+        "maximized": true,
+        "resizable": true,
         "decorations": false
       }
     ],
