@@ -1,11 +1,13 @@
 <script>
+  import { getVersion } from "@tauri-apps/api/app";
+
   import FeedItem from "$lib/feed/feed_item.svelte";
 
   import AddFeedModal from "$lib/components/modals/add_modal.svelte";
   import UpdateFeedModal from "$lib/components/modals/update_modal.svelte";
   import SettingsModal from "$lib/components/modals/settingsModal.svelte";
 
-  import { feeds_store, minimize_feeds } from "$lib/store"; 
+  import { feeds_store, minimize_feeds } from "$lib/store";
   import FeedOptions from "./feed_options.svelte";
   import FeedExpand from "./feed_expand.svelte";
 </script>
@@ -19,15 +21,20 @@
   {$minimize_feeds ? '' : 'w-1/6'}
 "
 >
-  <div class="text-primary1">
-    {#if !$minimize_feeds}
-      <h2 class="text-xl font-bold p-4">Reader Project</h2>
-    {:else}
-      <h2 class="text-xl font-bold p-4">R</h2>
-    {/if}
-  </div>
-
   <FeedExpand />
+
+  {#if !$minimize_feeds}
+    <div class="text-primary1 ml-4 mb-1 flex flex-col">
+      <h2 class="text-xl font-bold">Reader Project</h2>
+      {#await getVersion() then version}
+        <span class="text-sm self-start block text-left">v{version}</span>
+      {/await}
+    </div>
+  {:else}
+    <div class="text-primary1 ml-4 mb-1">
+      <h2 class="text-xl font-bold">R</h2>
+    </div>
+  {/if}
 
   <ul class="flex-grow overflow-auto">
     <FeedItem id={-1} title="All Posts" url={null} favicon={null} />

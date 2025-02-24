@@ -30,5 +30,11 @@ pub fn fetch_migrations() -> Vec<tauri_plugin_sql::Migration> {
                 );",
             kind: MigrationKind::Up,
         },
+        Migration {
+            version: 3,
+            description: "add_fav_post_col",
+            sql: "ALTER TABLE articles ADD COLUMN is_fav BOOLEAN NOT NULL DEFAULT 0;",
+            kind: MigrationKind::Up,
+        },
     ];
 }

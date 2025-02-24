@@ -6,7 +6,7 @@
     <!-- Expand Button -->
     <!-- svelte-ignore a11y_consider_explicit_label -->
     <button
-        class="absolute -top-11 -right-1 flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 text-text1"
+        class="absolute -right-0 flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 text-text1"
         onclick={() => ($minimize_feeds = !$minimize_feeds)}
     >
         <svg
