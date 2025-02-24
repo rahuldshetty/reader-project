@@ -1,5 +1,5 @@
 import Database from '@tauri-apps/plugin-sql';
-import { DB_PATH, DB_ORDER_ENUM } from '$lib/constants';
+import { DB_PATH, DB_ORDER_ENUM, NO_OF_POST_PULLS_PER_TIME } from '$lib/constants';
 import { convertToTimeStringForDB, escape_title } from "$lib/utils";
 
 
@@ -80,10 +80,10 @@ export const fetch_posts = async (
     last_id: number | null = null,
     feed_id: number = -1,
     existing_store_size: number = 0, // Refers to size of existing items in the list
-    limit: number = 20,
+    limit: number = NO_OF_POST_PULLS_PER_TIME,
     unread: boolean = false,
     lastPubDate: string = "",
-    is_fav: number | null = null, // Set this to filter specific posts
+    is_fav: boolean | null = null, // Set this to filter specific posts
 ) => {
     let whereCondition = "WHERE 1=1 ";
     if (last_id != null) {
@@ -102,8 +102,11 @@ export const fetch_posts = async (
         }
     }
 
-    if (feed_id != -1) {
+    // Negative Feed ids reserved for All Posts, Favs
+    if (feed_id >= 0) {
         whereCondition += `AND feed_id=${feed_id} `
+    } else if(feed_id == -2){
+        is_fav = true;
     }
 
     if(unread){
@@ -111,7 +114,10 @@ export const fetch_posts = async (
     }
 
     if(is_fav != null){
-        whereCondition += `AND is_fav=${is_fav} `
+        if(is_fav)
+            whereCondition += `AND is_fav=1 `
+        else
+            whereCondition += `AND is_fav=0 `
     }
 
     const query = `
@@ -151,9 +157,15 @@ export const fetch_unread_post_counts = async () => {
     );
 
     let id2count = {};
+    let total = 0;
+    
     for (var post of results) {
         id2count[post.id] = post.count;
+        total += post.count;
     }
+
+    // All Posts
+    id2count[-1] = total;
 
     return id2count;
 }
@@ -170,9 +182,9 @@ export const delete_expired_posts = async (days: number) => {
 
 export const update_fav_post = async (post_id: number, is_fav: number) => {
     console.log(`POST ID: ${post_id} Val: ${is_fav}`)
-    await db.execute(
+    const res = await db.execute(
         `UPDATE articles SET is_fav = $1 WHERE id = $2`,
         [is_fav, post_id],
     );
-    console.log("DB: UPDATE IS_FAV")
+    console.log(`DB: UPDATE IS_FAV ${res.rowsAffected}`)
 }

@@ -38,6 +38,7 @@
 
   <ul class="flex-grow overflow-auto">
     <FeedItem id={-1} title="All Posts" url={null} favicon={null} />
+    <FeedItem id={-2} title="My Favorites" url={null} favicon={null} />
     {#each $feeds_store as feed}
       <FeedItem
         id={feed.id}

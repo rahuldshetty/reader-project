@@ -5,7 +5,7 @@
     import { openUrl } from "@tauri-apps/plugin-opener";
     import { derived } from "svelte/store";
 
-    import { selected_post, is_loading_post_content } from "$lib/store";
+    import { selected_post, is_loading_post_content, posts_by_feed_store } from "$lib/store";
 
     import ContentLoadingState from "$lib/content_view/content_loading_state.svelte";
     import EmptyState from "$lib/components/empty_state.svelte";
@@ -13,7 +13,7 @@
 
     import Fa from 'svelte-fa'
     import { faStar, faUpRightFromSquare } from '@fortawesome/free-solid-svg-icons'
-    import { update_fav_post } from "$lib/db";
+    import { fetch_posts, update_fav_post } from "$lib/db";
 
     let parsed = $state({});
     let is_fav_post = $state(false);
@@ -41,7 +41,7 @@
             parsed = await mercury_parser(curValue.link, "");
             // parsed = await morzilla_readability_parser(curValue.link, webpage_content);
             $is_loading_post_content = false;
-            is_fav_post = curValue.is_fav;
+            is_fav_post = (curValue.is_fav == 1);
         }
     });
 
@@ -50,8 +50,9 @@
     };
 
     const change_fav_post = async () => {
-        await update_fav_post($selected_post.id, !is_fav_post);
-        is_fav_post = !is_fav_post;
+        await update_fav_post($selected_post.id, is_fav_post ? 0 : 1);
+        // Instead of Selected_Post use better reference to update the parent object.
+        $selected_post.is_fav =  1 - $selected_post.is_fav;
     }
 </script>
 
