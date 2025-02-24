@@ -35,7 +35,7 @@ export const delete_feed = async (feed_id: number) => {
         `DELETE FROM feeds WHERE id = $1`,
         [feed_id],
     );
-    console.log("DB: UPDATE FEED:")
+    console.log("DB: UPDATE FEED")
 }
 
 export const add_posts = async (posts: { title: string, link: string, pubDate: string, feed_id: Number }[]) => {
@@ -83,6 +83,7 @@ export const fetch_posts = async (
     limit: number = 20,
     unread: boolean = false,
     lastPubDate: string = "",
+    is_fav: number | null = null, // Set this to filter specific posts
 ) => {
     let whereCondition = "WHERE 1=1 ";
     if (last_id != null) {
@@ -105,11 +106,16 @@ export const fetch_posts = async (
         whereCondition += `AND feed_id=${feed_id} `
     }
 
-    if(unread)
+    if(unread){
         whereCondition += `AND read=0 `
+    }
+
+    if(is_fav != null){
+        whereCondition += `AND is_fav=${is_fav} `
+    }
 
     const query = `
-        SELECT id, feed_id, title, link, pub_date as pubDate, read from articles
+        SELECT id, feed_id, title, link, pub_date as pubDate, read, is_fav from articles
         ${whereCondition}
         ORDER BY datetime(pub_date) ${sort_by}
         LIMIT ${limit}
@@ -155,8 +161,18 @@ export const fetch_unread_post_counts = async () => {
 export const delete_expired_posts = async (days: number) => {
     // Deletes posts in DB that are older than 
     // the specified no. of "days" parameter
+    // and are not fav posts.
     const result = await db.execute(
-        `DELETE FROM articles WHERE datetime(pub_date) <= date('now','-${days} day')`
+        `DELETE FROM articles WHERE datetime(pub_date) <= date('now','-${days} day') AND is_fav = 0`
     );
     console.log(`DB: DELETED ${result.rowsAffected} EXPIRED POSTS`)
+}
+
+export const update_fav_post = async (post_id: number, is_fav: number) => {
+    console.log(`POST ID: ${post_id} Val: ${is_fav}`)
+    await db.execute(
+        `UPDATE articles SET is_fav = $1 WHERE id = $2`,
+        [is_fav, post_id],
+    );
+    console.log("DB: UPDATE IS_FAV")
 }
