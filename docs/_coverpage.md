@@ -1,6 +1,6 @@
 ![logo](media/icon.png)
 
-# reader-project <small>0.1.1</small>
+# reader-project <small>0.1.2</small>
 
 > XML based feed reader for your desktop.
 
