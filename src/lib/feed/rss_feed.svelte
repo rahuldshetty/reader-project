@@ -1,4 +1,5 @@
 <script>
+  import { fade } from 'svelte/transition';
   import { getVersion } from "@tauri-apps/api/app";
 
   import FeedItem from "$lib/feed/feed_item.svelte";
@@ -18,8 +19,9 @@
 
 <div
   class="bg-background1 flex flex-col h-screen
-  {$minimize_feeds ? '' : 'w-1/6'}
+  transition-[width] duration-300 ease-in-out
 "
+  style="width: {$minimize_feeds ? '4rem' : '16.666%'}"
 >
   <FeedExpand />
 
@@ -27,7 +29,7 @@
     <div class="text-primary1 ml-4 mb-1 flex flex-col">
       <h2 class="text-xl font-bold">Reader Project</h2>
       {#await getVersion() then version}
-        <span class="text-sm self-start block text-left">v{version}</span>
+        <span class="text-sm self-start text-gray-500 block text-left" in:fade out:fade>v{version}</span>
       {/await}
     </div>
   {:else}

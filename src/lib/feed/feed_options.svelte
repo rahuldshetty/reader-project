@@ -1,4 +1,5 @@
 <script>
+    import { scale } from 'svelte/transition';
     import { MODAL_TYPE } from "$lib/constants";
     import {
         selected_feed_id,
@@ -8,7 +9,7 @@
 </script>
 
 {#if !$minimize_feeds}
-    <div class="h-36 flex flex-row justify-center items-center">
+    <div class="h-36 flex flex-row justify-center items-center" in:scale out:scale>
         <!-- Add Button -->
         <button
             onclick={() => $selected_modal = MODAL_TYPE.ADD}

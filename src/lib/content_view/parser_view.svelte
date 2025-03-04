@@ -3,9 +3,8 @@
     
     import { fetch } from "@tauri-apps/plugin-http";
     import { openUrl } from "@tauri-apps/plugin-opener";
-    import { derived } from "svelte/store";
 
-    import { selected_post, is_loading_post_content, posts_by_feed_store } from "$lib/store";
+    import { selected_post, is_loading_post_content } from "$lib/store";
 
     import ContentLoadingState from "$lib/content_view/content_loading_state.svelte";
     import EmptyState from "$lib/components/empty_state.svelte";
@@ -13,7 +12,8 @@
 
     import Fa from 'svelte-fa'
     import { faStar, faUpRightFromSquare } from '@fortawesome/free-solid-svg-icons'
-    import { fetch_posts, update_fav_post } from "$lib/db";
+    import { update_fav_post } from "$lib/db";
+    import { cleanHTML } from "$lib/content_view/html_cleaner";
 
     let parsed = $state({});
     let is_fav_post = $state(false);
@@ -29,12 +29,6 @@
         const time = Math.ceil(word_count / wpm);
         return time;
     };
-
-    const cleanHTML = (html:string)=>{
-        const cleanedHtml = html.replace(/\s*class="[^"]*"/g, '');
-
-        return cleanedHtml;
-    }
 
     selected_post.subscribe(async (curValue) => {
         if (curValue && curValue.link) {
@@ -68,18 +62,8 @@
             </h1>
             <div class="flex flex-row items-center mb-2 mt-2 gap-2">
                 <div class="text-base text-slate-500">
-                    {`${timeToRead(parsed.word_count)} min read`}
+                    🕒 {`${timeToRead(parsed.word_count)} min read`}
                 </div>
-                ·
-                <!-- svelte-ignore a11y_click_events_have_key_events -->
-                <!-- svelte-ignore a11y_no_static_element_interactions -->
-                <div
-                    class="flex grow-0 cursor-pointer text-text1 hover:text-primary2 "
-                    onclick={() => openURLInBrowser(parsed.url)}
-                >
-                    <Fa icon={faUpRightFromSquare} size="lg" />
-                </div>
-
                 ·
                 <!-- svelte-ignore a11y_click_events_have_key_events -->
                 <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -91,12 +75,22 @@
                 >
                     <Fa icon={faStar} size="lg" />
                 </div>
+                ·
+                <!-- svelte-ignore a11y_click_events_have_key_events -->
+                <!-- svelte-ignore a11y_no_static_element_interactions -->
+                <div
+                    class="flex grow-0 cursor-pointer text-text1 hover:text-primary2 "
+                    onclick={() => openURLInBrowser(parsed.url)}
+                >
+                    <Fa icon={faUpRightFromSquare} size="lg" />
+                </div>
+
             </div>
         </div>
         
         <!-- To set margin: max-w-6xl -->
-        <div class=""> 
-            {#if parsed.content && parsed.image && !(parsed.content.includes(parsed.image)) }
+        <div class="max-w-6xl"> 
+            {#if parsed.content && parsed.image && !(parsed.content.includes('img')) }
                 <img
                     src={parsed.image}
                     alt={parsed.title}
@@ -107,8 +101,8 @@
             <div
                 class="mt-4 mr-4 indent-0 text-text1 text-base font-normal leading-relaxed text-justify mb-20"
             >
-                <article>
-                    {@html cleanHTML(parsed.content)}
+                <article class="content">
+                    {@html cleanHTML(parsed.content, parsed.url)}
                 </article>
             </div>
         </div>
@@ -121,7 +115,12 @@
             @apply max-w-screen-2xl;
         }
         p {
-            @apply text-text1 mt-3 mb-3 text-base antialiased font-normal tracking-wide;
+            @apply text-text1 mt-3 mb-3 text-base antialiased font-normal;
+        }
+
+        li p {
+            margin: 0; /* Remove unwanted margins */
+            display: inline; /* Force inline content */
         }
     
         a {
@@ -142,8 +141,12 @@
             @apply text-sm font-mono;
         }
 
+        img {
+            @apply max-w-5xl;
+        }
+
         pre{
-            @apply text-text1 bg-pre rounded-md p-4;
+            @apply text-text1 bg-pre rounded-md p-4 max-w-6xl whitespace-pre-wrap mt-1 mb-1; 
         }
         
         /* Table Styling */
