@@ -20,6 +20,7 @@
   import { NO_OF_POST_PULLS_PER_TIME } from "$lib/constants";
 
   let sentinel;
+  let scrollContainer;
 
   onMount(() => {
     const observer = new IntersectionObserver(
@@ -107,6 +108,12 @@
       }
     },
   );
+
+  selected_feed_id.subscribe((val)=>{
+    if (val && scrollContainer) {
+      scrollContainer.scrollTo({ top: 0, behavior: "smooth" })
+    }
+  });
 </script>
 
 <div class="flex flex-col w-2/5 
@@ -114,8 +121,9 @@
   <PostFilter/>
 
   <div
+    bind:this={scrollContainer}
     class="{$filtered_posts?.length != 0
-      ? 'overflow-auto'
+      ? 'overflow-auto scroll-smooth'
       : ''}"
   >
     {#if $is_loading_posts}
