@@ -25,6 +25,7 @@
 
   async function deleteFeed() {
     await delete_feed($selected_feed_id);
+    $selected_feed_id = -1;
     $feeds_store = await fetch_feed();
     feedURL = "";
     feedName = "";
