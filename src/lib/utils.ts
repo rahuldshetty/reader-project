@@ -12,8 +12,7 @@ export const fetchRSSMetadata = async (url: string) => {
     try {
         response = await fetch(url);
     } catch (except) {
-        console.log("Failed Response:");
-        console.log(JSON.stringify(response));
+        console.log("Failed Response");
     }
 
     if (response == null || response.status != 200) {
@@ -25,7 +24,7 @@ export const fetchRSSMetadata = async (url: string) => {
         name: fetchName(rssText),
         text: rssText,
         favicon: await fetchFavIcon(url, rssText),
-        posts: fetchPosts(rssText)
+        posts: await fetchPosts(rssText)
     }
 }
 
@@ -83,9 +82,7 @@ const fetchFavIcon = async (rssUrl: string, rssText: string) => {
     return '';
 }
 
-const fetchPosts = (rssText: string) => {
-    const posts: { title: string; link: string; description: string; pubDate: string }[] = [];
-
+const fetchPosts = async (rssText: string) => {
     const parser = new DOMParser();
     const rssDoc = parser.parseFromString(rssText, "application/xml");
 
@@ -95,27 +92,33 @@ const fetchPosts = (rssText: string) => {
 
     if (isRSS) {
         const items = rssDoc.querySelectorAll("channel > item");
-        items.forEach(item => {
-            posts.push({
+        console.log("Fetching RSS Contents");
+        const posts = await Promise.all(Array.from(items).map(async (item)=>{
+            const link = item.querySelector("link")?.textContent?.trim() || "";
+            return {
                 title: item.querySelector("title")?.textContent?.trim() || "",
-                link: item.querySelector("link")?.textContent?.trim() || "",
+                link: link,
                 description: item.querySelector("description")?.textContent?.trim() || "",
                 pubDate: item.querySelector("pubDate")?.textContent?.trim() || "",
-            });
-        });
+            }
+        }));
+        console.log(`Fetched ${posts.length} posts.`)
+        return posts;
     } else if (isAtom) {
+        console.log("Fetching Atom Contents");
         const entries = rssDoc.querySelectorAll("feed > entry");
-        entries.forEach(entry => {
-            posts.push({
+        const posts = await Promise.all(Array.from(entries).map(async (entry)=>{
+            const link = entry.querySelector("link")?.getAttribute("href") || "";
+            return {
                 title: entry.querySelector("title")?.textContent?.trim() || "",
-                link: entry.querySelector("link")?.getAttribute("href") || "",
+                link: link,
                 description: entry.querySelector("summary")?.textContent?.trim() || "",
                 pubDate: entry.querySelector("updated")?.textContent?.trim() || "",
-            });
-        });
+            }
+        }));
+        console.log(`Fetched ${posts.length} posts.`)
+        return posts;
     }
-
-    return posts;
 }
 
 const validateURL = (url: string) => {
@@ -227,3 +230,10 @@ export const generateShortUuid = (length = 8) => {
 export function capitalizeFirstLetter(val:string) {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 }
+
+export const runWithTimeout = (promise, ms=3000) => {
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Operation timed out')), ms)
+    );
+    return Promise.race([promise, timeout]);
+};

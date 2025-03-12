@@ -74,6 +74,36 @@ export const add_posts = async (posts: { title: string, link: string, pubDate: s
     console.log("DB: REFRESH FEED LRT");
 }
 
+export const add_posts_v2 = async (posts: { title: string, link: string, pubDate: string, feed_id: Number, image_url: string, word_count: number, content: string }[]) => {
+    // Feeds to update
+    const feedsSet = new Set();
+
+    for(const post of posts){
+        const date = convertToTimeStringForDB(post.pubDate);
+        const result = await db.execute(
+            `INSERT OR IGNORE INTO articles 
+                (feed_id, title, link, pub_date, image_url, word_count, content) VALUES 
+                ($1, $2, $3, $4, $5, $6, $7)
+            `,
+            [post.feed_id, post.title, post.link, date, post.image_url, post.word_count, post.content],
+        );
+        if(result.rowsAffected > 0){
+            feedsSet.add(post.feed_id);
+        }
+    }
+    console.log("DB: ADD POSTS");
+
+    // Update Last Refresh Time (LRT)
+    if (feedsSet.size > 0) {
+        const value_string_feeds = Array.from(feedsSet).join(", ");
+        const currentTime = new Date().toISOString();
+        await db.execute(
+            `UPDATE feeds SET last_refresh_time = "${currentTime}" WHERE id in (${value_string_feeds})`
+        );
+    }
+    console.log("DB: REFRESH FEED LRT");
+}
+
 
 export const fetch_posts = async (
     sort_by: DB_ORDER_ENUM = DB_ORDER_ENUM.NEWEST,
@@ -139,8 +169,6 @@ export const fetch_posts = async (
         })
     }
     console.log("DB FETCH POSTS:" + results.length);
-    console.log("DB DEBUG:");
-    console.log(JSON.stringify(results));
 
     return results;
 }

@@ -1,7 +1,6 @@
 <script lang="ts">
     import "$lib/styles/scrollbar.css";
 
-    import { fetch } from "@tauri-apps/plugin-http";
     import { openUrl } from "@tauri-apps/plugin-opener";
 
     import { selected_post, is_loading_post_content } from "$lib/store";
@@ -9,8 +8,7 @@
     import ContentLoadingState from "$lib/content_view/content_loading_state.svelte";
     import EmptyState from "$lib/components/empty_state.svelte";
     import {
-        mercury_parser,
-        morzilla_readability_parser,
+        hybrid_parser
     } from "$lib/content_view/parsers";
 
     import Fa from "svelte-fa";
@@ -21,14 +19,14 @@
     import { update_fav_post } from "$lib/db";
     import { cleanHTML } from "$lib/content_view/html_cleaner";
 
-    let parsed = $state({});
+    let parsed = $state({
+        title: "",
+        image: "",
+        url: "",
+        content: "",
+        word_count: 0,
+    });
     let is_fav_post = $state(false);
-
-    const fetch_web_content = async (url: string) => {
-        const response = await fetch(url);
-        const text = await response.text();
-        return text;
-    };
 
     const timeToRead = (word_count: number) => {
         const wpm = 225;
@@ -37,9 +35,9 @@
     };
 
     selected_post.subscribe(async (curValue) => {
-        if (curValue && curValue.link) {
-            parsed = await mercury_parser(curValue.link, "");
-            // parsed = await morzilla_readability_parser(curValue.link, webpage_content);
+        console.log(`Post Changed to: ${curValue.title}`);
+        if(curValue && curValue.link != ""){
+            parsed = await hybrid_parser(curValue.link);
             $is_loading_post_content = false;
             is_fav_post = curValue.is_fav == 1;
         }

@@ -50,13 +50,15 @@
     const time_in_seconds =
       (await fetch_user_setting(SETTINGS.LAST_REFRESH_TIME)) * 60 * 60;
 
+    console.log(`No. of Feeds: ${feeds.length}`);
+
     for (let feed of feeds) {
       const expiredTime = isTimeExpired(
         feed.last_refresh_time,
         time_in_seconds,
       );
-      console.log("Time Expired:" + expiredTime);
       if (expiredTime) {
+        console.log("Time Expired:" + expiredTime);
         const feedMatadata = await fetchRSSMetadata(feed.url);
         if (feedMatadata) {
           for (var post of feedMatadata.posts) {
@@ -71,7 +73,7 @@
       }
     }
 
-    console.log("Posts to Insert: " + posts.length);
+    console.log("No. of posts to Insert: " + posts.length);
 
     if (posts.length > 0) await add_posts(posts);
   };
