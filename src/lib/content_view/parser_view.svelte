@@ -17,9 +17,12 @@
         faUpRightFromSquare,
     } from "@fortawesome/free-solid-svg-icons";
     import { update_fav_post } from "$lib/db";
-    import { cleanHTML } from "$lib/content_view/html_cleaner";
+    import HtmlContent from "./contents/html_content/html_content.svelte";
+    import { CONTENT_TYPES } from "$lib/constants";
+    import PdfContent from "./contents/pdf_content/pdf_content.svelte";
 
     let parsed = $state({
+        content_type: CONTENT_TYPES.none,
         title: "",
         image: "",
         url: "",
@@ -65,10 +68,12 @@
                 {parsed.title}
             </h1>
             <div class="flex flex-row items-center mb-2 mt-2 gap-2">
-                <div class="text-base text-slate-500">
-                    🕒 {`${timeToRead(parsed.word_count)} min read`}
-                </div>
-                ·
+                {#if parsed.word_count != 0}
+                    <div class="text-base text-slate-500">
+                        🕒 {`${timeToRead(parsed.word_count)} min read`}
+                    </div>
+                    ·
+                {/if}
                 <!-- svelte-ignore a11y_click_events_have_key_events -->
                 <!-- svelte-ignore a11y_no_static_element_interactions -->
                 <div
@@ -91,104 +96,11 @@
             </div>
         </div>
 
-        <!-- To set margin: max-w-6xl -->
-        <div class="max-w-6xl">
-            {#if parsed.content && parsed.image && !parsed.content.includes("img")}
-                <img
-                    src={parsed.image}
-                    alt={parsed.title}
-                    class="rounded-md object-cover"
-                />
-            {/if}
-
-            <div
-                class="mt-4 mr-4 indent-0 text-text1 text-base font-normal leading-relaxed text-justify mb-20"
-            >
-                <article class="content">
-                    {@html cleanHTML(parsed.content, parsed.url)}
-                </article>
-            </div>
-        </div>
+        {#if parsed.content_type == CONTENT_TYPES.html}
+            <HtmlContent content={parsed.content} image={parsed.image} title={parsed.title} url={parsed.url}/>
+        {:else if parsed.content_type == CONTENT_TYPES.pdf}
+            <PdfContent content={parsed.content} image={parsed.image} title={parsed.title} url={parsed.url}/>
+        {/if}
+        
     {/if}
 </div>
-
-<style>
-    article :global {
-        * {
-            @apply max-w-screen-2xl;
-        }
-        p {
-            @apply text-text1 mt-3 mb-3 text-base antialiased font-normal;
-        }
-
-        li p {
-            margin: 0; /* Remove unwanted margins */
-            display: inline; /* Force inline content */
-        }
-
-        a {
-            pointer-events: none;
-            cursor: default;
-        }
-
-        h1 {
-            @apply text-5xl font-medium text-text1 mt-4 mb-4;
-        }
-        h2 {
-            @apply text-4xl font-medium text-text1 mt-4 mb-4;
-        }
-        h3 {
-            @apply text-3xl font-medium text-text1 mt-4 mb-4;
-        }
-        h4 {
-            @apply text-2xl font-medium text-text1 mt-4 mb-4;
-        }
-        h5 {
-            @apply text-xl font-medium text-text1 mt-4 mb-4;
-        }
-        h6 {
-            @apply text-base font-medium text-text1 mt-4 mb-4;
-        }
-
-        ul {
-            @apply list-inside list-disc;
-        }
-
-        code {
-            @apply text-sm font-mono;
-        }
-
-        img {
-            @apply max-w-5xl;
-        }
-
-        pre {
-            @apply text-text1 bg-pre rounded-md p-4 max-w-6xl whitespace-pre-wrap mt-1 mb-1;
-        }
-
-        /* Table Styling */
-        table {
-            @apply table w-1/2 text-sm text-left text-text1;
-        }
-
-        thead {
-            @apply table-header-group font-medium uppercase;
-        }
-
-        th {
-            @apply px-6 py-3;
-        }
-
-        tr {
-            @apply table-row border-b;
-        }
-
-        tbody {
-            @apply table-row-group;
-        }
-
-        td {
-            @apply table-cell px-2 py-1;
-        }
-    }
-</style>

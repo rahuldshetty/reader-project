@@ -29,3 +29,10 @@ export const LAST_REFRESH_TIME = 4;
 
 // Measured in Days
 export const POST_EXPIRY_TIME = 3;
+
+// Content Type displayed in parsed view
+export enum CONTENT_TYPES {
+    none,
+    html,
+    pdf
+}

@@ -3,14 +3,8 @@ import { Command } from '@tauri-apps/plugin-shell';
 import { Readability, isProbablyReaderable } from "@mozilla/readability";
 import { parseHTML } from 'linkedom';
 import { runWithTimeout } from '$lib/utils';
-
-export interface ParsedResult {
-    title: string,
-    content: string,
-    word_count: number,
-    url: string,
-    image: string,
-}
+import { pdfToHtmlString } from '$lib/content_view/contents/pdf_content/pdf_helper';
+import { CONTENT_TYPES } from '$lib/constants';
 
 const runSideCar = async (url:string) => {
     const command = Command.sidecar('binaries/app', ["parse", url]);
@@ -20,9 +14,18 @@ const runSideCar = async (url:string) => {
     return response;
 }
 
-const fetch_web_content = async (url: string) => {
+const fetch_web_response = async (url: string) => {
     try{
         const response = await fetch(url);
+        return response;
+    } catch(err){
+        console.log("ERROR: " + err.toString());
+        return null;
+    }
+};
+
+const fetch_web_content = async (response) => {
+    try{
         const text = await response.text();
         return text;
     } catch(err){
@@ -40,7 +43,8 @@ export const mercury_parser = async (url: string) => {
             content: document.content,
             word_count: document.word_count,
             url: url,
-            image: document.lead_image_url
+            image: document.lead_image_url,
+            content_type: CONTENT_TYPES.html,
         };
     } catch (error) {
         console.log(`Parse FAILED for ${url}: ${error}`)
@@ -50,10 +54,10 @@ export const mercury_parser = async (url: string) => {
         content: '',
         word_count: 0,
         url: url,
-        image: ''
+        image: '',
+        content_type: CONTENT_TYPES.none,
     };
 }
-
 
 export const morzilla_readability_parser = async (url: string, document: Document) => {
     console.log(`Parsing with morzilla_readability: ${url}`);
@@ -67,7 +71,8 @@ export const morzilla_readability_parser = async (url: string, document: Documen
             content: article.content,
             word_count: article.length,
             url: url,
-            image: ""
+            image: "",
+            content_type: CONTENT_TYPES.html,
         };
     } catch(error){
         console.log(`Parse FAILED for ${url}: ${error}`);
@@ -77,7 +82,20 @@ export const morzilla_readability_parser = async (url: string, document: Documen
 
 export const hybrid_parser = async (url: string) => {
     try{
-        const html: string = await fetch_web_content(url);
+        const web_response = await fetch_web_response(url);
+
+        if(web_response?.headers.get('Content-Type') == 'application/pdf'){
+            return {
+                title: `PDF (${url.split('/').pop()})`,
+                content: '',
+                word_count: 0,
+                url: url,
+                image: "",
+                content_type: CONTENT_TYPES.pdf,
+            };
+        }
+
+        const html: string = await fetch_web_content(web_response);
 
         const { document } = parseHTML(html,{
             // Based on test
