@@ -20,7 +20,8 @@
     import HtmlContent from "./contents/html_content/html_content.svelte";
     import { CONTENT_TYPES } from "$lib/constants";
     import PdfContent from "./contents/pdf_content/pdf_content.svelte";
-
+    
+    const postTitle = $derived($selected_post.title);
     let parsed = $state({
         content_type: CONTENT_TYPES.none,
         title: "",
@@ -38,7 +39,6 @@
     };
 
     selected_post.subscribe(async (curValue) => {
-        console.log(`Post Changed to: ${curValue.title}`);
         if(curValue && curValue.link != ""){
             parsed = await hybrid_parser(curValue.link);
             $is_loading_post_content = false;
@@ -65,7 +65,7 @@
     {:else}
         <div>
             <h1 class="text-2xl text-text1 font-semibold">
-                {parsed.title}
+                {postTitle}
             </h1>
             <div class="flex flex-row items-center mb-2 mt-2 gap-2">
                 {#if parsed.word_count != 0}

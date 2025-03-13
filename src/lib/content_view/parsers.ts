@@ -3,7 +3,6 @@ import { Command } from '@tauri-apps/plugin-shell';
 import { Readability, isProbablyReaderable } from "@mozilla/readability";
 import { parseHTML } from 'linkedom';
 import { runWithTimeout } from '$lib/utils';
-import { pdfToHtmlString } from '$lib/content_view/contents/pdf_content/pdf_helper';
 import { CONTENT_TYPES } from '$lib/constants';
 
 const runSideCar = async (url:string) => {
@@ -87,7 +86,7 @@ export const hybrid_parser = async (url: string) => {
         if(web_response?.headers.get('Content-Type') == 'application/pdf'){
             return {
                 title: `PDF (${url.split('/').pop()})`,
-                content: '',
+                content: await web_response.arrayBuffer(),
                 word_count: 0,
                 url: url,
                 image: "",
