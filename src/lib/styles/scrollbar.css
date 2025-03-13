@@ -11,5 +11,5 @@
 
 /* Scrollbar track when not in use */
 ::-webkit-scrollbar-track {
-    background: hsl(var(--twc-background1) / var(--twc-background1-opacity, var(--tw-bg-opacity)));; /* Light gray background */
+    background: hsl(var(--twc-background1) / var(--twc-background1-opacity, var(--tw-bg-opacity))); /* Light gray background */
 }
