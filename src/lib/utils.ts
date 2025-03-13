@@ -4,7 +4,7 @@ import { fetch } from '@tauri-apps/plugin-http';
 import { user_settings } from '$lib/store';
 import { SETTINGS, POST_EXPIRY_TIME, LAST_REFRESH_TIME, THEMES } from '$lib/constants';
 
-export const fetchRSSMetadata = async (url: string) => {
+export const fetchRSSMetadata = async (id: Number, url: string) => {
     if (!validateURL(url)) {
         return null;
     }
@@ -21,6 +21,7 @@ export const fetchRSSMetadata = async (url: string) => {
     const rssText = await response.text();
 
     return {
+        id: id,
         name: fetchName(rssText),
         text: rssText,
         favicon: await fetchFavIcon(url, rssText),

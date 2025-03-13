@@ -59,6 +59,7 @@ pub fn run() {
                 .target(tauri_plugin_log::Target::new(
                     tauri_plugin_log::TargetKind::Webview,
                 ))
+                .max_file_size(50_000 /* bytes */)
                 .build(),
         )
         .plugin(tauri_plugin_store::Builder::new().build())

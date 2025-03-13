@@ -35,18 +35,20 @@ const fetch_web_content = async (response) => {
 
 export const mercury_parser = async (url: string) => {
     console.log(`Parsing with mercury: ${url}`);
-    try {
-        const document = await runWithTimeout(runSideCar(url));
-        return {
-            title: document.title,
-            content: document.content,
-            word_count: document.word_count,
-            url: url,
-            image: document.lead_image_url,
-            content_type: CONTENT_TYPES.html,
-        };
-    } catch (error) {
-        console.log(`Parse FAILED for ${url}: ${error}`)
+    if(url){
+        try {
+            const document = await runWithTimeout(runSideCar(url));
+            return {
+                title: document.title,
+                content: document.content,
+                word_count: document.word_count,
+                url: url,
+                image: document.lead_image_url,
+                content_type: CONTENT_TYPES.html,
+            };
+        } catch (error) {
+            console.log(`Parse FAILED for ${url}: ${error}`)
+        }
     }
     return {
         title: '',
@@ -80,6 +82,16 @@ export const morzilla_readability_parser = async (url: string, document: Documen
 }
 
 export const hybrid_parser = async (url: string) => {
+    if(!url){
+        return {
+            title: '',
+            content: '',
+            word_count: 0,
+            url: url,
+            image: '',
+            content_type: CONTENT_TYPES.none,
+        };
+    }
     try{
         const web_response = await fetch_web_response(url);
 
