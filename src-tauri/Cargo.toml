@@ -29,6 +29,9 @@ tauri-plugin-http = "2"
 tauri-plugin-store = "2"
 tauri-plugin-log = "2"
 tauri-plugin-shell = "2"
+scraper = "0.13"
+tokio = { version = "1", features = ["full"] }
+url = "2.3"
 
 [profile.dev]
 incremental = true # Compile your binary in smaller steps.

@@ -17,3 +17,10 @@ pub struct PostData {
     pub pub_date: String,
 }
 
+
+#[derive(Debug)]
+pub struct FaviconLink {
+    pub href: String,
+    pub sizes: String,
+}
+
