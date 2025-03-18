@@ -27,7 +27,8 @@ export const syncPostsInDB = async (
 
     const filteredFeeds = feeds.filter((feed) => {
         // Need to refresh if time is expired (don't worry, logic is right :))
-        return true;
+        // DEBUGGING: Disable this below
+        // return true;
         return isTimeExpired(feed.last_refresh_time, time_in_seconds);
     });
 

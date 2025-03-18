@@ -18,6 +18,7 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
+roxmltree = "0.14"
 log = "0.4"
 tauri = { version = "2", features = [] }
 tauri-plugin-opener = "2"

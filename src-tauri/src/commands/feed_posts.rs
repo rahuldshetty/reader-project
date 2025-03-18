@@ -1,27 +1,192 @@
 use crate::models;
-use reqwest::Error;
+use roxmltree::Document;
 use tauri_plugin_http::reqwest;
 
-pub async fn get_articles_for_feed_url(id: i64, url: String) -> Result<models::FeedData, Error> {
+pub fn fetch_name(rss_text: &str) -> String {
+    // Parse the RSS text into an XML document.
+    let doc = match Document::parse(rss_text) {
+        Ok(doc) => doc,
+        Err(_) => return String::new(),
+    };
+
+    // Attempt to find a <title> node whose parent is <channel>
+    let channel_title = doc
+        .descendants()
+        .find(|n| {
+            n.has_tag_name("title") &&
+            n.parent().map_or(false, |p| p.has_tag_name("channel"))
+        })
+        // If not found, look for a <title> whose parent is <feed>
+        .or_else(|| {
+            doc.descendants()
+                .find(|n| {
+                    n.has_tag_name("title") &&
+                    n.parent().map_or(false, |p| p.has_tag_name("feed"))
+                })
+        });
+
+    // If a title is found and it has text, trim and return it.
+    if let Some(node) = channel_title {
+        return node.text().unwrap_or("").trim().to_string();
+    }
+
+    // Fallback: return an empty string.
+    String::new()
+}
+
+
+pub fn get_article_data_for_url(rss_text: &str) -> Vec<models::PostData> {
+    // Parse the XML document.
+    let doc = match Document::parse(rss_text) {
+        Ok(doc) => doc,
+        Err(err) => {
+            log::error!("Failed to parse XML: {}", err);
+            return Vec::new();
+        }
+    };
+
+    // Check if the feed is RSS by looking for "channel > item"
+    let is_rss = doc.descendants().any(|n| {
+        n.has_tag_name("item") && n.parent().map_or(false, |p| p.has_tag_name("channel"))
+    });
+
+    // Check if the feed is Atom by looking for "feed > entry"
+    let is_atom = doc.descendants().any(|n| {
+        n.has_tag_name("entry") && n.parent().map_or(false, |p| p.has_tag_name("feed"))
+    });
+
+    if is_rss {
+        log::info!("Fetching RSS Contents");
+        // Collect all <item> elements under <channel>
+        let items: Vec<_> = doc.descendants().filter(|n| {
+            n.has_tag_name("item") && n.parent().map_or(false, |p| p.has_tag_name("channel"))
+        }).collect();
+
+        let posts: Vec<models::PostData> = items.iter().map(|item| {
+            // For each item, extract the desired child element text.
+            let title = item
+                .children()
+                .find(|n| n.has_tag_name("title"))
+                .and_then(|n| n.text())
+                .unwrap_or("")
+                .trim()
+                .to_string();
+
+            let link = item
+                .children()
+                .find(|n| n.has_tag_name("link"))
+                .and_then(|n| n.text())
+                .unwrap_or("")
+                .trim()
+                .to_string();
+
+            let description = item
+                .children()
+                .find(|n| n.has_tag_name("description"))
+                .and_then(|n| n.text())
+                .unwrap_or("")
+                .trim()
+                .to_string();
+
+            let pub_date = item
+                .children()
+                .find(|n| n.has_tag_name("pubDate"))
+                .and_then(|n| n.text())
+                .unwrap_or("")
+                .trim()
+                .to_string();
+
+            models::PostData {
+                title,
+                link,
+                description,
+                pub_date,
+            }
+        }).collect();
+
+        log::info!("Fetched {} posts.", posts.len());
+        posts
+
+    } else if is_atom {
+        log::info!("Fetching Atom Contents");
+        // Collect all <entry> elements under <feed>
+        let entries: Vec<_> = doc.descendants().filter(|n| {
+            n.has_tag_name("entry") && n.parent().map_or(false, |p| p.has_tag_name("feed"))
+        }).collect();
+
+        let posts: Vec<models::PostData> = entries.iter().map(|entry| {
+            let title = entry
+                .children()
+                .find(|n| n.has_tag_name("title"))
+                .and_then(|n| n.text())
+                .unwrap_or("")
+                .trim()
+                .to_string();
+
+            // For Atom, the link is in the href attribute of the <link> element.
+            let link = entry
+                .children()
+                .find(|n| n.has_tag_name("link"))
+                .and_then(|n| n.attribute("href"))
+                .unwrap_or("")
+                .trim()
+                .to_string();
+
+            let description = entry
+                .children()
+                .find(|n| n.has_tag_name("summary"))
+                .and_then(|n| n.text())
+                .unwrap_or("")
+                .trim()
+                .to_string();
+
+            let pub_date = entry
+                .children()
+                .find(|n| n.has_tag_name("updated"))
+                .and_then(|n| n.text())
+                .unwrap_or("")
+                .trim()
+                .to_string();
+
+            models::PostData {
+                title,
+                link,
+                description,
+                pub_date,
+            }
+        }).collect();
+
+        log::info!("Fetched {} posts.", posts.len());
+        posts
+    } else {
+        // Neither RSS nor Atom format detected.
+        Vec::new()
+    }
+}
+
+
+pub async fn get_feed_data_for_url(id: i64, url: String) -> Result<models::FeedData, ()> {
     log::info!("Fetching articles for url: {url:?}");
 
-    let response = reqwest::get(url).await?;
+    let response = reqwest::get(url.clone()).await.unwrap();
 
-    let res_text = response.text().await?;
+    let res_text = response.text().await.unwrap();
 
     Ok(models::FeedData {
         id: id,
-        name: "RANDOM".to_string(),
-        text: res_text,
-        favicon: "".to_string(),
-        posts: vec![],
+        name: fetch_name(&res_text),  // name of feed not necessary for syncing posts
+        text: res_text.clone(),
+        favicon: "".to_string(), // favicon not requires for syncing posts
+        posts: get_article_data_for_url( &res_text),
     })
 }
+
 
 #[tauri::command]
 pub async fn sync_posts_in_db() -> Result<(), ()> {
     log::info!("Syncing DB Posts...");
-    // Call another async function and wait for it to finish
-    get_articles_for_feed_url(1, String::from("https://feeds.bbci.co.uk/news/world/asia/rss.xml")).await;
+
+    let result = get_feed_data_for_url(1, String::from("https://feeds.bbci.co.uk/news/world/asia/rss.xml")).await.unwrap();
+
     Ok(())
 }
