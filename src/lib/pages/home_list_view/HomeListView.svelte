@@ -46,34 +46,38 @@
         }
 
         // Update DB Posts
-        await syncPostsInDB($feeds_store);
+        invoke('sync_posts_in_db').then(async () =>{
+            console.log('DB Sync Complete!')
 
-        // Render Posts
-        const posts = await fetch_posts(
-            $posts_sort_by,
-            null,
-            -1,
-            0,
-            NO_OF_POST_PULLS_PER_TIME,
-            $unread_posts_only,
-        );
+            // Render Posts
+            const posts = await fetch_posts(
+                $posts_sort_by,
+                null,
+                -1,
+                0,
+                NO_OF_POST_PULLS_PER_TIME,
+                $unread_posts_only,
+            );
 
-        posts.forEach((post) => {
-            $posts_by_feed_store[post.feed_id].push({
-                ...post,
-                rowid: $posts_by_feed_store[post.feed_id].length,
+            posts.forEach((post) => {
+                $posts_by_feed_store[post.feed_id].push({
+                    ...post,
+                    rowid: $posts_by_feed_store[post.feed_id].length,
+                });
             });
+            $selected_feed_id = -1;
+
+            $feed_unread_post_count = await fetch_unread_post_counts();
+            $is_loading_posts = false;
+
+            console.log("POSTS BY FEED:");
+            console.debug(JSON.stringify($posts_by_feed_store));
+
+            // Set the frontend task as being completed
+            invoke("set_complete", { task: "frontend" });
+
         });
-        $selected_feed_id = -1;
-
-        $feed_unread_post_count = await fetch_unread_post_counts();
-        $is_loading_posts = false;
-
-        console.log("POSTS BY FEED:");
-        console.debug(JSON.stringify($posts_by_feed_store));
-
-        // Set the frontend task as being completed
-        invoke("set_complete", { task: "frontend" });
+        // await syncPostsInDB($feeds_store);
     });
 </script>
 
