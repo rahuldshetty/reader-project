@@ -78,7 +78,9 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             greet, 
             set_complete, 
-            feed_posts::sync_posts_in_db    
+            feed_posts::sync_posts_in_db,
+            feed_posts::get_article_data_for_url,
+            feed_posts::get_feed_data_for_url,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

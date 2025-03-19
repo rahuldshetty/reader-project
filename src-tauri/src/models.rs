@@ -14,7 +14,7 @@ pub struct PostData {
     pub title: String,
     pub link: String,
     pub description: String,
-    pub pub_date: String,
+    pub pubDate: String,
 }
 
 

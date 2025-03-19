@@ -38,10 +38,10 @@ pub fn fetch_name(rss_text: &str) -> String {
     String::new()
 }
 
-
-pub fn get_article_data_for_url(rss_text: &str) -> Vec<models::PostData> {
+#[tauri::command]
+pub fn get_article_data_for_url(rss_text: String) -> Vec<models::PostData> {
     // Parse the XML document.
-    let doc = match Document::parse(rss_text) {
+    let doc = match Document::parse(&rss_text) {
         Ok(doc) => doc,
         Err(err) => {
             log::error!("Failed to parse XML");
@@ -92,7 +92,7 @@ pub fn get_article_data_for_url(rss_text: &str) -> Vec<models::PostData> {
                 .trim()
                 .to_string();
 
-            let pub_date = item
+            let pubDate = item
                 .children()
                 .find(|n| n.has_tag_name("pubDate"))
                 .and_then(|n| n.text())
@@ -104,7 +104,7 @@ pub fn get_article_data_for_url(rss_text: &str) -> Vec<models::PostData> {
                 title,
                 link,
                 description,
-                pub_date,
+                pubDate,
             }
         }).collect();
 
@@ -144,7 +144,7 @@ pub fn get_article_data_for_url(rss_text: &str) -> Vec<models::PostData> {
                 .trim()
                 .to_string();
 
-            let pub_date = entry
+            let pubDate = entry
                 .children()
                 .find(|n| n.has_tag_name("updated"))
                 .and_then(|n| n.text())
@@ -156,7 +156,7 @@ pub fn get_article_data_for_url(rss_text: &str) -> Vec<models::PostData> {
                 title,
                 link,
                 description,
-                pub_date,
+                pubDate,
             }
         }).collect();
 
@@ -230,7 +230,7 @@ pub async fn get_fav_icon(rss_url: &str, _rss_text: &str) -> Result<String, Box<
     Ok(String::new())
 }
 
-
+#[tauri::command]
 pub async fn get_feed_data_for_url(id: i64, url: String, skip_extra_details: bool) -> Result<models::FeedData, ()> {
     log::info!("Fetching articles for url: {url:?}");
 
@@ -245,7 +245,7 @@ pub async fn get_feed_data_for_url(id: i64, url: String, skip_extra_details: boo
             name: "".to_string(),  // name of feed not necessary for syncing posts
             text: "".to_string(),
             favicon: "".to_string(), // favicon not requires for syncing posts
-            posts: get_article_data_for_url( &res_text),
+            posts: get_article_data_for_url( res_text.clone()),
         })
     } else {
         Ok(models::FeedData {
@@ -253,7 +253,7 @@ pub async fn get_feed_data_for_url(id: i64, url: String, skip_extra_details: boo
             name: fetch_name(&res_text),  // name of feed not necessary for syncing posts
             text: res_text.clone(),
             favicon: get_fav_icon(&url, &res_text).await.unwrap(), // favicon not requires for syncing posts
-            posts: get_article_data_for_url( &res_text),
+            posts: get_article_data_for_url( res_text.clone()),
         })
     }
 }
