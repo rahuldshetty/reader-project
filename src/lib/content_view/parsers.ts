@@ -107,12 +107,11 @@ export const hybrid_parser = async (url: string) => {
         }
 
         const html: string = await fetch_web_content(web_response);
-
-        const { document } = parseHTML(html,{
-            // Based on test
-            // https://github.com/WebReflection/linkedom/blob/63c22fb48cea1179b7fdc9bcffe84d824c3bca04/test/html/document.js#L75
-            href: url
-        });
+        
+        // Based on test
+        // https://github.com/WebReflection/linkedom/blob/63c22fb48cea1179b7fdc9bcffe84d824c3bca04/test/html/document.js#L75
+        const location = {href: url};
+        const { document } = parseHTML(html, {location});
 
         if(isProbablyReaderable(document, {
             minScore: 80

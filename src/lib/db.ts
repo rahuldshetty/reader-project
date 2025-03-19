@@ -57,9 +57,11 @@ export const add_posts = async (posts: { title: string, link: string, pubDate: s
         feedsSet.add(post.feed_id);
     }
 
-    await db.execute(
+    const response = await db.execute(
         `INSERT OR IGNORE INTO articles (feed_id, title, link, pub_date) VALUES ${value_string}`
     );
+
+    console.log(`No. of inserts: ${response.rowsAffected}`);
 
     // Update Last Refresh Time (LRT)
     if (feedsSet.size > 0) {
@@ -201,9 +203,14 @@ export const fetch_unread_post_counts = async () => {
 export const delete_expired_posts = async (days: number) => {
     // Deletes posts in DB that are older than 
     // the specified no. of "days" parameter
-    // and are not fav posts.
+    // and are not fav posts and 
+    // should contain more than 30 articles in that feed.
     const result = await db.execute(
-        `DELETE FROM articles WHERE datetime(pub_date) <= date('now','-${days} day') AND is_fav = 0`
+        `DELETE FROM articles WHERE datetime(pub_date) <= date('now','-${days} day') AND is_fav = 0 AND 
+        feed_id in (
+            SELECT feed_id FROM articles group by feed_id having count(*) > 30
+        )
+        `
     );
     console.log(`DB: DELETED ${result.rowsAffected} EXPIRED POSTS`)
 }

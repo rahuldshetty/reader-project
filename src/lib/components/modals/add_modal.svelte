@@ -78,7 +78,7 @@
   }
 
   async function handleFeedURLChange() {
-    const response = await fetchRSSMetadata(feedURL);
+    const response = await fetchRSSMetadata(-1, feedURL);
     if (response) {
       feedName = response.name;
       feedIcon = response.favicon;

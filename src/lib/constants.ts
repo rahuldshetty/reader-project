@@ -28,7 +28,7 @@ export const NO_OF_POST_PULLS_PER_TIME = 20;
 export const LAST_REFRESH_TIME = 4;
 
 // Measured in Days
-export const POST_EXPIRY_TIME = 3;
+export const POST_EXPIRY_TIME = 30;
 
 // Content Type displayed in parsed view
 export enum CONTENT_TYPES {

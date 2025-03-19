@@ -21,8 +21,6 @@ export const syncPostsInDB = async (
     }[],
 ) => {
     // Adds new post entries to DB
-    const posts = [];
-
     const time_in_seconds =
         (await fetch_user_setting(SETTINGS.LAST_REFRESH_TIME)) * 60 * 60;
 
@@ -40,6 +38,7 @@ export const syncPostsInDB = async (
     );
 
     for (const feed of feedsResults) {
+        let posts = [];
         for (const post of feed.posts) {
             posts.push({
                 title: post.title,
@@ -48,9 +47,7 @@ export const syncPostsInDB = async (
                 feed_id: feed.id,
             });
         }
+        if (posts.length > 0) await add_posts(posts);
     }
 
-    console.log("No. of posts to Insert: " + posts.length);
-
-    if (posts.length > 0) await add_posts(posts);
 };
