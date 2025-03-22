@@ -48,9 +48,7 @@
         const posts = [];
         for (var post of feedPosts) {
           posts.push({
-            title: post.title,
-            link: post.link,
-            pubDate: post.pubDate,
+            ...post,
             feed_id: feedId,
           });
         }

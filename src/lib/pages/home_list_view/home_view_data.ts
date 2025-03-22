@@ -41,9 +41,7 @@ export const syncPostsInDB = async (
         let posts = [];
         for (const post of feed.posts) {
             posts.push({
-                title: post.title,
-                link: post.link,
-                pubDate: post.pubDate,
+                ...post,
                 feed_id: feed.id,
             });
         }

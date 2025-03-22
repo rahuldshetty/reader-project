@@ -11,6 +11,7 @@
     const postFeedId = $derived(post.feed_id);
     const postTitle = $derived(post.title);
     const postDate = $derived(timeAgo(post.pubDate));
+    const postImage = $derived(post.image);
 
     const isPostSelected = $derived($selected_post && $selected_post.id == post.id)
 
@@ -39,7 +40,12 @@
     "
     onclick={handleSelectPost}
 >
-    <h3 class="text-sm font-semibold">{postTitle}</h3>
+    <div class="flex flex-row">
+        {#if postImage && postImage != ""}
+            <img src={postImage} class="w-20 h-20 object-scale-down" alt={postTitle}/>
+        {/if}
+        <h3 class="text-sm font-semibold m-2">{postTitle}</h3>
+    </div>
     <p class="text-xs text-text2">{postDate}</p>
     {#if !post_read}
         <div class="text-xs text-primary2 font-extrabold relative">

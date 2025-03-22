@@ -96,11 +96,19 @@ const fetchPosts = async (rssText: string) => {
         console.log("Fetching RSS Contents");
         const posts = await Promise.all(Array.from(items).map(async (item)=>{
             const link = item.querySelector("link")?.textContent?.trim() || "";
+
+            // Extract Image from enclosure or media:content
+            const image = item.querySelector("media\\:thumbnail, thumbnail")?.getAttribute("url") ||
+                          item.querySelector("enclosure[type^='image']")?.getAttribute("url") ||
+                          item.querySelector("media\\:content, content")?.getAttribute("url") ||
+                          "";
+
             return {
                 title: item.querySelector("title")?.textContent?.trim() || "",
                 link: link,
                 description: item.querySelector("description")?.textContent?.trim() || "",
                 pubDate: item.querySelector("pubDate")?.textContent?.trim() || "",
+                image: image,
             }
         }));
         console.log(`Fetched ${posts.length} posts.`)
@@ -110,11 +118,19 @@ const fetchPosts = async (rssText: string) => {
         const entries = rssDoc.querySelectorAll("feed > entry");
         const posts = await Promise.all(Array.from(entries).map(async (entry)=>{
             const link = entry.querySelector("link")?.getAttribute("href") || "";
+
+            // Extract Image from Atom feed (enclosure or media:content)
+            const image =  entry.querySelector("media\\:thumbnail, thumbnail")?.getAttribute("url") ||
+                            entry.querySelector("link[rel='enclosure'][type^='image']")?.getAttribute("href") ||
+                            entry.querySelector("media\\:content, content")?.getAttribute("url") ||
+                            "";
+
             return {
                 title: entry.querySelector("title")?.textContent?.trim() || "",
                 link: link,
                 description: entry.querySelector("summary")?.textContent?.trim() || "",
                 pubDate: entry.querySelector("updated")?.textContent?.trim() || "",
+                image: image,
             }
         }));
         console.log(`Fetched ${posts.length} posts.`)
@@ -186,6 +202,7 @@ export const convertToTimeStringForDB = (dateString: string) => {
 }
 
 export const escape_title = (str: string) => {
+    if (!str) return "";
     return str.replace(/[']/g, function (char) {
         switch (char) {
             case "'":

@@ -38,7 +38,7 @@ export const delete_feed = async (feed_id: number) => {
     console.log("DB: UPDATE FEED")
 }
 
-export const add_posts = async (posts: { title: string, link: string, pubDate: string, feed_id: Number }[]) => {
+export const add_posts = async (posts: { title: string, link: string, pubDate: string, feed_id: Number, image: string }[]) => {
     // Track individual posts to insert into DB
     let value_string = ""
 
@@ -49,7 +49,7 @@ export const add_posts = async (posts: { title: string, link: string, pubDate: s
     for (const [i, post] of posts.entries()) {
         const date = convertToTimeStringForDB(post.pubDate);
 
-        value_string += `(${post.feed_id}, '${escape_title(post.title)}', '${post.link}', '${date}')`;
+        value_string += `(${post.feed_id}, '${escape_title(post.title)}', '${post.link}', '${date}', '${escape_title(post.image)}')`;
 
         if (i != posts.length - 1) {
             value_string += ",\n"
@@ -58,7 +58,7 @@ export const add_posts = async (posts: { title: string, link: string, pubDate: s
     }
 
     const response = await db.execute(
-        `INSERT OR IGNORE INTO articles (feed_id, title, link, pub_date) VALUES ${value_string}`
+        `INSERT OR IGNORE INTO articles (feed_id, title, link, pub_date, image_url) VALUES ${value_string}`
     );
 
     console.log(`No. of inserts: ${response.rowsAffected}`);
@@ -153,7 +153,7 @@ export const fetch_posts = async (
     }
 
     const query = `
-        SELECT id, feed_id, title, link, pub_date as pubDate, read, is_fav from articles
+        SELECT id, feed_id, title, link, pub_date as pubDate, read, is_fav, image_url as image from articles
         ${whereCondition}
         ORDER BY datetime(pub_date) ${sort_by}
         LIMIT ${limit}
