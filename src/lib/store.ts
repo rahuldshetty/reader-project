@@ -16,7 +16,7 @@ export const posts_sort_by = writable(DB_ORDER_ENUM.NEWEST);
 export const unread_posts_only = writable(false);
 export const selected_post = writable({});
 
-
+export const is_loading_splashscreen = writable(true);
 export const is_loading_feed = writable(false);
 export const is_loading_posts = writable(false);
 export const is_loading_post_content = writable(false);

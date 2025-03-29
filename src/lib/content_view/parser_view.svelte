@@ -40,13 +40,12 @@
     selected_post.subscribe(async (curValue) => {
         $is_loading_post_content = true;
 
-        if(curValue && curValue.link != ""){
+        if(curValue && curValue.link && curValue.link != ""){
             is_fav_post = (curValue.is_fav == 1);
 
             // When content is available in DB
             if(curValue.content && curValue.word_count){
-                console.log("skipping post content pull...")
-                $is_loading_post_content = false;
+                console.log("skipping post content pull...");
                 parsed = {
                     content_type: CONTENT_TYPES.html,
                     title: curValue.title,
@@ -56,7 +55,7 @@
                     word_count: curValue.word_count,
                 }
             } else {
-                console.log("pulling post content...")
+                console.log("pulling post content...");
                 // When content is not available in DB
                 parsed = await hybrid_parser(curValue.link);
                 // Save parsed content in DB
@@ -67,9 +66,10 @@
                         parsed.word_count,
                     );
                 }
-                $is_loading_post_content = false;
             }
         }
+
+        $is_loading_post_content = false;
     });
 
     const openURLInBrowser = async (url: string) => {
