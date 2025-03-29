@@ -22,7 +22,7 @@
         delete_expired_posts,
     } from "$lib/db";
     import { fetch_user_setting } from "$lib/utils";
-    import { syncPostsInDB } from "$lib/pages/home_list_view/home_view_data";
+    import { syncPostsInDB } from "$lib/pages/home_list_view/feed_view_data";
     import { onMount } from "svelte";
     import ParserView from "$lib/content_view/parser_view.svelte";
     import "$lib/logging";

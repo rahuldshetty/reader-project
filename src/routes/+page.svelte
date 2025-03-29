@@ -1,5 +1,5 @@
 <script>
-  import HomeListView from "$lib/pages/home_list_view/HomeListView.svelte";
+  import FeedListView from "$lib/pages/home_list_view/FeedListView.svelte";
 </script>
 
-<HomeListView/>
+<FeedListView/>
