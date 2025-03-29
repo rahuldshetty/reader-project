@@ -153,7 +153,7 @@ export const fetch_posts = async (
     }
 
     const query = `
-        SELECT id, feed_id, title, link, pub_date as pubDate, read, is_fav, image_url as image from articles
+        SELECT id, feed_id, title, link, pub_date as pubDate, read, is_fav, image_url as image, content, word_count from articles
         ${whereCondition}
         ORDER BY datetime(pub_date) ${sort_by}
         LIMIT ${limit}
@@ -222,4 +222,12 @@ export const update_fav_post = async (post_id: number, is_fav: number) => {
         [is_fav, post_id],
     );
     console.log(`DB: UPDATE IS_FAV ${res.rowsAffected}`)
+}
+
+export const save_post_html_content = async (post_id: number, content: string, word_count: number) => {
+    const response = await db.execute(
+        `UPDATE articles SET content = $1, word_count = $2 WHERE id = $3`,
+        [content, word_count, post_id]
+    );
+    console.log(`DB: CONTENT SAVED STATUS - ${response.rowsAffected}`)
 }

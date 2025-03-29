@@ -69,8 +69,8 @@
         $feed_unread_post_count = await fetch_unread_post_counts();
         $is_loading_posts = false;
 
-        console.log("POSTS BY FEED:");
-        console.debug(JSON.stringify($posts_by_feed_store));
+        // console.log("POSTS BY FEED:");
+        // console.debug(JSON.stringify($posts_by_feed_store));
 
         // Set the frontend task as being completed
         invoke("set_complete", { task: "frontend" });

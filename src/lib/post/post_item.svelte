@@ -19,7 +19,6 @@
 
     const handleSelectPost = async () => {
         $selected_post = post;
-        $is_loading_post_content = true;
         
         if(!post_read){
             await read_post(postId);

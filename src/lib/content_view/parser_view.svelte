@@ -16,12 +16,11 @@
         faStar,
         faUpRightFromSquare,
     } from "@fortawesome/free-solid-svg-icons";
-    import { update_fav_post } from "$lib/db";
+    import { update_fav_post, save_post_html_content } from "$lib/db";
     import HtmlContent from "./contents/html_content/html_content.svelte";
     import { CONTENT_TYPES } from "$lib/constants";
     import PdfContent from "./contents/pdf_content/pdf_content.svelte";
-    
-    const postTitle = $derived($selected_post.title);
+
     let parsed = $state({
         content_type: CONTENT_TYPES.none,
         title: "",
@@ -39,10 +38,37 @@
     };
 
     selected_post.subscribe(async (curValue) => {
+        $is_loading_post_content = true;
+
         if(curValue && curValue.link != ""){
-            parsed = await hybrid_parser(curValue.link);
-            $is_loading_post_content = false;
-            is_fav_post = curValue.is_fav == 1;
+            is_fav_post = (curValue.is_fav == 1);
+
+            // When content is available in DB
+            if(curValue.content && curValue.word_count){
+                console.log("skipping post content pull...")
+                $is_loading_post_content = false;
+                parsed = {
+                    content_type: CONTENT_TYPES.html,
+                    title: curValue.title,
+                    image: curValue.image,
+                    url: curValue.link,
+                    content: curValue.content,
+                    word_count: curValue.word_count,
+                }
+            } else {
+                console.log("pulling post content...")
+                // When content is not available in DB
+                parsed = await hybrid_parser(curValue.link);
+                // Save parsed content in DB
+                if (parsed.content_type == CONTENT_TYPES.html){
+                    await save_post_html_content(
+                        curValue.id,
+                        parsed.content,
+                        parsed.word_count,
+                    );
+                }
+                $is_loading_post_content = false;
+            }
         }
     });
 
@@ -65,7 +91,7 @@
     {:else}
         <div>
             <h1 class="text-2xl text-text1 font-semibold">
-                {postTitle}
+                {$selected_post.title}
             </h1>
             <div class="flex flex-row items-center mb-2 mt-2 gap-2">
                 {#if parsed.word_count != 0}
