@@ -8,8 +8,10 @@
         posts_by_feed_store,
         minimize_feeds,
         unread_posts_only,
+        feed_view,
+        selected_post
     } from "$lib/store";
-    import { NO_OF_POST_PULLS_PER_TIME } from "$lib/constants";
+    import { NO_OF_POST_PULLS_PER_TIME, FEED_VIEW } from "$lib/constants";
 
     import Fa from "svelte-fa";
     import { faStar } from "@fortawesome/free-solid-svg-icons";
@@ -29,6 +31,9 @@
             $unread_posts_only,
         );
         $posts_by_feed_store[$selected_feed_id] = posts;
+        if($feed_view == FEED_VIEW.THUMBNAIL){
+            $selected_post = {};
+        }
     };
 </script>
 

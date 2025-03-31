@@ -3,7 +3,7 @@
 
     import { openUrl } from "@tauri-apps/plugin-opener";
 
-    import { selected_post, is_loading_post_content } from "$lib/store";
+    import { selected_post, is_loading_post_content, feed_view } from "$lib/store";
 
     import ContentLoadingState from "$lib/content_view/content_loading_state.svelte";
     import EmptyState from "$lib/components/empty_state.svelte";
@@ -15,10 +15,11 @@
     import {
         faStar,
         faUpRightFromSquare,
+        faArrowLeft
     } from "@fortawesome/free-solid-svg-icons";
     import { update_fav_post, save_post_html_content } from "$lib/db";
     import HtmlContent from "./contents/html_content/html_content.svelte";
-    import { CONTENT_TYPES } from "$lib/constants";
+    import { CONTENT_TYPES, FEED_VIEW } from "$lib/constants";
     import PdfContent from "./contents/pdf_content/pdf_content.svelte";
 
     let parsed = $state({
@@ -94,6 +95,16 @@
                 {$selected_post.title}
             </h1>
             <div class="flex flex-row items-center mb-2 mt-2 gap-2">
+                <!-- svelte-ignore a11y_no_static_element_interactions -->
+                {#if $feed_view == FEED_VIEW.THUMBNAIL}
+                    <!-- svelte-ignore a11y_click_events_have_key_events -->
+                    <div
+                        class="flex grow-0 cursor-pointer text-text1 hover:text-primary2"
+                        onclick={() => $selected_post = {}}
+                    >
+                        <Fa icon={faArrowLeft} size="lg" title="Go Back"/>
+                    </div>
+                {/if}
                 {#if parsed.word_count != 0}
                     <div class="text-base text-slate-500">
                         🕒 {`${timeToRead(parsed.word_count)} min read`}
