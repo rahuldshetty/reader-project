@@ -22,6 +22,11 @@ export enum THEMES{
     DARK = "dark"
 }
 
+export enum FEED_VIEW {
+    LIST = "list",
+    THUMBNAIL = "thumbnail",
+}
+
 export const NO_OF_POST_PULLS_PER_TIME = 20;
 
 // Measured in Hours

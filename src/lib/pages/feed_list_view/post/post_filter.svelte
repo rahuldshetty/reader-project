@@ -1,5 +1,5 @@
 <script>
-    import { DB_ORDER_ENUM, NO_OF_POST_PULLS_PER_TIME } from "$lib/constants";
+    import { DB_ORDER_ENUM, NO_OF_POST_PULLS_PER_TIME, FEED_VIEW } from "$lib/constants";
     import {
         feeds_store,
         posts_by_feed_store,
@@ -8,8 +8,12 @@
         feed_unread_post_count,
         unread_posts_only,
         is_loading_posts,
+        feed_view
     } from "$lib/store";
     import { fetch_posts, fetch_unread_post_counts } from "$lib/db";
+
+    import Fa from "svelte-fa";
+    import { faGrip } from "@fortawesome/free-solid-svg-icons";
 
     const sortPosts = async () => {
         $is_loading_posts = true;
@@ -144,5 +148,9 @@
             for="default-checkbox"
             class="ms-2 text-sm text-text2 font-semibold">Unread</label
         >
+    </div>
+
+    <div class="text-text2 cursor-pointer" onclick={()=>{ $feed_view = FEED_VIEW.THUMBNAIL }}>
+        <Fa icon={faGrip} size="lg" title="Show Thumbnail View"/>
     </div>
 </div>

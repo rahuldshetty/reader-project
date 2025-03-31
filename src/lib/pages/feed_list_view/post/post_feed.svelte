@@ -13,7 +13,6 @@
   } from "$lib/store";
   import PostItem from "$lib/pages/feed_list_view/post/post_item.svelte";
 
-  import empty_logo from "$lib/assets/empty_logo.svg";
   import searching_logo from "$lib/assets/searching.svg";
   import PostFilter from "./post_filter.svelte";
   import EmptyState from "$lib/components/empty_state.svelte";
