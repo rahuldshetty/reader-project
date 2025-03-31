@@ -11,7 +11,7 @@
     feed_unread_post_count,
     unread_posts_only,
   } from "$lib/store";
-  import PostItem from "$lib/post/post_item.svelte";
+  import PostItem from "$lib/pages/feed_list_view/post/post_item.svelte";
 
   import empty_logo from "$lib/assets/empty_logo.svg";
   import searching_logo from "$lib/assets/searching.svg";

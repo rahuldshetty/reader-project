@@ -2,7 +2,7 @@
   import { fade } from 'svelte/transition';
   import { getVersion } from "@tauri-apps/api/app";
 
-  import FeedItem from "$lib/feed/feed_item.svelte";
+  import FeedItem from "$lib/pages/feed_list_view/feed/feed_item.svelte";
 
   import AddFeedModal from "$lib/components/modals/add_modal.svelte";
   import UpdateFeedModal from "$lib/components/modals/update_modal.svelte";

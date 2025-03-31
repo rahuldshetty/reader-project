@@ -1,6 +1,6 @@
 <script lang="ts">
-    import RssFeed from "$lib/feed/rss_feed.svelte";
-    import PostFeed from "$lib/post/post_feed.svelte";
+    import RssFeed from "$lib/pages/feed_list_view/feed/rss_feed.svelte";
+    import PostFeed from "$lib/pages/feed_list_view/post/post_feed.svelte";
 
     import { selected_post } from "$lib/store";
     import ParserView from "$lib/content_view/parser_view.svelte";
