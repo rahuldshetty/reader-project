@@ -38,8 +38,8 @@
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <li 
     transition:slide={{delay:200, duration:500}}
-    class="bg-white rounded-md shadow overflow-hidden cursor-pointer hover:bg-gray-100 hover:text-text2 transition duration-200
-     { isPostSelected ? "bg-slate-100" : "text-text1"}
+    class="bg-background2 rounded-md shadow overflow-hidden cursor-pointer hover:bg-background1 hover:text-text2 transition duration-200
+     { isPostSelected ? "bg-slate-100" : !post_read? "" : "text-text1"}
     "
     onclick={handleSelectPost}
 >
@@ -47,20 +47,20 @@
         <img src={postImage} class="w-full h-48 object-cover" alt={postTitle}/>
     {:else}
         <div class="w-full h-48 flex items-center justify-center text-white" style="background: {randomGradient()}">
-            <p class="text-sm italic opacity-75">{postTitle}</p>
+            <p class="text-sm text-text3 opacity-75 m-20">{postTitle}</p>
         </div>
     {/if}
     <div class="p-4">
         <h2 class="text-lg font-semibold line-clamp-1">{postTitle}</h2>
         <div class="relative bottom-0 flex flex-row gap-2">
             <p class="text-sm text-gray-500">{postDate} by</p>
-            <div class="">
+            <div class="flex items-center justify-center">
                 <div class="flex flex-col">
                     <div class="flex flex-row items-center justify-center gap-1">
                         {#if feed.favicon}
                             <img src={feed.favicon} alt="Feed Logo" class="w-6 h-6" />
                         {/if}
-                        <p class="text-xs font-light right-3  z-0 italic">
+                        <p class="text-xs font-normal z-0 italic">
                             {feed.title}
                         </p>
                     </div>

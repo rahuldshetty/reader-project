@@ -7,6 +7,7 @@
     import ParserView from "$lib/content_view/parser_view.svelte";
     import "$lib/logging";
     import ThumbnailGridView from "./thumbnail_grid/thumbnail_grid_view.svelte";
+    import ThumbnailContent from "./thumbnail_grid/thumbnail_content.svelte";
 </script>
 
 <div
@@ -17,7 +18,11 @@
     <RssFeed />
 
     {#if $feed_view == FEED_VIEW.THUMBNAIL}
-        <ThumbnailGridView/>
+        {#if $selected_post && $selected_post.id}
+            <ThumbnailContent/>
+        {:else}
+            <ThumbnailGridView/>
+        {/if}
     {:else if $feed_view == FEED_VIEW.LIST}
         <!-- Second Column: News List -->
         <PostFeed />

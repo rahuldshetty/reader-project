@@ -13,7 +13,7 @@
     import { fetch_posts, fetch_unread_post_counts } from "$lib/db";
 
     import Fa from "svelte-fa";
-    import { faGrip } from "@fortawesome/free-solid-svg-icons";
+    import { faList } from "@fortawesome/free-solid-svg-icons";
 
     const sortPosts = async () => {
         $is_loading_posts = true;
@@ -150,11 +150,11 @@
         >
     </div>
 
-    <div class="text-text2 cursor-pointer" onclick={()=>{ $feed_view = FEED_VIEW.THUMBNAIL }}>
+    <div class="text-text2 cursor-pointer" onclick={()=>{ $feed_view = FEED_VIEW.LIST }}>
         <div class="flex flex-row">
-            <Fa icon={faGrip} size="lg" title="Show Thumbnail View"/>
+            <Fa icon={faList} size="lg" title="Show Thumbnail View"/>
             <label
-                class="ms-2 text-sm text-text2 font-semibold cursor-pointer">Thumbnail View</label
+                class="ms-2 text-sm text-text2 font-semibold cursor-pointer">List View</label
             >
         </div>
     </div>

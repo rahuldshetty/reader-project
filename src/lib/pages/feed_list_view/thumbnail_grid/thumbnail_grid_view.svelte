@@ -14,6 +14,7 @@
     import { onMount } from "svelte";
     import { NO_OF_POST_PULLS_PER_TIME } from "$lib/constants";
     import ThumbnailContent from "./thumbnail_content.svelte";
+    import ThumbnailBar from "./thumbnail_bar.svelte";
 
     // Filter posts by selected feed id
     const filtered_posts = derived(
@@ -118,25 +119,31 @@
 
         return () => observer.disconnect();
     });
+
+    selected_feed_id.subscribe((val)=>{
+        if (val && scrollContainer) {
+        scrollContainer.scrollTo({ top: 0, behavior: "smooth" })
+        }
+    });
+
 </script>
 
-{#if $selected_post && $selected_post.id}
-    <ThumbnailContent/>
-{:else}
-    <div class="flex flex-col bg-background2">
-        <div
-            bind:this={scrollContainer}
-            class={$filtered_posts?.length != 0
-                ? "overflow-auto scroll-smooth"
-                : ""}
-        >
-            <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 list-none">
-                {#each $filtered_posts as post}
-                    <ThumbnailCard {post} feed={feed_info_map[post.feed_id]} />
-                {/each}
 
-                <li bind:this={sentinel} aria-hidden="true" />
-            </ul>
-        </div>
+<div class="flex flex-col bg-background2">
+    <ThumbnailBar/>
+    <div
+        bind:this={scrollContainer}
+        class={$filtered_posts?.length != 0
+            ? "overflow-auto scroll-smooth"
+            : ""}
+    >
+        <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 list-none">
+            {#each $filtered_posts as post}
+                <ThumbnailCard {post} feed={feed_info_map[post.feed_id]} />
+            {/each}
+
+            <li bind:this={sentinel} aria-hidden="true" />
+        </ul>
     </div>
-{/if}
+</div>
+
