@@ -48,7 +48,7 @@
 
 </script>
 
-<div class="mb-2"> 
+<div class="mb-2">
     <AppButton onclick={prevPage} disabled={currentPage === 1} text={'Previous'}/>
     <AppButton onclick={nextPage} disabled={currentPage === pdfDocument?.numPages} text={'Next'}/>
 </div>

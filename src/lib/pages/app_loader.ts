@@ -9,6 +9,7 @@ import {
     unread_posts_only,
     themeMode,
     is_loading_splashscreen,
+    feed_view
 } from "$lib/store";
 import { get } from "svelte/store";
 
@@ -74,7 +75,9 @@ export const appLoader = async () => {
     console.log("Loading Reader App...");
     is_loading_splashscreen.set(true);
 
+    // Load Default Settings
     themeMode.set(await fetch_user_setting(SETTINGS.THEME_MODE));
+    feed_view.set(await fetch_user_setting(SETTINGS.CURRENT_FEED_VIEW));
 
     await delete_expired_posts(
         await fetch_user_setting(SETTINGS.POST_EXPIRY_TIME),

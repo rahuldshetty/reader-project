@@ -93,6 +93,12 @@
 
         $feed_unread_post_count = await fetch_unread_post_counts();
     };
+
+    const changeListView = async () => {
+        $feed_view = FEED_VIEW.LIST;
+        $selected_post = {};
+        await user_settings.set(SETTINGS.CURRENT_FEED_VIEW, FEED_VIEW.LIST);
+    }
 </script>
 
 <div class="shrink border-br p-2 flex flex-row gap-4">
@@ -151,10 +157,7 @@
         >
     </div>
 
-    <div class="text-text2 cursor-pointer" onclick={()=>{ 
-        $feed_view = FEED_VIEW.LIST;
-        $selected_post = {};
-     }}>
+    <div class="text-text2 cursor-pointer" onclick={changeListView}>
         <div class="flex flex-row">
             <Fa icon={faList} size="lg" title="Show Thumbnail View"/>
             <label

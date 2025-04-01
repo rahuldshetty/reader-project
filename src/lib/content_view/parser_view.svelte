@@ -133,11 +133,13 @@
             </div>
         </div>
 
-        {#if parsed.content_type == CONTENT_TYPES.html}
-            <HtmlContent content={parsed.content} image={parsed.image} title={parsed.title} url={parsed.url}/>
-        {:else if parsed.content_type == CONTENT_TYPES.pdf}
-            <PdfContent content={parsed.content} image={parsed.image} title={parsed.title} url={parsed.url}/>
-        {/if}
+        <div class="flex flex-col justify-center items-center w-full">
+            {#if parsed.content_type == CONTENT_TYPES.html}
+                <HtmlContent content={parsed.content} image={parsed.image} title={parsed.title} url={parsed.url}/>
+            {:else if parsed.content_type == CONTENT_TYPES.pdf}
+                <PdfContent content={parsed.content} image={parsed.image} title={parsed.title} url={parsed.url}/>
+            {/if}
+        </div>
         
     {/if}
 </div>

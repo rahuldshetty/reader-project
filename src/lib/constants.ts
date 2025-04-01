@@ -13,7 +13,8 @@ export enum SETTINGS {
     THEME_MODE = "THEME_MODE",
 
     // Posts to clear from DB if they have passed this time
-    POST_EXPIRY_TIME = "POST_EXPIRY_TIME", 
+    POST_EXPIRY_TIME = "POST_EXPIRY_TIME",
+    CURRENT_FEED_VIEW = "CURRENT_FEED_VIEW",
 }
 
 export enum THEMES{
