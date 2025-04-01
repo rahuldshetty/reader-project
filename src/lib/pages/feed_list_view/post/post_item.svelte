@@ -34,23 +34,23 @@
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <li 
     transition:slide={{delay:200, duration:500}}
-    class="p-4 border-b hover:bg-gray-100 hover:text-text2 cursor-pointer
-    { isPostSelected ? "bg-slate-100" : "text-text1"}
+    class="p-4 border-b hover:bg-gray-100 cursor-pointer
+    { isPostSelected ? "bg-slate-100" : ""}
     "
     onclick={handleSelectPost}
 >
     <div class="flex flex-row">
         {#if postImage && postImage != ""}
-            <img src={postImage} class="w-20 h-20 object-scale-down" alt={postTitle}/>
+            <img src={postImage} class="w-20 h-20 object-fit" alt={postTitle}/>
         {/if}
-        <h3 class="text-sm font-semibold m-2">{postTitle}</h3>
+        <h3 class="text-sm {!post_read ? "font-semibold":"font-medium"} {postImage? "mt-2 ml-2":""}">{postTitle}</h3>
     </div>
     <p class="text-xs text-text2">{postDate}</p>
-    {#if !post_read}
+    <!-- {#if !post_read}
         <div class="text-xs text-primary2 font-extrabold relative">
             <p class="absolute right-0 bottom-0 z-0 animate-pulse">
                 NEW
             </p>
         </div>
-    {/if}
+    {/if} -->
 </li>

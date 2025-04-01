@@ -51,7 +51,7 @@
         </div>
     {/if}
     <div class="p-4">
-        <h2 class="text-lg font-semibold line-clamp-1">{postTitle}</h2>
+        <h2 class="text-lg {!post_read ? "font-semibold":"font-medium"} line-clamp-1">{postTitle}</h2>
         <div class="relative bottom-0 flex flex-row gap-2">
             <p class="text-sm text-gray-500">{postDate} by</p>
             <div class="flex items-center justify-center">

@@ -8,7 +8,8 @@
         feed_unread_post_count,
         unread_posts_only,
         is_loading_posts,
-        feed_view
+        feed_view,
+        selected_post
     } from "$lib/store";
     import { fetch_posts, fetch_unread_post_counts } from "$lib/db";
 
@@ -150,7 +151,10 @@
         >
     </div>
 
-    <div class="text-text2 cursor-pointer" onclick={()=>{ $feed_view = FEED_VIEW.LIST }}>
+    <div class="text-text2 cursor-pointer" onclick={()=>{ 
+        $feed_view = FEED_VIEW.LIST;
+        $selected_post = {};
+     }}>
         <div class="flex flex-row">
             <Fa icon={faList} size="lg" title="Show Thumbnail View"/>
             <label
