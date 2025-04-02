@@ -127,7 +127,9 @@ export const appLoader = async () => {
     // console.debug(JSON.stringify($posts_by_feed_store));
 
     // Set the frontend task as being completed
+    console.log('FRONTEND TASK DONE!')
     invoke("set_complete", { task: "frontend" });
     is_loading_splashscreen.set(false);
+    console.log('APP LOAD FINISHED!')
 };
 
