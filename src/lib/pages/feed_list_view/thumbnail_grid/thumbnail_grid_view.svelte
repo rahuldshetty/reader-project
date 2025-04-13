@@ -107,8 +107,7 @@
                         $posts_by_feed_store = newPost;
 
                         // Update no. of unread posts
-                        $feed_unread_post_count =
-                            await fetch_unread_post_counts();
+                        $feed_unread_post_count = await fetch_unread_post_counts();
                     }
                 }
             },
@@ -142,7 +141,7 @@
                 <ThumbnailCard {post} feed={feed_info_map[post.feed_id]} />
             {/each}
 
-            <li bind:this={sentinel} aria-hidden="true" />
+            <li bind:this={sentinel} aria-hidden="true"></li>
         </ul>
     </div>
 </div>

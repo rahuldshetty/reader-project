@@ -85,7 +85,7 @@
 
     if (sentinel) observer.observe(sentinel);
 
-    return () => observer.disconnect();
+    return () => observer.disconnect()
   });
 
   // Filter posts by selected feed id
@@ -141,7 +141,7 @@
         <PostItem {post} />
       {/each}
 
-      <li bind:this={sentinel} aria-hidden="true" />
+      <li bind:this={sentinel} aria-hidden="true" ></li>
     </ul>
   </div>
 </div>
