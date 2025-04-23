@@ -162,7 +162,7 @@
 
     <div class="text-text2 cursor-pointer" onclick={changeThumbnailView}>
         <div class="flex flex-row">
-            <Fa icon={faGrip} size="lg" title="Show Thumbnail View"/>
+            <Fa icon={faGrip} size="lg" title="Thumbnail View"/>
             <label
                 class="ms-2 text-sm text-text2 font-semibold cursor-pointer">Thumbnail View</label
             >

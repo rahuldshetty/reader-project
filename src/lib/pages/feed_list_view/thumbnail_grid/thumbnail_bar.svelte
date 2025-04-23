@@ -160,7 +160,7 @@
 
     <div class="text-text2 cursor-pointer" onclick={changeListView}>
         <div class="flex flex-row">
-            <Fa icon={faList} size="lg" title="Show Thumbnail View"/>
+            <Fa icon={faList} size="lg" title="List View"/>
             <label
                 class="ms-2 text-sm text-text2 font-semibold cursor-pointer">List View</label
             >

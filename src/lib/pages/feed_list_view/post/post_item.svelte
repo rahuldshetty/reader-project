@@ -45,7 +45,7 @@
         {/if}
         <h3 class="text-sm {!post_read ? "font-semibold":"font-medium"} {postImage? "mt-2 ml-2":""}">{postTitle}</h3>
     </div>
-    <p class="text-xs text-text2">{postDate}</p>
+    <p class="text-xs text-text2 mt-1">{postDate}</p>
     <!-- {#if !post_read}
         <div class="text-xs text-primary2 font-extrabold relative">
             <p class="absolute right-0 bottom-0 z-0 animate-pulse">

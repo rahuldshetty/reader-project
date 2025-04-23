@@ -4,7 +4,7 @@
 </script>
 
 <div
-    class="w-full h-screen cursor-default flex flex-col items-center justify-center gap-10"
+    class=" w-full h-screen cursor-default flex flex-col items-center justify-center gap-10"
 >
     <img src={empty_logo} class="object-contain w-32" alt="Not Found" />
     <p class="text-xs text-text1">{message}</p>

@@ -15,6 +15,7 @@
     import { NO_OF_POST_PULLS_PER_TIME } from "$lib/constants";
     import ThumbnailContent from "./thumbnail_content.svelte";
     import ThumbnailBar from "./thumbnail_bar.svelte";
+    import EmptyState from "$lib/components/empty_state.svelte";
 
     // Filter posts by selected feed id
     const filtered_posts = derived(
@@ -130,6 +131,10 @@
 
 <div class="flex flex-col bg-background2">
     <ThumbnailBar/>
+    {#if $filtered_posts?.length == 0}
+        <!-- Show empty state -->
+        <EmptyState message="Could not find posts" />
+    {:else}
     <div
         bind:this={scrollContainer}
         class={$filtered_posts?.length != 0
@@ -144,5 +149,6 @@
             <li bind:this={sentinel} aria-hidden="true"></li>
         </ul>
     </div>
+    {/if}
 </div>
 
