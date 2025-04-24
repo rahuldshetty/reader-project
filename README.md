@@ -21,7 +21,8 @@
 - 📰 Content Extraction - Load and display article contents efficiently.
 
 - 🔡 Article Translation powered by Google Translate.
-    ![Translation Demo](media/translation-demo.mp4)
+
+![Translation Demo](docs/media/translation-demo.mp4)
 
 ## 🛠️ Tech Stack
 - Frontend: SvelteKit + Tailwind CSS
