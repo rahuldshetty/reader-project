@@ -19,10 +19,7 @@
 - 📁 Offline Storage - Persist articles in an SQLite database.
 - 🎨 Modern UI - Built with Tailwind CSS for a smooth experience.
 - 📰 Content Extraction - Load and display article contents efficiently.
-
 - 🔡 Article Translation powered by Google Translate.
-
-![Translation Demo](docs/media/translation-demo.mp4)
 
 ## 🛠️ Tech Stack
 - Frontend: SvelteKit + Tailwind CSS
