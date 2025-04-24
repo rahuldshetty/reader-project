@@ -7,6 +7,7 @@
   import AddFeedModal from "$lib/components/modals/add_modal.svelte";
   import UpdateFeedModal from "$lib/components/modals/update_modal.svelte";
   import SettingsModal from "$lib/components/modals/settingsModal.svelte";
+  import TranslateModal from '$lib/components/modals/translate_modal.svelte';
 
   import { feeds_store, minimize_feeds } from "$lib/store";
   import FeedOptions from "./feed_options.svelte";
@@ -16,6 +17,7 @@
 <AddFeedModal />
 <UpdateFeedModal />
 <SettingsModal />
+<TranslateModal />
 
 <div
   class="bg-background1 flex flex-col h-screen

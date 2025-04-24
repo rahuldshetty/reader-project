@@ -27,6 +27,7 @@ tauri-plugin-http = "2"
 tauri-plugin-store = "2"
 tauri-plugin-log = "2"
 tauri-plugin-shell = "2"
+rust-translate = "0.1.3"
 
 [profile.dev]
 incremental = true # Compile your binary in smaller steps.

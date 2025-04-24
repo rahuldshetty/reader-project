@@ -2,6 +2,7 @@ use std::sync::Mutex;
 use tauri::{AppHandle, Manager, State};
 
 mod db;
+mod experimental;
 
 // Create a struct we'll use to track the completion of
 // setup related tasks
@@ -77,7 +78,7 @@ pub fn run() {
                 .build(),
         )
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet, set_complete])
+        .invoke_handler(tauri::generate_handler![greet, set_complete, experimental::translate_text])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
