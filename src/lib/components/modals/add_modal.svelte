@@ -23,12 +23,14 @@
   let feedIcon = $state("");
   let feedPosts = $state([]);
   let feedId = $state(-1);
+
+  let feed_type = $state(FEED_TYPE.FEED);
   let folder = $state(-1);
 
   async function addFeed() {
     if (feedName.trim() !== "") {
       // TODO: Select specific folder
-      const id = await add_feed(feedName, feedURL, feedIcon, FEED_TYPE.FEED, folder);
+      const id = await add_feed(feedName, feedURL, feedIcon, feed_type, folder);
       if (id) {
         feedId = id;
       } else {
@@ -42,33 +44,37 @@
           title: feedName,
           url: feedURL,
           favicon: feedIcon,
+          type: feed_type,
+          parent: folder,
         },
       ];
-
-      // Insert posts into DB
-      if (feedPosts) {
-        const posts = [];
-        for (var post of feedPosts) {
-          posts.push({
-            ...post,
-            feed_id: feedId,
-          });
+      
+      if (feed_type == FEED_TYPE.FEED){
+        // Insert posts into DB
+        if (feedPosts) {
+          const posts = [];
+          for (var post of feedPosts) {
+            posts.push({
+              ...post,
+              feed_id: feedId,
+            });
+          }
+          await add_posts(posts);
         }
-        await add_posts(posts);
+        $is_loading_posts = true;
+
+        $posts_by_feed_store[feedId] = await fetch_posts(
+          $posts_sort_by,
+          null,
+          feedId,
+          0,
+          NO_OF_POST_PULLS_PER_TIME,
+          $unread_posts_only,
+        );
+        $selected_feed_id = feedId;
       }
-      $is_loading_posts = true;
 
-      $posts_by_feed_store[feedId] = await fetch_posts(
-        $posts_sort_by,
-        null,
-        feedId,
-        0,
-        NO_OF_POST_PULLS_PER_TIME,
-        $unread_posts_only,
-      );
       $feed_unread_post_count = await fetch_unread_post_counts();
-      $selected_feed_id = feedId;
-
       $is_loading_posts = false;
       feedURL = "";
       feedName = "";
@@ -79,6 +85,10 @@
   }
 
   async function handleFeedURLChange() {
+    // Fetch feed metadata and posts from the Feed URL change
+    if(feed_type == FEED_TYPE.FOLDER) 
+      return;
+
     const response = await fetchRSSMetadata(-1, feedURL);
     if (response) {
       feedName = response.name;
@@ -95,16 +105,43 @@
   "
 >
   <div class="bg-white p-6 rounded-lg shadow-lg w-96">
-    <h2 class="text-lg font-bold mb-4">Add New Feed</h2>
+    <h2 class="text-lg font-bold mb-4">Create Feed</h2>
 
-    <label class="block mb-2 text-sm font-medium">Feed URL</label>
-    <input
-      type="url"
-      placeholder="Enter RSS URL"
-      class="w-full px-3 py-2 border rounded-lg mb-4"
-      bind:value={feedURL}
-      onchange={handleFeedURLChange}
-    />
+    <div class="flex flex-row gap-4 mb-4">
+      <label class="block text-sm font-medium">Feed Type:</label>
+      <label class="flex items-center space-x-2">
+        <input
+          type="radio"
+          class="accent-blue-500"
+          name="options"
+          bind:group={feed_type}
+          value={FEED_TYPE.FEED}
+        />
+        <span class="block text-sm font-medium">Feed</span>
+      </label>
+    
+      <label class="flex items-center space-x-2">
+        <input
+          type="radio"
+          class="accent-blue-500"
+          name="options"
+          bind:group={feed_type}
+          value={FEED_TYPE.FOLDER}
+        />
+        <span class="block text-sm font-medium">Folder</span>
+      </label>
+    </div>
+
+    {#if feed_type == FEED_TYPE.FEED}
+      <label class="block mb-2 text-sm font-medium">Feed URL</label>
+      <input
+        type="url"
+        placeholder="Enter RSS URL"
+        class="w-full px-3 py-2 border rounded-lg mb-4"
+        bind:value={feedURL}
+        onchange={handleFeedURLChange}
+      />
+    {/if}
 
     <div class="flex">
       <div class="">

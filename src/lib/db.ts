@@ -7,7 +7,7 @@ const db = await Database.load(DB_PATH);
 
 export const fetch_feed = async () => {
     const result = await db.select(
-        "SELECT * from feeds"
+        "SELECT * from feeds where type=0"
     );
     console.log("DB: FETCH FEED")
     return result;
