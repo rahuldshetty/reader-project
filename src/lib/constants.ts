@@ -28,6 +28,11 @@ export enum FEED_VIEW {
     THUMBNAIL = "thumbnail",
 }
 
+export enum FEED_TYPE {
+    FEED = 0,
+    FOLDER = 1,
+}
+
 export const NO_OF_POST_PULLS_PER_TIME = 20;
 
 // Measured in Hours
@@ -42,3 +47,4 @@ export enum CONTENT_TYPES {
     html,
     pdf
 }
+

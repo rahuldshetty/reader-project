@@ -1,5 +1,5 @@
 import Database from '@tauri-apps/plugin-sql';
-import { DB_PATH, DB_ORDER_ENUM, NO_OF_POST_PULLS_PER_TIME } from '$lib/constants';
+import { DB_PATH, DB_ORDER_ENUM, NO_OF_POST_PULLS_PER_TIME, FEED_TYPE} from '$lib/constants';
 import { convertToTimeStringForDB, escape_title } from "$lib/utils";
 
 
@@ -13,10 +13,16 @@ export const fetch_feed = async () => {
     return result;
 }
 
-export const add_feed = async (title: String, url: String, favicon: String) => {
+export const add_feed = async (
+    title: String, 
+    url: String, 
+    favicon: String, 
+    type: FEED_TYPE,
+    parent: number,
+) => {
     const response = await db.execute(
-        "INSERT into feeds (title, url, favicon) VALUES ($1, $2, $3) RETURNING id",
-        [title, url, favicon],
+        "INSERT into feeds (title, url, favicon, type, parent) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+        [title, url, favicon, type, parent],
     );
     console.log("DB: ADD FEED")
     return response.lastInsertId;
@@ -31,8 +37,16 @@ export const update_feed = async (title: string, feed_id: number) => {
 }
 
 export const delete_feed = async (feed_id: number) => {
+    // Delete feed
     await db.execute(
-        `DELETE FROM feeds WHERE id = $1`,
+        `WITH RECURSIVE descendants(id) AS (
+            SELECT id FROM feeds WHERE id = $1
+            UNION ALL
+            SELECT n.id
+            FROM feeds n
+            JOIN descendants d ON n.parent = d.id
+        )
+        DELETE FROM feeds WHERE id IN (SELECT id FROM descendants);`,
         [feed_id],
     );
     console.log("DB: UPDATE FEED")
@@ -75,37 +89,6 @@ export const add_posts = async (posts: { title: string, link: string, pubDate: s
     console.log("DB: ADD POSTS");
     console.log("DB: REFRESH FEED LRT");
 }
-
-export const add_posts_v2 = async (posts: { title: string, link: string, pubDate: string, feed_id: Number, image_url: string, word_count: number, content: string }[]) => {
-    // Feeds to update
-    const feedsSet = new Set();
-
-    for(const post of posts){
-        const date = convertToTimeStringForDB(post.pubDate);
-        const result = await db.execute(
-            `INSERT OR IGNORE INTO articles 
-                (feed_id, title, link, pub_date, image_url, word_count, content) VALUES 
-                ($1, $2, $3, $4, $5, $6, $7)
-            `,
-            [post.feed_id, post.title, post.link, date, post.image_url, post.word_count, post.content],
-        );
-        if(result.rowsAffected > 0){
-            feedsSet.add(post.feed_id);
-        }
-    }
-    console.log("DB: ADD POSTS");
-
-    // Update Last Refresh Time (LRT)
-    if (feedsSet.size > 0) {
-        const value_string_feeds = Array.from(feedsSet).join(", ");
-        const currentTime = new Date().toISOString();
-        await db.execute(
-            `UPDATE feeds SET last_refresh_time = "${currentTime}" WHERE id in (${value_string_feeds})`
-        );
-    }
-    console.log("DB: REFRESH FEED LRT");
-}
-
 
 export const fetch_posts = async (
     sort_by: DB_ORDER_ENUM = DB_ORDER_ENUM.NEWEST,

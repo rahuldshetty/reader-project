@@ -1,5 +1,5 @@
 <script>
-  import { NO_OF_POST_PULLS_PER_TIME, MODAL_TYPE } from "$lib/constants";
+  import { NO_OF_POST_PULLS_PER_TIME, MODAL_TYPE, FEED_TYPE } from "$lib/constants";
   import {
     add_feed,
     add_posts,
@@ -23,10 +23,12 @@
   let feedIcon = $state("");
   let feedPosts = $state([]);
   let feedId = $state(-1);
+  let folder = $state(-1);
 
   async function addFeed() {
     if (feedName.trim() !== "") {
-      const id = await add_feed(feedName, feedURL, feedIcon);
+      // TODO: Select specific folder
+      const id = await add_feed(feedName, feedURL, feedIcon, FEED_TYPE.FEED, folder);
       if (id) {
         feedId = id;
       } else {
@@ -73,6 +75,7 @@
       feedIcon = "";
       feedPosts = [];
     }
+    // TODO: Error handling when name is not valid.
   }
 
   async function handleFeedURLChange() {
