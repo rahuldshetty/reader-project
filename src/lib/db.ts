@@ -22,6 +22,17 @@ export const fetch_folders = async () => {
     return result;
 }
 
+export const fetch_folder_ids_for_open_status = async () => {
+    const result = await db.select(
+        "SELECT * from feeds where type=1"
+    );
+    let mapping = {};
+    for(const folder of result){
+        mapping[folder.id] = false; 
+    }
+    return mapping;
+}
+
 export const fetch_folder_feeds = async () => {
     // Returns a list of folder and feeds
     // Only 1 max folder level available at the moment

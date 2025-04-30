@@ -9,7 +9,8 @@ import {
     unread_posts_only,
     themeMode,
     is_loading_splashscreen,
-    feed_view
+    feed_view,
+    feed_parent_open_status
 } from "$lib/store";
 import { get } from "svelte/store";
 
@@ -20,6 +21,7 @@ import {
     fetch_posts,
     fetch_unread_post_counts,
     delete_expired_posts,
+    fetch_folder_ids_for_open_status,
 } from "$lib/db";
 
 import {
@@ -91,7 +93,9 @@ export const appLoader = async () => {
     is_loading_feed.set(false);
 
     // Set foldered feeds
-    const feed_folders = await fetch_folder_feeds()
+    const feed_folders = await fetch_folder_feeds();
+    feed_parent_open_status.set(await fetch_folder_ids_for_open_status());
+
     feeds_store.set(feed_folders);
 
     posts_by_feed_store.update(store => {

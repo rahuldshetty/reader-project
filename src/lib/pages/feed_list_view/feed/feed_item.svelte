@@ -9,21 +9,23 @@
         minimize_feeds,
         unread_posts_only,
         feed_view,
-        selected_post
+        selected_post,
+
+        feed_parent_open_status
+
     } from "$lib/store";
     import { NO_OF_POST_PULLS_PER_TIME, FEED_VIEW, FEED_TYPE } from "$lib/constants";
 
     import Fa from "svelte-fa";
     import { faStar, faRss, faFolderOpen, faFolder } from "@fortawesome/free-solid-svg-icons";
 
-    let { id, title, url, favicon, type, parent } = $props();
+    let { id, title, url, favicon, type, parent, is_child_node } = $props();
 
     let folderOpen = $state(false);
 
     const count = $derived($feed_unread_post_count[id]);
 
     const update_feed_id = async () => {
-        $selected_feed_id = id;
         if(type == FEED_TYPE.FEED){
             const posts = await fetch_posts(
                 $posts_sort_by,
@@ -38,9 +40,11 @@
                 $selected_post = {};
             }
         } else if(type == FEED_TYPE.FOLDER){
-            // TODO: Fetch different feed ids for the parent folder
             folderOpen = !folderOpen;
+            $feed_parent_open_status[id] = !$feed_parent_open_status[id];
+            // TODO: Gather multiple feed ids to search for parent
         }
+        $selected_feed_id = id;
     };
 </script>
 
@@ -51,6 +55,7 @@
     class="flex items-center cursor-pointer gap-2 p-2 text-text1 hover:bg-primary2 hover:text-text3
     rounded ml-2 mr-2 mt-1
     {$selected_feed_id == id ? 'bg-primary2 text-text3' : ''}
+    {!$minimize_feeds && is_child_node? "ml-8":""}
     "
     in:fade={{ delay: 300, duration: 500 }}
     out:slide

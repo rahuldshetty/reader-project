@@ -5,6 +5,7 @@ import { writable } from 'svelte/store';
 
 export const feeds_store = writable([]);
 export const feed_unread_post_count = writable({});
+export const feed_parent_open_status = writable({});
 export const minimize_feeds = writable(true);
 export const feed_view = writable(FEED_VIEW.LIST);
 

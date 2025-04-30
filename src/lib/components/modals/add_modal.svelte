@@ -7,6 +7,7 @@
     fetch_posts,
     fetch_folder_feeds,
     fetch_folders,
+    fetch_folder_ids_for_open_status,
   } from "$lib/db";
   import {
     feeds_store,
@@ -17,6 +18,7 @@
     posts_sort_by,
     unread_posts_only,
     selected_modal,
+    feed_parent_open_status,
   } from "$lib/store";
   import { fetchRSSMetadata } from "$lib/utils";
 
@@ -47,6 +49,7 @@
         return;
       }
       $feeds_store = await fetch_folder_feeds();
+      $feed_parent_open_status = await fetch_folder_ids_for_open_status();
       
       if (feed_type == FEED_TYPE.FEED){
         // Insert posts into DB

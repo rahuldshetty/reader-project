@@ -1,7 +1,7 @@
 <script>
   import { MODAL_TYPE, FEED_TYPE } from "$lib/constants";
-  import { fetch_folder_feeds, update_feed, delete_feed, fetch_folders } from "$lib/db";
-  import { feeds_store, selected_feed_id, selected_modal } from "$lib/store";
+  import { fetch_folder_feeds, update_feed, delete_feed, fetch_folders, fetch_folder_ids_for_open_status, fetch_feed } from "$lib/db";
+  import { feed_parent_open_status, feeds_store, selected_feed_id, selected_modal } from "$lib/store";
 
   let feedName = $state("");
   let feedURL = $state("");
@@ -9,9 +9,11 @@
   let feedType = $state(FEED_TYPE.FEED);
   let folder = $state(-1);
 
-  selected_feed_id.subscribe((selected_feed_id) => {
-    if (selected_feed_id != -1)
-      for (const feed of $feeds_store) {
+  selected_feed_id.subscribe(async (selected_feed_id) => {
+    console.log(`SELECTED FEED ID: ${selected_feed_id}`);
+    if (selected_feed_id != -1 && selected_feed_id != -2){
+      const feeds = await fetch_feed();
+      for (const feed of feeds) {
         if (feed.id == selected_feed_id) {
           feedName = feed.title;
           feedURL = feed.url;
@@ -20,6 +22,7 @@
           return;
         }
       }
+    }
   });
 
   async function updateFeed() {
@@ -31,6 +34,7 @@
     await delete_feed($selected_feed_id);
     $selected_feed_id = -1;
     $feeds_store = await fetch_folder_feeds();
+    $feed_parent_open_status = await fetch_folder_ids_for_open_status();
     feedURL = "";
     feedName = "";
     feedIcon = "";

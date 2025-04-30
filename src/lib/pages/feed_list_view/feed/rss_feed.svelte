@@ -9,9 +9,10 @@
   import SettingsModal from "$lib/components/modals/settingsModal.svelte";
   import TranslateModal from '$lib/components/modals/translate_modal.svelte';
 
-  import { feeds_store, minimize_feeds } from "$lib/store";
+  import { feeds_store, minimize_feeds, selected_feed_id, feed_parent_open_status } from "$lib/store";
   import FeedOptions from "./feed_options.svelte";
   import FeedExpand from "./feed_expand.svelte";
+    import { FEED_TYPE } from '$lib/constants';
 </script>
 
 <AddFeedModal />
@@ -41,8 +42,8 @@
   {/if}
 
   <ul class="flex-grow overflow-auto">
-    <FeedItem id={-1} title="All Posts" url={null} favicon={null} type={0} parent={-1}/>
-    <FeedItem id={-2} title="My Favorites" url={null} favicon={null} type={0} parent={-1}/>
+    <FeedItem id={-1} title="All Posts" url={null} favicon={null} type={0} parent={-1} is_child_node={false}/>
+    <FeedItem id={-2} title="My Favorites" url={null} favicon={null} type={0} parent={-1} is_child_node={false}/>
     {#each $feeds_store as feed}
       <FeedItem
         id={feed.id}
@@ -51,7 +52,21 @@
         url={feed.url}
         type={feed.type}
         parent={feed.parent}
+        is_child_node={false}
       />
+      {#if $feed_parent_open_status[feed.id]}
+      {#each feed.children as child_feed}
+        <FeedItem
+          id={child_feed.id}
+          title={child_feed.title}
+          favicon={child_feed.favicon}
+          url={child_feed.url}
+          type={child_feed.type}
+          parent={child_feed.parent}
+          is_child_node={true}
+        />
+      {/each}
+      {/if}
     {/each}
   </ul>
 
