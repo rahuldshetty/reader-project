@@ -13,7 +13,8 @@
     console.log(`SELECTED FEED ID: ${selected_feed_id}`);
     if (selected_feed_id != -1 && selected_feed_id != -2){
       const feeds = await fetch_feed();
-      for (const feed of feeds) {
+      const folders = await fetch_folders();
+      for (const feed of feeds.concat(folders)) {
         if (feed.id == selected_feed_id) {
           feedName = feed.title;
           feedURL = feed.url;
