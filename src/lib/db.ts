@@ -13,6 +13,49 @@ export const fetch_feed = async () => {
     return result;
 }
 
+
+export const fetch_folders = async () => {
+    const result = await db.select(
+        "SELECT * from feeds where type=1"
+    );
+    console.log("DB: FETCH FOLDERS")
+    return result;
+}
+
+export const fetch_folder_feeds = async () => {
+    // Returns a list of folder and feeds
+    // Only 1 max folder level available at the moment
+    const feeds = await fetch_feed();
+    let folders = await fetch_folders();
+
+    let folder_id_to_map_idx = {};
+    for(let i=0; i < folders.length; i++){
+        const id = folders[i].id;
+        folder_id_to_map_idx[id] = i;
+    }
+    console.log(folders)
+    console.log(folder_id_to_map_idx);
+
+    for(const feed of feeds){
+        // Add feeds into folder that don't have parent
+        if(feed.parent == -1){
+            folders.push(feed);
+        } else {
+            // Place the feed under folder
+            const parent_idx = folder_id_to_map_idx[feed.parent];
+            if("children" in folders[parent_idx]){
+                folders[parent_idx]['children'].push(feed);
+            } else {
+                folders[parent_idx]['children'] = [feed];
+            }
+        }
+    }
+    console.log(folders);
+    
+    return folders;
+}
+
+
 export const add_feed = async (
     title: String, 
     url: String, 
@@ -28,10 +71,10 @@ export const add_feed = async (
     return response.lastInsertId;
 }
 
-export const update_feed = async (title: string, feed_id: number) => {
+export const update_feed = async (title: string, feed_id: number, folder: number) => {
     await db.execute(
-        `UPDATE feeds SET title = $1 WHERE id = $2`,
-        [title, feed_id],
+        `UPDATE feeds SET title = $1, parent = $3 WHERE id = $2`,
+        [title, feed_id, folder],
     );
     console.log("DB: UPDATE FEED:")
 }

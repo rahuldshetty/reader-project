@@ -41,14 +41,16 @@
   {/if}
 
   <ul class="flex-grow overflow-auto">
-    <FeedItem id={-1} title="All Posts" url={null} favicon={null} />
-    <FeedItem id={-2} title="My Favorites" url={null} favicon={null} />
+    <FeedItem id={-1} title="All Posts" url={null} favicon={null} type={0} parent={-1}/>
+    <FeedItem id={-2} title="My Favorites" url={null} favicon={null} type={0} parent={-1}/>
     {#each $feeds_store as feed}
       <FeedItem
         id={feed.id}
         title={feed.title}
         favicon={feed.favicon}
         url={feed.url}
+        type={feed.type}
+        parent={feed.parent}
       />
     {/each}
   </ul>

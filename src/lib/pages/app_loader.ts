@@ -16,6 +16,7 @@ import { get } from "svelte/store";
 import {
     add_posts,
     fetch_feed,
+    fetch_folder_feeds,
     fetch_posts,
     fetch_unread_post_counts,
     delete_expired_posts,
@@ -87,8 +88,11 @@ export const appLoader = async () => {
     is_loading_posts.set(true);
 
     const fetchedFeeds = await fetch_feed();
-    feeds_store.set(fetchedFeeds);
     is_loading_feed.set(false);
+
+    // Set foldered feeds
+    const feed_folders = await fetch_folder_feeds()
+    feeds_store.set(feed_folders);
 
     posts_by_feed_store.update(store => {
         fetchedFeeds.forEach(feed => {

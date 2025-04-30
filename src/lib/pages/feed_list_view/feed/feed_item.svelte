@@ -11,28 +11,32 @@
         feed_view,
         selected_post
     } from "$lib/store";
-    import { NO_OF_POST_PULLS_PER_TIME, FEED_VIEW } from "$lib/constants";
+    import { NO_OF_POST_PULLS_PER_TIME, FEED_VIEW, FEED_TYPE } from "$lib/constants";
 
     import Fa from "svelte-fa";
     import { faStar } from "@fortawesome/free-solid-svg-icons";
 
-    let { id, title, url, favicon } = $props();
+    let { id, title, url, favicon, type, parent } = $props();
 
     const count = $derived($feed_unread_post_count[id]);
 
     const update_feed_id = async () => {
         $selected_feed_id = id;
-        const posts = await fetch_posts(
-            $posts_sort_by,
-            null,
-            $selected_feed_id,
-            0,
-            NO_OF_POST_PULLS_PER_TIME,
-            $unread_posts_only,
-        );
-        $posts_by_feed_store[$selected_feed_id] = posts;
-        if($feed_view == FEED_VIEW.THUMBNAIL){
-            $selected_post = {};
+        if(type == FEED_TYPE.FEED){
+            const posts = await fetch_posts(
+                $posts_sort_by,
+                null,
+                $selected_feed_id,
+                0,
+                NO_OF_POST_PULLS_PER_TIME,
+                $unread_posts_only,
+            );
+            $posts_by_feed_store[$selected_feed_id] = posts;
+            if($feed_view == FEED_VIEW.THUMBNAIL){
+                $selected_post = {};
+            }
+        } else if(type == FEED_TYPE.FOLDER){
+            // TODO: Fetch different feed ids for the parent folder
         }
     };
 </script>

@@ -5,6 +5,8 @@
     add_posts,
     fetch_unread_post_counts,
     fetch_posts,
+    fetch_folder_feeds,
+    fetch_folders,
   } from "$lib/db";
   import {
     feeds_store,
@@ -30,6 +32,13 @@
   async function addFeed() {
     if (feedName.trim() !== "") {
       // TODO: Select specific folder
+
+      // feedURL has unique constraint on DB.
+      //  so we set it to name of feed to avoid issues inserting
+      if(feed_type == FEED_TYPE.FOLDER){
+        feedURL = feedName;
+      }
+
       const id = await add_feed(feedName, feedURL, feedIcon, feed_type, folder);
       if (id) {
         feedId = id;
@@ -37,17 +46,7 @@
         console.error("Unable to add data to feed table");
         return;
       }
-      $feeds_store = [
-        ...$feeds_store,
-        {
-          id: feedId,
-          title: feedName,
-          url: feedURL,
-          favicon: feedIcon,
-          type: feed_type,
-          parent: folder,
-        },
-      ];
+      $feeds_store = await fetch_folder_feeds();
       
       if (feed_type == FEED_TYPE.FEED){
         // Insert posts into DB
@@ -160,6 +159,22 @@
         </div>
       {/if}
     </div>
+
+    {#if feed_type == FEED_TYPE.FEED}
+    <div class="flex flex-col mb-4">
+      <label class="block text-sm flex gap-1 font-medium">
+        <p>Group under</p>
+      </label>
+      <select bind:value={folder} class="border-0 border-b-2  bg-transparent appearance-none border-neutral-500 focus:outline-none text-neutral-900 text-sm block w-full p-2.5 peer">
+        <option value={-1}>Parent</option>
+        {#await fetch_folders() then folders}
+          {#each folders as folder}
+            <option value={folder.id}>{folder.title}</option>
+          {/each}
+        {/await}
+      </select>
+    </div>   
+    {/if}
 
     <div class="flex justify-end gap-2">
       <button
