@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { fetch } from '@tauri-apps/plugin-http';
 
 import { user_settings } from '$lib/store';
-import { SETTINGS, POST_EXPIRY_TIME, LAST_REFRESH_TIME, THEMES, FEED_VIEW } from '$lib/constants';
+import { SETTINGS, POST_EXPIRY_TIME, LAST_REFRESH_TIME, THEMES, FEED_VIEW, FEED_TYPE } from '$lib/constants';
 
 export const fetchRSSMetadata = async (id: Number, url: string) => {
     if (!validateURL(url)) {
@@ -257,3 +257,24 @@ export const runWithTimeout = (promise, ms=3000) => {
     );
     return Promise.race([promise, timeout]);
 };
+
+export const convertFeedDataToOPML = (feed_data) => {
+    let opml_body = "";
+
+    for(const feed of feed_data){
+        console.log(feed);
+        if(feed.type == FEED_TYPE.FOLDER){
+            if(feed.children){
+                opml_body += `\t\t<outline text="${feed.title}">\n`
+                for(const child_feed of feed.children){
+                    opml_body += `\t\t\t\t<outline text="${child_feed.title}" xmlUrl="${child_feed.url}"/>\n`
+                }
+                opml_body += `\t\t</outline>\n`
+            }
+        } else{
+            opml_body += `\t\t<outline text="${feed.title}" xmlUrl="${feed.url}"/>\n`
+        }
+    }
+
+    return `<opml version="1.0">\t\n<body>\n${opml_body}\t</body>\n</opml>`;
+}

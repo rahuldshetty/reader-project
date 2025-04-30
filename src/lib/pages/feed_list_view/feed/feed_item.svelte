@@ -93,7 +93,7 @@
     {/if}
 
     {#if !$minimize_feeds}
-        <span class="text-sm truncate">{title}</span>
+        <span class="text-sm truncate max-w-28">{title}</span>
     {/if}
 
     {#if count && count != 0}

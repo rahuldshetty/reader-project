@@ -12,7 +12,7 @@
   import { feeds_store, minimize_feeds, selected_feed_id, feed_parent_open_status } from "$lib/store";
   import FeedOptions from "./feed_options.svelte";
   import FeedExpand from "./feed_expand.svelte";
-    import { FEED_TYPE } from '$lib/constants';
+  import { FEED_TYPE } from '$lib/constants';
 </script>
 
 <AddFeedModal />

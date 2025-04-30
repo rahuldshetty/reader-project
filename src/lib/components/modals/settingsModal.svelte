@@ -1,9 +1,11 @@
 <script>
   import { SETTINGS, MODAL_TYPE, THEMES } from "$lib/constants";
 
-  import { user_settings, selected_modal, themeMode } from "$lib/store";
-  import { capitalizeFirstLetter, fetch_user_setting } from "$lib/utils";
+  import { user_settings, selected_modal, themeMode, feeds_store } from "$lib/store";
+  import { capitalizeFirstLetter, convertFeedDataToOPML, fetch_user_setting } from "$lib/utils";
   import { onMount } from "svelte";
+  import { save } from '@tauri-apps/plugin-dialog';
+  import { writeTextFile } from '@tauri-apps/plugin-fs';
 
   let last_refresh_time = $state(4);
   let theme = $state(THEMES.LIGHT);
@@ -19,6 +21,26 @@
     await user_settings.set(SETTINGS.THEME_MODE, theme);
     $selected_modal = MODAL_TYPE.NONE
   };
+
+  const exportOPML = async () => {
+    // Open Save dialog
+    const path = await save({
+      filters: [
+        {
+          name: 'OPML (XML)',
+          extensions: ['opml'],
+        },
+      ],
+    });
+
+    // Generate OPML
+    const opml_result = convertFeedDataToOPML($feeds_store);
+    console.log(opml_result);
+
+    await writeTextFile(path, opml_result);
+  }
+
+
 </script>
 
 <div
@@ -27,8 +49,8 @@
   {$selected_modal != MODAL_TYPE.SETTINGS ? "hidden":""}
   "
 >
-  <div class="bg-white p-6 rounded-lg shadow-lg w-96">
-    <h2 class="text-lg font-bold mb-4">Settings</h2>
+  <div class="bg-white p-6 rounded-lg shadow-lg w-96 flex flex-col gap-6">
+    <h2 class="text-lg font-bold">Settings</h2>
 
     <div>
       <label class="block mb-2 text-sm font-medium"
@@ -37,7 +59,7 @@
       <input
         type="number"
         placeholder="Enter no. of hours"
-        class="w-full px-3 py-2 border rounded-lg mb-4"
+        class="w-full px-3 py-2 border rounded-lg "
         bind:value={last_refresh_time}
       />
     </div>
@@ -54,6 +76,13 @@
     </div>
 
     <div class="flex justify-end gap-2 mt-10">
+      <button
+        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+        onclick={exportOPML}
+      >
+        Export OPML
+      </button>
+
       <button
         class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
         onclick={saveSettings}

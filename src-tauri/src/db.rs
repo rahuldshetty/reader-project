@@ -50,7 +50,7 @@ pub fn fetch_migrations() -> Vec<tauri_plugin_sql::Migration> {
             description: "add_parent_col_to_feeds",
             // feeds.type: Represents whether the given feed is a folder or feed.
             // Values: 0 (feed), 1 (folder)
-            
+
             // feeds.parent: Represents the parent folder for the feed
             // Value: Id represents feeds.id, with -1 for root item
             sql: "
