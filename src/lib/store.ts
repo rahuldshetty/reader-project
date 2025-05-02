@@ -11,6 +11,7 @@ export const feed_view = writable(FEED_VIEW.LIST);
 
 export const selected_modal = writable(MODAL_TYPE.NONE);
 export const selected_feed_id = writable(-2);
+export const opml_modal_data = writable('');
 
 export const posts_by_feed_store = writable({});
 

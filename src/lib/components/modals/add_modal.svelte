@@ -1,5 +1,7 @@
 <script>
   import { NO_OF_POST_PULLS_PER_TIME, MODAL_TYPE, FEED_TYPE } from "$lib/constants";
+  import { open } from '@tauri-apps/plugin-dialog';
+  import { readTextFile } from '@tauri-apps/plugin-fs';
   import {
     add_feed,
     add_posts,
@@ -19,6 +21,7 @@
     unread_posts_only,
     selected_modal,
     feed_parent_open_status,
+    opml_modal_data,
   } from "$lib/store";
   import { fetchRSSMetadata } from "$lib/utils";
 
@@ -96,6 +99,17 @@
       feedName = response.name;
       feedIcon = response.favicon;
       feedPosts = response.posts;
+    }
+  }
+
+  const importOPML = async () => {
+    const file = await open({
+      multiple: false,
+      directory: false,
+    });
+    if(file){
+      $opml_modal_data = await readTextFile(file);
+      $selected_modal = MODAL_TYPE.OPML_IMPORT;
     }
   }
 </script>
@@ -180,6 +194,13 @@
     {/if}
 
     <div class="flex justify-end gap-2">
+      <button
+        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+        onclick={importOPML}
+      >
+        Import OPML
+      </button>
+
       <button
         class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
         onclick={async () => {

@@ -278,3 +278,29 @@ export const convertFeedDataToOPML = (feed_data) => {
 
     return `<opml version="1.0">\t\n<body>\n${opml_body}\t</body>\n</opml>`;
 }
+
+export const parseOPML = (opmlString: string) => {
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(opmlString, "text/xml");
+
+    const items = [];
+
+    function traverseOutlines(outlines) {
+        outlines.forEach(outline => {
+            if (outline.hasAttribute("xmlUrl")) {
+                items.push({
+                    name: outline.getAttribute("text") || "",
+                    xmlUrl: outline.getAttribute("xmlUrl") || "",
+                });
+            } else {
+                const childOutlines = outline.querySelectorAll(":scope > outline");
+                traverseOutlines(childOutlines);
+            }
+        });
+    }
+
+    const topLevelOutlines = xmlDoc.querySelectorAll("body > outline");
+    traverseOutlines(topLevelOutlines);
+
+    return items;
+}

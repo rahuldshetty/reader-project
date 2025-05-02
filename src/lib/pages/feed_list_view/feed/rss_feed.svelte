@@ -13,12 +13,14 @@
   import FeedOptions from "./feed_options.svelte";
   import FeedExpand from "./feed_expand.svelte";
   import { FEED_TYPE } from '$lib/constants';
+    import OpmlImportModal from '$lib/components/modals/opml_import_modal.svelte';
 </script>
 
 <AddFeedModal />
 <UpdateFeedModal />
 <SettingsModal />
 <TranslateModal />
+<OpmlImportModal />
 
 <div
   class="bg-background1 flex flex-col h-screen

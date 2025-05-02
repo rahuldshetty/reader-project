@@ -44,8 +44,6 @@ export const fetch_folder_feeds = async () => {
         const id = folders[i].id;
         folder_id_to_map_idx[id] = i;
     }
-    console.log(folders)
-    console.log(folder_id_to_map_idx);
 
     for(const feed of feeds){
         // Add feeds into folder that don't have parent
@@ -61,7 +59,6 @@ export const fetch_folder_feeds = async () => {
             }
         }
     }
-    console.log(folders);
     
     return folders;
 }
