@@ -57,11 +57,11 @@
             <div class="flex items-center justify-center">
                 <div class="flex flex-col">
                     <div class="flex flex-row items-center justify-center gap-1">
-                        {#if feed.favicon}
+                        {#if feed && feed.favicon}
                             <img src={feed.favicon} alt="Feed Logo" class="w-6 h-6" />
                         {/if}
                         <p class="text-xs font-normal z-0 italic">
-                            {feed.title}
+                            {postTitle}
                         </p>
                     </div>
                 </div>

@@ -20,6 +20,7 @@
 - 🎨 Modern UI - Built with Tailwind CSS for a smooth experience.
 - 📰 Content Extraction - Load and display article contents efficiently.
 - 🔡 Article Translation powered by Google Translate.
+- 💾 Import & Export Feeds from OPML (XML).
 
 ## 🛠️ Tech Stack
 - Frontend: SvelteKit + Tailwind CSS

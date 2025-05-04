@@ -57,17 +57,17 @@
         is_child_node={false}
       />
       {#if $feed_parent_open_status[feed.id]}
-      {#each feed.children as child_feed}
-        <FeedItem
-          id={child_feed.id}
-          title={child_feed.title}
-          favicon={child_feed.favicon}
-          url={child_feed.url}
-          type={child_feed.type}
-          parent={child_feed.parent}
-          is_child_node={true}
-        />
-      {/each}
+        {#each feed.children as child_feed}
+          <FeedItem
+            id={child_feed.id}
+            title={child_feed.title}
+            favicon={child_feed.favicon}
+            url={child_feed.url}
+            type={child_feed.type}
+            parent={child_feed.parent}
+            is_child_node={true}
+          />
+        {/each}
       {/if}
     {/each}
   </ul>

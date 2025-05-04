@@ -1,6 +1,6 @@
 <script>
     import { derived } from "svelte/store";
-    import { fetch_posts, fetch_unread_post_counts } from "$lib/db";
+    import { fetch_feed, fetch_posts, fetch_unread_post_counts } from "$lib/db";
     import {
         posts_by_feed_store,
         selected_feed_id,
@@ -39,9 +39,10 @@
         },
     );
 
-    const feed_info_map = $derived.by(() => {
+    const feed_info_map = $derived.by(async () => {
             let feedIdToInfoMap = {};
-            for(const feed of $feeds_store){
+            const feeds = await fetch_feed();
+            for(const feed of feeds){
                 feedIdToInfoMap[feed.id] = feed;
             }
             return feedIdToInfoMap;

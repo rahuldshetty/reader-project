@@ -9,6 +9,3 @@ In order to build this project, you will need to have a package manager like npm
 3. Start the project in developer mode by running: `bun run tauri dev`
 3. Do your changes :)
 4. Build the project: `bun run tauri build`
-
-
-🚧 Under Construction!!
