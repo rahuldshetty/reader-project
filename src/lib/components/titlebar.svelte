@@ -4,25 +4,24 @@
     import Fa from "svelte-fa";
     import {
         faWindowMinimize,
-        faWindowMaximize,
-        faWindowClose,
+        faWindowRestore,
+        faXmark,
     } from "@fortawesome/free-solid-svg-icons";
 
     const appWindow = getCurrentWindow();
 </script>
 
-<!-- svelte-ignore a11y_consider_explicit_label -->
 <div data-tauri-drag-region class="titlebar">
     <button class="btn btn-ghost btn-xs" onclick={appWindow.minimize}>
-        <Fa style="" icon={faWindowMinimize} size="lg" title="Minimize" />
+        <Fa icon={faWindowMinimize} size="lg" title="Minimize" />
     </button>
 
     <button class="btn btn-ghost btn-xs" onclick={appWindow.toggleMaximize}>
-        <Fa icon={faWindowMaximize} size="lg" title="Maximize" />
+        <Fa icon={faWindowRestore} size="lg" title="Maximize" />
     </button>
 
     <button class="btn btn-ghost btn-xs" onclick={appWindow.close}>
-        <Fa icon={faWindowClose} size="lg" title="Exit" />
+        <Fa icon={faXmark} size="lg" title="Exit" />
     </button>
 </div>
 
