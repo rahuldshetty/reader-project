@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import tailwindcss from "@tailwindcss/vite";
 import { sveltekit } from "@sveltejs/kit/vite";
 
 // @ts-expect-error process is a nodejs global
@@ -10,6 +11,7 @@ export default defineConfig(async () => ({
     target: 'esnext'
   },
   plugins: [
+    tailwindcss(),
     sveltekit()
   ],
 
