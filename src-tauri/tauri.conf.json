@@ -19,12 +19,13 @@
         "resizable": true,
         "decorations": false,
         "label": "main",
-        "visible": false,
+        "visible": true,
         "center": true
       },
       {
         "label": "splashscreen",
         "url": "/splashscreen",
+        "visible": false,
         "width": 600,
         "height": 420,
         "maximized": false,
