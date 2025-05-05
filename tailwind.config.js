@@ -8,6 +8,7 @@ export default {
     },
   },
   plugins: [
+    require('daisyui'),
     createThemes({
       light: {
         'primary1': '#3949AB', // title bars, buttons, and primary actions

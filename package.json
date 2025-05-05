@@ -38,6 +38,7 @@
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
     "@tauri-apps/cli": "^2",
     "autoprefixer": "^10.4.20",
+    "daisyui": "^5.0.35",
     "postcss": "^8.5.1",
     "svelte": "^5.0.0",
     "svelte-check": "^4.0.0",
