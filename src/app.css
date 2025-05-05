@@ -11,4 +11,5 @@ body {
 
 @plugin "daisyui" {
   exclude: rootscrollgutter, rootcolor;
+  themes: all;
 }
