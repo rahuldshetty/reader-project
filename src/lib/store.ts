@@ -1,4 +1,7 @@
-import { DB_ORDER_ENUM, MODAL_TYPE, THEMES, FEED_VIEW } from '$lib/constants';
+import { DB_ORDER_ENUM, MODAL_TYPE, THEMES, FEED_VIEW, 
+    LAST_REFRESH_TIME, DEFAULT_DAISY_THEME,
+    POST_EXPIRY_TIME, 
+} from '$lib/constants';
 
 import { LazyStore } from '@tauri-apps/plugin-store';
 import { writable } from 'svelte/store';
@@ -26,6 +29,19 @@ export const is_loading_feed = writable(false);
 export const is_loading_posts = writable(false);
 export const is_loading_post_content = writable(false);
 
-export const user_settings = new LazyStore('settings.json', { autoSave: true });
-
 export const themeMode = writable(THEMES.LIGHT);
+
+
+// New States
+
+export const collapse_sidebar = writable(false);
+export const active_modal = writable(MODAL_TYPE.NONE);
+
+// User Configuration for App
+export const user_settings = new LazyStore('settings.json', { autoSave: true });
+export const local_user_setting = writable({
+    "LAST_REFRESH_TIME": LAST_REFRESH_TIME,
+    "THEME_MODE": DEFAULT_DAISY_THEME,
+    "POST_EXPIRY_TIME": POST_EXPIRY_TIME,
+    "CURRENT_FEED_VIEW": FEED_VIEW.LIST,
+});

@@ -48,3 +48,19 @@ export enum CONTENT_TYPES {
     pdf
 }
 
+// Based on data from https://daisyui.com/docs/themes/
+export const DAISY_UI_THEMES = [
+    "default",
+    "light",
+    "dark",
+    "retro",
+    "cyberpunk",
+    "valentine",
+    "dracula",
+    "coffee",
+    "aqua",
+    "night",
+    "winter",
+    "forest"
+]
+export const DEFAULT_DAISY_THEME = "default";
