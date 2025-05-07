@@ -5,7 +5,7 @@
         faAngleRight,
     } from "@fortawesome/free-solid-svg-icons";
 
-    import { collapse_sidebar } from "$lib/store";
+    import { collapse_sidebar } from "$lib/dao/store";
 
     const handleCollapse = () => {
         $collapse_sidebar = !$collapse_sidebar;

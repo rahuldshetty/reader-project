@@ -1,5 +1,5 @@
 <script>
-    import { active_modal } from "$lib/store";
+    import { active_modal } from "$lib/dao/store";
     import { MODAL_TYPE } from '$lib/constants';
 </script>
 

@@ -11,9 +11,12 @@ import {
     is_loading_splashscreen,
     feed_view,
     feed_parent_open_status,
-
-    local_user_setting,
 } from "$lib/store";
+
+import {
+    local_user_setting
+} from "$lib/dao/store";
+
 import { get } from "svelte/store";
 
 import {

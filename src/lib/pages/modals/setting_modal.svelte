@@ -1,13 +1,13 @@
 <script>
   import { onMount } from "svelte";
-  import { active_modal, user_settings, local_user_setting } from "$lib/store";
+  import { active_modal, user_settings, local_user_setting } from "$lib/dao/store";
   import {
     MODAL_TYPE, 
     DAISY_UI_THEMES, DEFAULT_DAISY_THEME,
     LAST_REFRESH_TIME, SETTINGS
   } from "$lib/constants";
   import { toInitCaps } from "$lib/utils";
-    import { fetch_latest_user_settings } from "$lib/utils/setting";
+  import { fetch_latest_user_settings } from "$lib/utils/setting";
 
   // Local setting State Variables
   // Why use Local vs Global?
