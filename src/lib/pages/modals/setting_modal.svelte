@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import { active_modal, user_settings, local_user_setting } from "$lib/store";
-  import { 
+  import {
     MODAL_TYPE, 
     DAISY_UI_THEMES, DEFAULT_DAISY_THEME,
     LAST_REFRESH_TIME, SETTINGS
@@ -65,11 +65,14 @@
         checked
       />
       <div class="tab-content bg-base-100 p-4">
-        <div>
+        <div class="grid grid-cols-1 gap-2">
           <!-- Color Theme -->
-          <fieldset class="fieldset">
-            <legend class="fieldset-legend">Theme</legend>
-            <div class="dropdown">
+          <fieldset class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2">
+            <div>
+              <legend class="fieldset-legend">Theme</legend>
+              <p class="label">Pick your favorite theme.</p>
+            </div>
+            <div class="dropdown flex justify-end">
               <div tabindex="0" role="button" class="btn m-1">Choose Theme</div>
               <ul
                 tabindex="0"
@@ -93,11 +96,15 @@
             </div>
           </fieldset>
 
-          <fieldset class="fieldset">
+          <fieldset class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2">
             <!-- Last Refresh Time -->
-            <legend class="fieldset-legend">Last Refresh Time (hours)</legend>
-            <input type="number" class="input" bind:value={refresh_time} />
-            <p class="label">Expiry time before refreshing new posts.</p>
+            <div>
+              <legend class="fieldset-legend">Last Refresh Time (hours)</legend>
+              <p class="label">Expiry time before refreshing new posts.</p>
+            </div>
+            <div class="flex justify-end">
+              <input type="number" class="input" bind:value={refresh_time} />
+            </div>
           </fieldset>
         </div>
       </div>
