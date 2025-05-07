@@ -18,10 +18,12 @@
         <FeedBar />
 
         <!-- Feed List -->
-        <ul class="menu menu-md  overflow-visible rounded-box p-2 w-full h-screen">
-            {#each $filtered_feeds as feed}
-                <FeedParent feed={feed}/>
-            {/each}
+        <ul class="menu menu-md overflow-y-auto overflow-x-hidden rounded-box p-2 w-full h-full">
+            <div>
+                {#each $filtered_feeds as feed}
+                    <FeedParent feed={feed}/>
+                {/each}
+            </div>
         </ul>
     </div>
 {/if}

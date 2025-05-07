@@ -64,3 +64,5 @@ export const DAISY_UI_THEMES = [
     "forest"
 ]
 export const DEFAULT_DAISY_THEME = "default";
+
+export const NO_FEED_SELECTED = -1000;

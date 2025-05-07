@@ -16,7 +16,7 @@
 </script>
 
 <div class="dropdown dropdown-bottom dropdown-center flex justify-end">
-    <button role="button" class="m-2">
+    <button role="button" class="p-2 cursor-pointer">
         <Fa icon={faEllipsisVertical} />
     </button>
     <ul

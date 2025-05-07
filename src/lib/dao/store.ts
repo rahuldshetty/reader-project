@@ -8,7 +8,8 @@ import {
     LAST_REFRESH_TIME, 
     DEFAULT_DAISY_THEME,
     POST_EXPIRY_TIME, 
-    FEED_VIEW
+    FEED_VIEW,
+    NO_FEED_SELECTED
 } from '$lib/constants';
 
 // UI States
@@ -27,3 +28,5 @@ export const local_user_setting = writable<UserSettings>({
 
 // Feed Configuration
 export const feeds_store = writable<FeedResult[]>([]);
+export const active_feed_id = writable(NO_FEED_SELECTED);
+
