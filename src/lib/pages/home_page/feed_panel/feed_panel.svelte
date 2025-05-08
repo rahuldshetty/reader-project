@@ -1,7 +1,7 @@
 <script lang="ts">
     import { derived } from "svelte/store";
 
-    import { collapse_sidebar, feeds_store } from "$lib/dao/store";
+    import { collapse_sidebar, feeds_store } from "$lib/stores/app_store";
     import FeedBar from "./feed_bar.svelte";
     import FeedParent from './feed_parent.svelte';
 

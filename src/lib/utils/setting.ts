@@ -1,4 +1,4 @@
-import { user_settings } from "$lib/dao/store";
+import { user_settings } from "$lib/stores/app_store";
 import { 
     DEFAULT_DAISY_THEME, LAST_REFRESH_TIME, POST_EXPIRY_TIME, FEED_VIEW,
     SETTINGS

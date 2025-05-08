@@ -2,7 +2,7 @@
     import Fa from "svelte-fa";
     import { faGear } from "@fortawesome/free-solid-svg-icons";
 
-    import { active_modal } from "$lib/dao/store";
+    import { active_modal } from "$lib/stores/app_store";
     import { MODAL_TYPE } from '$lib/constants';
 
     const openSettingsModal = () => {

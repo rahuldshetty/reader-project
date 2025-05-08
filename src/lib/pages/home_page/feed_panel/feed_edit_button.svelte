@@ -6,6 +6,10 @@
 
     let { title, id, type } = $props();
 
+    const handleRefresh = () => {
+        
+    }
+
     const handleEditFeed = () => {
         
     }
@@ -20,8 +24,11 @@
         <Fa icon={faEllipsisVertical} />
     </button>
     <ul
-        class="dropdown-content overflow-auto menu bg-base-200 rounded-box z-10 p-2 w-28 shadow-sm"
+        class="dropdown-content overflow-auto text-base-content menu bg-base-200 rounded-box z-10 p-2 w-28 shadow-sm"
     >
+        {#if type == FEED_TYPE.FEED}
+            <li><div onclick={handleRefresh}>Refresh</div></li>
+        {/if}
         <li><div onclick={handleEditFeed}>Edit</div></li>
         <li><div onclick={handleDeleteFeed}>Delete</div></li>
     </ul>

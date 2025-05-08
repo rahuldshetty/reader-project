@@ -3,7 +3,7 @@
     import { onMount } from "svelte";
     import { init_app } from "$lib/pages/loading_page/init_loader";
     import Titlebar from "$lib/components/titlebar.svelte";
-    import { is_loading_splashscreen } from "$lib/dao/store";
+    import { is_loading_splashscreen } from "$lib/stores/app_store";
     import AppLoadScreen from "$lib/pages/loading_page/app_load_screen.svelte";
 
     let { children } = $props();

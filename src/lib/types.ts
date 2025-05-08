@@ -29,3 +29,24 @@ export interface FeedResult {
     if_folder_open: boolean; 
 }
 
+export interface Post {
+    title: string;
+    link: string;
+    description: string;
+    pubDate: string;
+    image: string;
+}
+
+export interface FeedMetadata {
+    id: number;
+    name: string;
+    icon: string;
+    posts: Post[];
+    url: string;
+}
+
+export interface FeedMetadataFolder {
+    id: number;
+    name: string;
+    children: FeedMetadata[];
+}

@@ -66,3 +66,8 @@ export const DAISY_UI_THEMES = [
 export const DEFAULT_DAISY_THEME = "default";
 
 export const NO_FEED_SELECTED = -1000;
+
+export enum FEED_URL_CONTENT_TYPE {
+    XML,
+    WEBSITE
+}

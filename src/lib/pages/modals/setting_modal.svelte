@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import { active_modal, user_settings, local_user_setting } from "$lib/dao/store";
+  import { active_modal, user_settings, local_user_setting } from "$lib/stores/app_store";
   import {
     MODAL_TYPE, 
     DAISY_UI_THEMES, DEFAULT_DAISY_THEME,

@@ -4,7 +4,7 @@ import {
     feeds_store,
     local_user_setting,
     is_loading_splashscreen
-} from "$lib/dao/store";
+} from "$lib/stores/app_store";
 
 import {
     fetch_feeds

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { fetch } from '@tauri-apps/plugin-http';
 
-import { user_settings } from '$lib/dao/store';
+import { user_settings } from '$lib/stores/app_store';
 import { SETTINGS, POST_EXPIRY_TIME, LAST_REFRESH_TIME, THEMES, FEED_VIEW, FEED_TYPE } from '$lib/constants';
 
 export const fetchRSSMetadata = async (id: Number, url: string) => {

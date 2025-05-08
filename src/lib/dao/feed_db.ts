@@ -4,6 +4,15 @@ import { DB_PATH, FEED_TYPE } from '$lib/constants';
 
 const db = await Database.load(DB_PATH);
 
+export const fetch_folders = async (): Promise<Feed[]> => {
+    const folders = (await db.select(
+        "SELECT * from feeds where type = $1 order by title",
+        [ FEED_TYPE.FOLDER ]
+    )) as Feed[];
+
+    return folders;
+}
+
 export const fetch_feeds = async (): Promise<FeedResult[]> => {
     // Fetch data from DB
     const feeds = (await db.select(

@@ -15,7 +15,7 @@ import {
 
 import {
     local_user_setting
-} from "$lib/dao/store";
+} from "$lib/stores/app_store";
 
 import { get } from "svelte/store";
 
