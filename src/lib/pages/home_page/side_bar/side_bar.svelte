@@ -1,4 +1,5 @@
 <script>
+    import BtnAbout from "./btn_about.svelte";
     import BtnAdd from "./btn_add.svelte";
     import BtnCollapse from "./btn_collapse.svelte";
     import BtnFeeds from "./btn_feeds.svelte";
@@ -12,5 +13,6 @@
     <BtnSettings/>
     <BtnAdd />
     <div class="flex-grow"></div>
+    <BtnAbout />
     <BtnCollapse/>
 </ul>

@@ -8,6 +8,7 @@ export enum DB_ORDER_ENUM { NEWEST = "DESC", OLDEST = "ASC" }
 
 export enum MODAL_TYPE { 
     NONE, 
+    ABOUT,
     ADD, 
     UPDATE, 
     SETTINGS, 

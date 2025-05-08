@@ -17,7 +17,7 @@
 
 {#if type == FEED_TYPE.FOLDER}
     <!-- TODO: Handle selection of folders  -->
-    <summary class="p-2">
+    <summary class="p-2" onclick={handleFeedSelect}>
         <Fa icon={faFolder} size="lg" />
         {title}
         <FeedEditButton {title} {id} {type} />

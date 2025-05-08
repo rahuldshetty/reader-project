@@ -35,6 +35,11 @@
     $active_modal = MODAL_TYPE.NONE;
   };
 
+  const closeDropdown = () => {
+    if(document && document.activeElement && document.activeElement instanceof HTMLElement)
+      document.activeElement.blur();
+  }
+
   const saveSettings = async () => {
     save_in_progress = true;
 
@@ -80,6 +85,7 @@
               >
                 {#each DAISY_UI_THEMES as theme_name}
                   <li
+                    onclick={closeDropdown}
                     class={`rounded ${color_theme === theme_name ? "bg-primary text-primary-content" : ""}`}
                   >
                     <input

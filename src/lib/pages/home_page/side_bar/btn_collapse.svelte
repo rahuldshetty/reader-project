@@ -14,7 +14,7 @@
 
 <li>
     <a class="flex flex-col" onclick={handleCollapse}>
-        <Fa icon={$collapse_sidebar ? faAngleRight: faAngleLeft } title="Minimize" />
+        <Fa icon={$collapse_sidebar ? faAngleRight: faAngleLeft } />
         <span class="text-xs">Collapse</span>
     </a>
 </li>
