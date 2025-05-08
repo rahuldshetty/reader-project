@@ -1,4 +1,5 @@
 <script>
+    import { getVersion } from "@tauri-apps/api/app";
     import logo from "$lib/assets/ico-1024.png";
     import { active_modal } from "$lib/stores/app_store";
     import { MODAL_TYPE } from "$lib/constants";
@@ -17,7 +18,12 @@
         <!-- App Logo -->
         <div class="flex items-center space-x-3 mb-4">
             <img src={logo} alt="App Logo" class="w-12 h-12 rounded-md" />
-            <h3 class="text-xl font-bold">Reader-Project</h3>
+            <div>
+                <h3 class="text-xl font-bold">Reader-Project</h3>
+                {#await getVersion() then version}
+                    <p class="text-sm text-gray-500">v{version}</p>
+                {/await}
+            </div>
         </div>
 
         <!-- App Description -->
