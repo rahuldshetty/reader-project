@@ -1,7 +1,7 @@
 <script lang="ts">
     import FeedEditButton from "./feed_edit_button.svelte";
 
-    import { active_feed_id } from "$lib/stores/app_store";
+    import { active_feed_id, active_feed_name } from "$lib/stores/app_store";
     import { FEED_TYPE } from "$lib/constants";
 
     import Fa from "svelte-fa";
@@ -11,6 +11,7 @@
 
     const handleFeedSelect = () => {
         $active_feed_id = id;
+        $active_feed_name = title;
     };
 </script>
 

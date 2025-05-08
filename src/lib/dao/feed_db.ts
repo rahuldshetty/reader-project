@@ -80,3 +80,19 @@ export const add_feed = async (
     console.log("|| DB: ADD FEED ||")
     return response.lastInsertId;
 }
+
+export const delete_feed = async (feed_id: number) => {
+    // Delete feed
+    await db.execute(
+        `WITH RECURSIVE descendants(id) AS (
+            SELECT id FROM feeds WHERE id = $1
+            UNION ALL
+            SELECT n.id
+            FROM feeds n
+            JOIN descendants d ON n.parent = d.id
+        )
+        DELETE FROM feeds WHERE id IN (SELECT id FROM descendants);`,
+        [feed_id],
+    );
+    console.log("|| DB: DELETE FEED ||");
+}

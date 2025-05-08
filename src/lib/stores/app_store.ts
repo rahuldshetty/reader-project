@@ -29,4 +29,6 @@ export const local_user_setting = writable<UserSettings>({
 // Feed Configuration
 export const feeds_store = writable<FeedResult[]>([]);
 export const active_feed_id = writable(NO_FEED_SELECTED);
+export const active_feed_name = writable('');
+
 
