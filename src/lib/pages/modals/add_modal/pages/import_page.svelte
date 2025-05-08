@@ -3,7 +3,11 @@
         btn_in_progress,
         feeds_import_data,
     } from "$lib/stores/add_modal_store";
+    import { refresh_app_data } from "$lib/pages/home_page/common";
+    import { flattenFeedData } from "$lib/services/feed_gather";
+    import { add_feed } from "$lib/dao/feed_db";
     import { closeAddModal } from "../add_modal_methods";
+    import { FEED_TYPE } from "$lib/constants";
 
     let feed_id_to_import = $state(new Set());
 
@@ -16,6 +20,33 @@
         }
         feed_id_to_import = new Set(feed_id_to_import);
     };
+
+    const handleAddFeedToDB = async () => {
+        $btn_in_progress = true;
+
+        // Flatten feeds import data
+        const flat_feed_data = flattenFeedData($feeds_import_data);
+
+        // TODO: Handle folder creation and storing parent_index map
+
+        for(const feed of flat_feed_data){
+            if(!('children' in feed)){
+                await add_feed(
+                    feed.name,
+                    feed.url,
+                    feed.icon,
+                    FEED_TYPE.FEED
+                );
+            }
+            // TODO: Add post data into DB while addition
+        }
+
+        // Refresh App Data
+        await refresh_app_data();
+
+        // Close modal once operation is done.
+        closeAddModal();
+    }
 </script>
 
 <div>
@@ -30,8 +61,11 @@
                     <input
                         type="checkbox"
                         class="checkbox"
-                        onchange={(e: Event) => handleOnClick(e, 1)}
+                        onchange={(e: Event) => handleOnClick(e, import_data.id)}
                     />
+                    {#if 'icon' in import_data}
+                        <img class="w-6 h-6 object-cover" src={import_data.icon} alt={import_data.name} />
+                    {/if}
                     <input
                         type="text"
                         placeholder="Type here"
@@ -43,7 +77,12 @@
                     {#if "children" in import_data}
                         {#each import_data.children as child_import_data}
                             <li class="flex items-center space-x-2">
-                                <input type="checkbox" class="checkbox" />
+                                <input type="checkbox" class="checkbox"
+                                    onchange={(e: Event) => handleOnClick(e, child_import_data.id)}
+                                />
+                                {#if 'icon' in import_data}
+                                    <img class="w-6 h-6 object-cover" src={child_import_data.icon} alt={import_data.name} />
+                                {/if}
                                 <input
                                     type="text"
                                     placeholder="Type here"
@@ -65,8 +104,8 @@
         >
         <button
             class="btn btn-primary"
-            onclick={() => {}}
-            disabled={$btn_in_progress}
+            onclick={handleAddFeedToDB}
+            disabled={$btn_in_progress || feed_id_to_import.size == 0}
         >
             {#if $btn_in_progress}
                 <span class="loading loading-spinner"></span>

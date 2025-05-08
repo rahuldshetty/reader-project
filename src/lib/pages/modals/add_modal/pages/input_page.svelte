@@ -9,7 +9,7 @@
         <!-- URL -->
         <div>
             <legend class="fieldset-legend">URL</legend>
-            <p class="label">Enter website, RSS or Atom feed URL</p>
+            <p class="label">Enter RSS or Atom feed URL</p>
         </div>
         <div>
             <input

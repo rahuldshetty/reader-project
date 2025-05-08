@@ -165,3 +165,22 @@ export const fetchFeedDataFromURL = async (url: string): Promise<(FeedMetadata |
     // TODO: Scenario 3 - OPML URL link
     return [];
 }
+
+
+export const flattenFeedData = (feeds_import_data: (FeedMetadata | FeedMetadataFolder)[]) => {
+    const flat_feeds_import_data = [];
+    for(const feed of feeds_import_data){
+        if('children' in feed){
+            for(const child of feed.children){
+                flat_feeds_import_data.push(child);
+            }
+            flat_feeds_import_data.push({
+                ...feed,
+                children: []
+            });
+        } else {
+            flat_feeds_import_data.push(feed);
+        }
+    }
+    return flat_feeds_import_data;
+}

@@ -1,17 +1,12 @@
 import { get } from "svelte/store";
 
 import {
-    feeds_store,
     local_user_setting,
     is_loading_splashscreen
 } from "$lib/stores/app_store";
 
-import {
-    fetch_feeds
-} from "$lib/dao/feed_db";
-
 import { fetch_latest_user_settings } from "$lib/utils/setting";
-
+import { refresh_app_data } from "$lib/pages/home_page/common";
 
 export const init_app = async () => {
     
@@ -23,8 +18,7 @@ export const init_app = async () => {
     // TODO: Do rest of loading stuff
     // 1. refreshing feed on load
 
-    // Fetch Feeds
-    feeds_store.set(await fetch_feeds());
+    await refresh_app_data();
 
     is_loading_splashscreen.set(false);
 }

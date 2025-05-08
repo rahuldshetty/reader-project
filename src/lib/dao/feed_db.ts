@@ -1,6 +1,6 @@
 import type { Feed, FeedResult } from '$lib/types';
 import Database from '@tauri-apps/plugin-sql';
-import { DB_PATH, FEED_TYPE } from '$lib/constants';
+import { DB_PATH, FEED_TYPE, ROOT_PARENT_FEED_ID } from '$lib/constants';
 
 const db = await Database.load(DB_PATH);
 
@@ -64,4 +64,19 @@ export const fetch_feeds = async (): Promise<FeedResult[]> => {
     // const feeds = result as Feed[];
     console.log(`|| FETCH_FEED (SIZE: ${feeds.length + folders.length}) ||`);
     return result;
+}
+
+export const add_feed = async (
+    title: String, 
+    url: String, 
+    favicon: String, 
+    type: FEED_TYPE,
+    parent: number = ROOT_PARENT_FEED_ID,
+) => {
+    const response = await db.execute(
+        "INSERT into feeds (title, url, favicon, type, parent) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+        [title, url, favicon, type, parent],
+    );
+    console.log("|| DB: ADD FEED ||")
+    return response.lastInsertId;
 }
