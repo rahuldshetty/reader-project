@@ -5,18 +5,20 @@
     import { CONTENT_TYPES } from "$lib/constants";
     import HtmlRenderer from "./html_renderer.svelte";
     import PdfRenderer from "./pdf_renderer.svelte";
+    import SkeletonContent from "./skeleton_content.svelte";
 </script>
 
 {#if $active_post_id != -1}
     {#await fetch_post_data($active_post_id) then post}
-        {#await hybrid_parser(post.link) then content}
-            
-                {#if content.content_type == CONTENT_TYPES.html}
+        {#await hybrid_parser(post.link)}
+            <!-- Content is being fetched from URL -->
+            <SkeletonContent/>
+        {:then content}
+            {#if content.content_type == CONTENT_TYPES.html}
                     <HtmlRenderer data={content} post={post}/>
                 {:else if content.content_type == CONTENT_TYPES.pdf}
                     <PdfRenderer data={content} post={post}/>
-                {/if}
-            
+            {/if}
         {/await}
     {/await}
 {/if}

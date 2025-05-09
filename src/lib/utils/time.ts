@@ -33,9 +33,25 @@ export const convertToTimeStringForDB = (dateString: string) => {
     return date.toISOString();
 }
 
-export const runWithTimeout = (promise, ms=3000) => {
+export const runWithTimeout = (promise: Promise<any>, ms=3000) => {
     const timeout = new Promise((_, reject) =>
       setTimeout(() => reject(new Error('Operation timed out')), ms)
     );
     return Promise.race([promise, timeout]);
 };
+
+export const timeToRead = (word_count: number) => {
+    const wpm = 225;
+    const time = Math.ceil(word_count / wpm);
+    return time;
+};
+
+
+export const generateId = () => {
+    // Use crypto.randomUUID() if available
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+        return crypto.randomUUID();
+    }
+    // Fallback: random base36 string
+    return Math.random().toString(36).substring(2, 10);
+}

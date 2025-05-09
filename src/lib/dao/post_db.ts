@@ -106,3 +106,15 @@ export const fetch_post_data = async (id: number): Promise<PostResult> => {
 
     return result[0];
 }
+
+
+export const mark_post_as_read = async (id: number, read_status: boolean) => {
+    let status = 1;
+    if(!read_status){
+        status = 0;
+    }
+    await db.execute(
+        `UPDATE articles SET read = $1 WHERE id = $2`,
+        [ status, id ]
+    );
+}

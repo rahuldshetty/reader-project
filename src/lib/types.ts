@@ -1,10 +1,17 @@
-import { CONTENT_TYPES } from "$lib/constants";
+import { CONTENT_TYPES, TOAST_MESSAGE_TYPE } from "$lib/constants";
 
 export interface UserSettings {
     LAST_REFRESH_TIME: number;
     THEME_MODE: string;
     POST_EXPIRY_TIME: number;
     CURRENT_FEED_VIEW: string;
+}
+
+export interface ToastMessage {
+    id: string;
+    type: TOAST_MESSAGE_TYPE;
+    message: string;
+    duration: number;
 }
 
 export interface Feed {
@@ -75,3 +82,4 @@ export interface ContentResult {
     image: string;
     content_type: CONTENT_TYPES;
 }
+

@@ -82,3 +82,10 @@ export enum FEED_URL_CONTENT_TYPE {
     XML,
     WEBSITE
 }
+
+export enum TOAST_MESSAGE_TYPE {
+    SUCCESS = "success",
+    WARNING = "warning",
+    INFO = "info",
+    ERROR = "error"
+}

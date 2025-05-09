@@ -1,11 +1,14 @@
 <script lang="ts">
     import type { ContentResult, PostResult } from "$lib/types";
     import { cleanHTML } from "$lib/utils/html";
+    import ContentBar from "./content_bar.svelte";
 
-    const { data, post }: { data: ContentResult; post: PostResult } = $props();
+    const { data, post = $bindable() }: { data: ContentResult; post: PostResult } = $props();
 </script>
 
 <div class="flex-1 overflow-y-auto">
+    <ContentBar data={data} post={post}/>
+
     <div class="p-6">
         {#if data.image || post.image}
             <img
