@@ -80,3 +80,29 @@ export const fetch_posts = async (
     
     return result;
 }
+
+export const fetch_post_data = async (id: number): Promise<PostResult> => {
+    const query = `
+        SELECT 
+            id, 
+            feed_id, 
+            title, 
+            link, 
+            pub_date as pubDate, 
+            read, 
+            is_fav, 
+            image_url as image, 
+            content, 
+            word_count 
+        from articles
+        where id = $1
+    `
+
+    const result = (await db.select(query, [id])) as PostResult[];
+
+    if(result.length == 0){
+        throw Error(`No Article found with id ${id}`);
+    }
+
+    return result[0];
+}

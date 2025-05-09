@@ -1,3 +1,5 @@
+import { CONTENT_TYPES } from "$lib/constants";
+
 export interface UserSettings {
     LAST_REFRESH_TIME: number;
     THEME_MODE: string;
@@ -63,4 +65,13 @@ export interface PostResult {
     image: string;
     content: string;
     word_count: number
+}
+
+export interface ContentResult {
+    title: string;
+    content: string | ArrayBuffer;
+    word_count: number;
+    url: string;
+    image: string;
+    content_type: CONTENT_TYPES;
 }

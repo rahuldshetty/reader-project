@@ -3,11 +3,7 @@
     import MainModal from "../modals/main_modal.svelte";
     import FeedPanel from "./feed_panel/feed_panel.svelte";
     import PostsPanel from "./posts_panel/posts_panel.svelte";
-
-    let selectedPost = {
-        title: "Post 1",
-        content: "This is the news content.",
-    };
+    import ContentPanel from "./content_panel/content_panel.svelte";
 </script>
 
 <MainModal />
@@ -16,10 +12,5 @@
     <SideBar/>
     <FeedPanel />
     <PostsPanel/>
-
-    <!-- Column 4: News Content -->
-    <div class="flex flex-col flex-grow bg-base-100 p-4 overflow-auto">
-        <h1 class="text-xl font-bold mb-2">{selectedPost.title}</h1>
-        <p>{selectedPost.content}</p>
-    </div>
+    <ContentPanel/>
 </div>

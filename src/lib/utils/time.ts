@@ -33,3 +33,9 @@ export const convertToTimeStringForDB = (dateString: string) => {
     return date.toISOString();
 }
 
+export const runWithTimeout = (promise, ms=3000) => {
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Operation timed out')), ms)
+    );
+    return Promise.race([promise, timeout]);
+};
