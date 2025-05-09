@@ -1,4 +1,4 @@
-import type { FeedResult, UserSettings } from '$lib/types';
+import type { FeedResult, UserSettings, PostResult } from '$lib/types';
 
 import { LazyStore } from '@tauri-apps/plugin-store';
 import { writable } from 'svelte/store';
@@ -9,7 +9,8 @@ import {
     DEFAULT_DAISY_THEME,
     POST_EXPIRY_TIME, 
     FEED_VIEW,
-    NO_FEED_SELECTED
+    NO_FEED_SELECTED,
+    DB_ORDER_ENUM
 } from '$lib/constants';
 
 // UI States
@@ -32,3 +33,9 @@ export const active_feed_id = writable(NO_FEED_SELECTED);
 export const active_feed_name = writable('');
 
 
+// Post Configuration
+export const posts_store = writable<PostResult[]>([]);
+export const posts_sort_by = writable(DB_ORDER_ENUM.NEWEST);
+export const filter_unread_posts = writable(false);
+export const filter_liked_posts = writable(false);
+export const active_post_id = writable(-1);

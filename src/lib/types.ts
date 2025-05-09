@@ -50,3 +50,17 @@ export interface FeedMetadataFolder {
     name: string;
     children: FeedMetadata[];
 }
+
+
+export interface PostResult {
+    id: number;
+    feed_id: number;
+    title: string;
+    link: string;
+    pubDate: string;
+    read: boolean;
+    is_fav: boolean;
+    image: string;
+    content: string;
+    word_count: number
+}
