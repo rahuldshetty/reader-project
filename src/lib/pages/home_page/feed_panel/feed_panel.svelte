@@ -18,7 +18,7 @@
         <FeedBar />
 
         <!-- Feed List -->
-        <ul class="menu menu-md overflow-y-auto overflow-x-hidden rounded-box p-2 w-full h-full">
+        <ul class="menu menu-md overflow-y-auto overflow-x-hidden rounded-box w-full h-full">
             <div>
                 {#each $filtered_feeds as feed}
                     <FeedParent feed={feed}/>

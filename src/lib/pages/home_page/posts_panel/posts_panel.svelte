@@ -12,7 +12,7 @@
     class="flex flex-col w-64 sm:w-80 bg-base-100 border-r border-base-300"
     >
     <div class="overflow-auto overflow-x-hidden">
-        <ul class="menu bg-base-100 rounded-box">
+        <ul class="menu gap-2 bg-base-100 rounded-box">
             {#each $filtered_posts as post}
                 <PostItem post={post}/>
             {/each}

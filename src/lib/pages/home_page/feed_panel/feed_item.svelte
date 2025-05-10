@@ -24,14 +24,14 @@
 
 {#if type == FEED_TYPE.FOLDER}
     <!-- TODO: Handle selection of folders  -->
-    <summary class="p-2" onclick={handleFeedSelect}>
+    <summary class="m-0.5" onclick={handleFeedSelect}>
         <Fa icon={faFolder} size="lg" />
         {title}
         <FeedEditButton {title} {id} {type} />
     </summary>
 {:else}
     <li onclick={handleFeedSelect}>
-        <div class="p-2 {$active_feed_id == id ? 'menu-active' : ''}">
+        <div class="m-0.5 {$active_feed_id == id ? 'menu-active' : ''}">
             {#if favicon}
                 <img class="w-6 h-6 object-cover" src={favicon} alt={title} />
             {/if}

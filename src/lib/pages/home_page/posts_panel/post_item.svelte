@@ -10,20 +10,20 @@
     }
 </script>
 
-<li class="p-2 rounded-lg"
+<li class="rounded-lg"
     onclick={handleOnPostClick}
 >
-      <a class="flex gap-4 {$active_post_id == post.id? "menu-active":""}">
+      <a class="flex gap-2 p-3 {$active_post_id == post.id? "menu-active":""}">
         {#if post.image}
           <img
             src={post.image}
             alt="Post thumbnail"
-            class="w-20 h-20 mt-1 rounded object-cover"
+            class="w-18 h-18 rounded object-cover"
           />
         {/if}
-        <div class="flex flex-col">
-          <p class="font-semibold line-clamp-2">{post.title}</p>
-          <span class="">{timeAgo(post.pubDate)}</span>
+        <div class="flex flex-col p-1">
+          <p class="line-clamp-2 {post.read?"font-normal":"font-semibold"}">{post.title}</p>
+          <span>{timeAgo(post.pubDate)}</span>
         </div>
       </a>
 </li>

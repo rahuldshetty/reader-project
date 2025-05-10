@@ -57,7 +57,7 @@
   <div class="flex items-center space-x-2">
     <!-- Share Button -->
     <button class="btn btn-circle btn-ghost p-5" onclick={handleShareButton}>
-        <Fa icon={faShareNodes} color="var(--color-secondary)" size="lg" title="Copy link to Clipboard" />
+        <Fa icon={faShareNodes} size="lg" title="Copy link to Clipboard" />
     </button>
 
     <!-- Mark Read -->
@@ -74,7 +74,7 @@
 
     <!-- Open URL -->
     <button class="btn btn-circle btn-ghost p-5" onclick={handleOpenURL}>
-        <Fa icon={faGlobe} color="var(--color-info)" size="lg" title="Mark Favorite" />
+        <Fa icon={faGlobe} size="lg" title="Open in browser" />
     </button>
   </div>
 </div>
