@@ -6,22 +6,30 @@
         active_feed_id,
         active_feed_name,
         active_post_id,
-        posts_infinite_loader,
+        refreshing_posts,
     } from "$lib/stores/app_store";
     import { FEED_TYPE } from "$lib/constants";
 
     import Fa from "svelte-fa";
     import { faFolder } from "@fortawesome/free-solid-svg-icons";
-    import { refresh_posts } from "$lib/pages/home_page/common";
+    import { check_and_pull_latest_feed_data, refresh_posts } from "$lib/pages/home_page/common";
 
     const { feed }: { feed: FeedResult | Feed } = $props();
 
     const handleFeedSelect = async () => {
-        if(feed.type == FEED_TYPE.FEED){
-            await refresh_posts(feed.id);
-        } 
         $active_feed_id = feed.id;
         $active_feed_name = feed.title;
+
+        if(feed.type == FEED_TYPE.FEED){
+            // Check and try to pull latest post from RSS feed
+            await check_and_pull_latest_feed_data(
+                feed.id,
+                feed.url
+            );
+
+            // Pull latest post feeds from DB
+            await refresh_posts(feed.id);
+        }
         // TODO: User settings option - switching feeds removes content
         // $active_post_id = -1;
     };

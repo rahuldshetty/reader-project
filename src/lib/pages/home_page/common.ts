@@ -1,4 +1,5 @@
 import {
+    check_feed_expired,
     fetch_feeds
 } from "$lib/dao/feed_db";
 
@@ -13,11 +14,18 @@ import {
     filter_unread_posts,
     filter_liked_posts,
     active_post_id,
+    user_settings,
+    refreshing_posts,
+} from "$lib/stores/app_store";
+
+import {
+    local_user_setting,
 } from "$lib/stores/app_store";
 
 import {
     NO_FEED_SELECTED,
-    NO_OF_POST_PULLS_PER_TIME
+    NO_OF_POST_PULLS_PER_TIME,
+    SETTINGS,
 } from "$lib/constants";
 
 import {get} from "svelte/store";
@@ -47,6 +55,7 @@ export const refresh_posts = async (
     lastPubDate: string = "",
     is_fav: boolean | null = null,
 ) => {
+    refreshing_posts.set(true);
     const sort_by = get(posts_sort_by);
     const unread = get(filter_unread_posts);
     posts_store.set(
@@ -60,6 +69,7 @@ export const refresh_posts = async (
             is_fav,
         )
     );
+    refreshing_posts.set(false);
 }
 
 
@@ -74,6 +84,9 @@ export const load_new_posts = async (
 
     // Get pubDate for last post
     const posts = get(posts_store);
+    if(posts.length == 0){
+        return false;
+    }
     const lastPubDate = posts[posts.length - 1].pubDate;
 
     // Get new posts
@@ -103,6 +116,7 @@ export const refresh_post_data = async (
     url: string
 ) => {
     // Called when selecting "Refresh" option for a Feed
+    refreshing_posts.set(true);
 
     const latest_feed_info = await fetchFeedDataFromFeedURL(feed_id, url);
 
@@ -110,4 +124,19 @@ export const refresh_post_data = async (
     
     // update new post data in store
     refresh_posts(feed_id);
+}
+
+
+export const check_and_pull_latest_feed_data = async (
+    feed_id: number,
+    url: string
+) => {
+    // Checks first if setting is enabled to check for latest feeds when selecting the feed.
+    if(await user_settings.get(SETTINGS.REFRESH_FEED_ON_SELECT)){
+        // Check if given feed is expired
+        if(await check_feed_expired(feed_id)){
+            // Pull new data from feed
+            await refresh_post_data(feed_id, url);
+        }
+    }
 }

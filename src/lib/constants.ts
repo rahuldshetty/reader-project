@@ -26,6 +26,7 @@ export enum SETTINGS {
     // Posts to clear from DB if they have passed this time
     POST_EXPIRY_TIME = "POST_EXPIRY_TIME",
     CURRENT_FEED_VIEW = "CURRENT_FEED_VIEW",
+    REFRESH_FEED_ON_SELECT = "REFRESH_FEED_ON_SELECT",
 }
 
 export enum THEMES{
@@ -75,6 +76,7 @@ export const DAISY_UI_THEMES = [
     "forest"
 ]
 export const DEFAULT_DAISY_THEME = "default";
+export const REFRESH_FEED_ON_SELECT = false;
 
 export const NO_FEED_SELECTED = -1000;
 export const ROOT_PARENT_FEED_ID = -1;

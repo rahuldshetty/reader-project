@@ -55,3 +55,22 @@ export const generateId = () => {
     // Fallback: random base36 string
     return Math.random().toString(36).substring(2, 10);
 }
+
+
+export const isTimeExpired = (time: string, expiry_in_hours: number) => {
+    if (!time) {
+        return true;
+    }
+
+    const lastRefreshTime = new Date(time);
+    const currentTime = new Date();
+    const timeDifference = currentTime - lastRefreshTime;
+
+    const expiryDifference = expiry_in_hours * 60 * 60 * 1000;
+
+    if (timeDifference > expiryDifference) {
+        return true;
+    }
+
+    return false;
+}

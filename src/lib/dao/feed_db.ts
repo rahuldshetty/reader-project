@@ -1,8 +1,22 @@
+import {get} from "svelte/store";
 import type { Feed, FeedResult } from '$lib/types';
 import Database from '@tauri-apps/plugin-sql';
 import { DB_PATH, FEED_TYPE, ROOT_PARENT_FEED_ID } from '$lib/constants';
+import { isTimeExpired } from "$lib/utils/time";
+import { local_user_setting } from "$lib/stores/app_store";
 
 const db = await Database.load(DB_PATH);
+
+export const fetch_feed_by_id = async (id: number): Promise<Feed> => {
+    const feed = (await db.select(
+        "SELECT * from feeds where id = $1",
+        [ id ]
+    )) as Feed[];
+    if(feed.length == 0){
+        throw Error(`Feed data for id ${id} not found.`);
+    }
+    return feed[0];
+}
 
 export const fetch_folders = async (): Promise<Feed[]> => {
     const folders = (await db.select(
@@ -95,4 +109,11 @@ export const delete_feed = async (feed_id: number) => {
         [feed_id],
     );
     console.log("|| DB: DELETE FEED ||");
+}
+
+
+export const check_feed_expired = async (feed_id: number) => {
+    const feed = await fetch_feed_by_id(feed_id);
+    const lrt = get(local_user_setting).LAST_REFRESH_TIME;
+    return feed.last_refresh_time == null || feed.last_refresh_time == '' || isTimeExpired(feed.last_refresh_time, lrt);
 }

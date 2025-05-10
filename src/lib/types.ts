@@ -5,6 +5,7 @@ export interface UserSettings {
     THEME_MODE: string;
     POST_EXPIRY_TIME: number;
     CURRENT_FEED_VIEW: string;
+    REFRESH_FEED_ON_SELECT: boolean;
 }
 
 export interface ToastMessage {

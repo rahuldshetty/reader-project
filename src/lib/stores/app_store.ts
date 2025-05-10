@@ -12,6 +12,7 @@ import {
     POST_EXPIRY_TIME, 
     FEED_VIEW,
     NO_FEED_SELECTED,
+    REFRESH_FEED_ON_SELECT,
     DB_ORDER_ENUM
 } from '$lib/constants';
 
@@ -27,6 +28,7 @@ export const local_user_setting = writable<UserSettings>({
     "THEME_MODE": DEFAULT_DAISY_THEME,
     "POST_EXPIRY_TIME": POST_EXPIRY_TIME,
     "CURRENT_FEED_VIEW": String(FEED_VIEW.LIST),
+    "REFRESH_FEED_ON_SELECT": REFRESH_FEED_ON_SELECT
 });
 
 // Feed Configuration
