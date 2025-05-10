@@ -12,6 +12,7 @@ import {
     posts_sort_by,
     filter_unread_posts,
     filter_liked_posts,
+    active_post_id,
 } from "$lib/stores/app_store";
 
 import {
@@ -23,6 +24,7 @@ import {get} from "svelte/store";
 
 export const refresh_app_data = async (
     only_feeds: boolean = true,
+    only_posts: boolean = true,
 ) => {
     // Refresh Feed List
     if(only_feeds)
@@ -30,6 +32,9 @@ export const refresh_app_data = async (
         feeds_store.set(await fetch_feeds());
         active_feed_name.set('');
         active_feed_id.set(NO_FEED_SELECTED);
+    }
+    if(only_posts){
+        active_post_id.set(-1);
     }
 }
 

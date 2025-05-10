@@ -16,6 +16,7 @@ export enum MODAL_TYPE {
     OPML_IMPORT,
     
     DELETE_FEED,
+    ADD_FOLDER,
 }
 
 export enum SETTINGS {

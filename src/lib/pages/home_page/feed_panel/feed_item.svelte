@@ -4,6 +4,7 @@
     import { 
         active_feed_id,
         active_feed_name,
+        active_post_id
     } from "$lib/stores/app_store";
     import { FEED_TYPE } from "$lib/constants";
 
@@ -19,6 +20,8 @@
         } 
         $active_feed_id = id;
         $active_feed_name = title;
+        // TODO: User settings option - switching feeds removes content
+        // $active_post_id = -1;
     };
 </script>
 

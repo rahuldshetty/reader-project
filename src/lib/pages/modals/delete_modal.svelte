@@ -32,11 +32,11 @@
   class="modal"
   class:modal-open={$active_modal == MODAL_TYPE.DELETE_FEED}
 >
-  <div class="modal-box max-w-xl overflow-visible">
-    <h3 class="font-bold text-lg">Delete Feed</h3>
+  <div class="modal-box max-w-md overflow-visible">
+    <h3 class="font-bold text-lg">Delete</h3>
 
-    <p class="py-4">
-      You are about to delete a feed/folder <span class="font-bold"
+    <p class="py-2">
+      You are about to delete <span class="font-bold"
         >{$active_feed_name}</span
       >. Are you sure you want to continue?
     </p>
