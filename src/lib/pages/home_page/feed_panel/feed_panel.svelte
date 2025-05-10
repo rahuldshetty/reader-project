@@ -4,6 +4,7 @@
     import { collapse_sidebar, feeds_store } from "$lib/stores/app_store";
     import FeedBar from "./feed_bar.svelte";
     import FeedParent from './feed_parent.svelte';
+    import CustomFeedItems from "./custom_feed_items.svelte";
 
     const filtered_feeds = derived([feeds_store], ([$feeds_store])=>{
         return $feeds_store;
@@ -20,6 +21,7 @@
         <!-- Feed List -->
         <ul class="menu menu-md overflow-y-auto overflow-x-hidden rounded-box w-full h-full">
             <div>
+                <CustomFeedItems />
                 {#each $filtered_feeds as feed}
                     <FeedParent feed={feed}/>
                 {/each}

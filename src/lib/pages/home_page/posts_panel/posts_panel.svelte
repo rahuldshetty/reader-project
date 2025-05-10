@@ -6,6 +6,7 @@
         active_feed_id,
         posts_infinite_loader as loaderState,
     } from "$lib/stores/app_store";
+
     import { load_new_posts } from "$lib/pages/home_page/common";
     import PostItem from "./post_item.svelte";
     import LoadingSpinner from "$lib/pages/components/loading_spinner.svelte";
@@ -27,6 +28,7 @@
     };
 
     active_feed_id.subscribe((_)=> {
+        loaderState.reset();
         if(scrollContainer){
             scrollContainer.scrollTop = 0;
         }

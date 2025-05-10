@@ -22,7 +22,6 @@
         } 
         $active_feed_id = feed.id;
         $active_feed_name = feed.title;
-        posts_infinite_loader.reset();
         // TODO: User settings option - switching feeds removes content
         // $active_post_id = -1;
     };
