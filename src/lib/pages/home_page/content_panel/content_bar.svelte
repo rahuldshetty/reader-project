@@ -14,12 +14,13 @@
         faStar,
         faGlobe,
     } from "@fortawesome/free-solid-svg-icons";
-    import { mark_post_as_read } from "$lib/dao/post_db";
+    import { mark_post_as_fav, mark_post_as_read } from "$lib/dao/post_db";
     import { TOAST_MESSAGE_TYPE } from "$lib/constants";
 
     const { data, post }: { data: ContentResult; post: PostResult } = $props();
 
     let read_status = $state(post.read);
+    let is_fav = $state(post.is_fav);
 
     const handleShareButton = async () => {
         await writeText(post.link);
@@ -35,8 +36,9 @@
         read_status = !read_status;
     }
 
-    const handleFavouriteButton = () => {
-
+    const handleFavouriteButton = async () => {
+        await mark_post_as_fav(post.id, !is_fav);
+        is_fav = !is_fav;
     }
 
     const handleOpenURL = async () => {
@@ -69,7 +71,9 @@
 
     <!-- Mark Favourite -->
     <button class="btn btn-circle btn-ghost p-5" onclick={handleFavouriteButton}>
-        <Fa icon={faStar} size="lg" title="Mark Favorite" />
+        <Fa icon={faStar} size="lg" title="Mark Favorite" 
+            color="{is_fav? "var(--color-accent)":""}"
+        />
     </button>
 
     <!-- Open URL -->

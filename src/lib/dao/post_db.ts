@@ -122,6 +122,18 @@ export const mark_post_as_read = async (id: number, read_status: boolean) => {
 }
 
 
+export const mark_post_as_fav = async (id: number, is_fav: boolean) => {
+    let fav = 1;
+    if(!is_fav){
+        fav = 0;
+    }
+    await db.execute(
+        `UPDATE articles SET is_fav = $1 WHERE id = $2`,
+        [fav, id],
+    );
+}
+
+
 export const add_posts = async (feedMetadata: FeedMetadata) => {
     const posts = feedMetadata.posts;
 

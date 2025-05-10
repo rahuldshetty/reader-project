@@ -45,10 +45,10 @@ export const refresh_posts = async (
     last_id: number | null = null,
     limit: number = NO_OF_POST_PULLS_PER_TIME,
     lastPubDate: string = "",
+    is_fav: boolean | null = null,
 ) => {
     const sort_by = get(posts_sort_by);
     const unread = get(filter_unread_posts);
-    const is_fav = get(filter_liked_posts);
     posts_store.set(
         await fetch_posts(
             sort_by,
@@ -66,6 +66,8 @@ export const refresh_post_data = async (
     feed_id: number, 
     url: string
 ) => {
+    // Called when selecting "Refresh" option for a Feed
+
     const latest_feed_info = await fetchFeedDataFromFeedURL(feed_id, url);
 
     await add_posts(latest_feed_info);
