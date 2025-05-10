@@ -12,6 +12,8 @@
 
     import { InfiniteLoader } from "svelte-infinite";
 
+    let scrollContainer: Element;
+
     const loadMorePosts = async () => {
         if (loaderState.isFirstLoad) {
             loaderState.loaded();
@@ -24,6 +26,12 @@
         }
     };
 
+    active_feed_id.subscribe((_)=> {
+        if(scrollContainer){
+            scrollContainer.scrollTop = 0;
+        }
+    });
+
     const filtered_posts = derived([posts_store], ([$posts_store]) => {
         return $posts_store;
     });
@@ -33,7 +41,7 @@
     {#if $refreshing_posts}
         <LoadingSpinner messaage="Refreshing feed..." />
     {:else}
-        <div class="overflow-auto overflow-x-hidden">
+        <div bind:this={scrollContainer} class="overflow-auto overflow-x-hidden">
             <ul class="menu gap-2 bg-base-100 rounded-box">
                 <InfiniteLoader {loaderState} triggerLoad={loadMorePosts}>
                     {#each $filtered_posts as post}
@@ -47,7 +55,7 @@
                     {/snippet}
 
                     {#snippet noData()}
-                        NO MORE DATA
+                        <div class="h-0 m-0"></div>
                     {/snippet}
                 </InfiniteLoader>
             </ul>

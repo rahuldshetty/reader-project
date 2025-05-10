@@ -10,7 +10,7 @@
     }
 </script>
 
-<li class="rounded-lg"
+<li class="rounded-lg transition-transform duration-200 hover:scale-[1.02] hover:shadow-md"
     onclick={handleOnPostClick}
 >
       <a class="flex gap-2 p-3 {$active_post_id == post.id? "menu-active":""}">
