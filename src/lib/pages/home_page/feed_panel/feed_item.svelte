@@ -17,6 +17,11 @@
     const { feed }: { feed: FeedResult | Feed } = $props();
 
     const handleFeedSelect = async () => {
+        // Avoid re-renders on clicking same feed again
+        if($active_feed_id == feed.id){
+            return;
+        }
+
         $active_feed_id = feed.id;
         $active_feed_name = feed.title;
 

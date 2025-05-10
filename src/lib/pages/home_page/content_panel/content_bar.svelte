@@ -46,10 +46,12 @@
     }
 </script>
 
-<div class="sticky top-0 z-50 bg-base-100 border-b border-base-300 p-4 flex items-center justify-between">
+<div class="sticky top-0 z-50 bg-base-100 border-b border-base-300 flex items-center justify-between p-2 pl-6">
   <!-- Left section: title and word count -->
   <div class="flex flex-col">
-    <span class="text-lg font-semibold text-text1 truncate">{post.title}</span>
+    <span class="text-lg font-semibold text-text1 max-w-3xl">
+        {post.title}
+    </span>
     <span class="text-sm">
         🕒 <span class="text-base-content/70">{`${timeToRead(data.word_count)} min read`}</span>
     </span>
