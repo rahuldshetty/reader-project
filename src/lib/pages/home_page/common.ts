@@ -62,6 +62,42 @@ export const refresh_posts = async (
     );
 }
 
+
+export const load_new_posts = async (
+    feed_id:number = -1,
+    last_id: number | null = null,
+    limit: number = NO_OF_POST_PULLS_PER_TIME,
+    is_fav: boolean | null = null,
+) => {
+    const sort_by = get(posts_sort_by);
+    const unread = get(filter_unread_posts);
+
+    // Get pubDate for last post
+    const posts = get(posts_store);
+    const lastPubDate = posts[posts.length - 1].pubDate;
+
+    // Get new posts
+    const new_posts = await fetch_posts(
+        sort_by,
+        last_id,
+        feed_id,
+        limit,
+        unread,
+        lastPubDate,
+        is_fav,
+    )
+
+    // Append posts into current store
+    if(new_posts.length != 0)
+        posts_store.update(current_posts => {
+            return [ ...current_posts, ...new_posts ];
+        });
+    
+    // Whether new posts loaded or not
+    return new_posts.length > 0;
+}
+
+
 export const refresh_post_data = async (
     feed_id: number, 
     url: string

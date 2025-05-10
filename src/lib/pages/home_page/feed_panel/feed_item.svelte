@@ -5,7 +5,8 @@
     import { 
         active_feed_id,
         active_feed_name,
-        active_post_id
+        active_post_id,
+        posts_infinite_loader,
     } from "$lib/stores/app_store";
     import { FEED_TYPE } from "$lib/constants";
 
@@ -21,6 +22,7 @@
         } 
         $active_feed_id = feed.id;
         $active_feed_name = feed.title;
+        posts_infinite_loader.reset();
         // TODO: User settings option - switching feeds removes content
         // $active_post_id = -1;
     };
