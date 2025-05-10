@@ -10,9 +10,11 @@
     };
 </script>
 
-<li>
-    <a class="flex flex-col btn btn-primary p-6" onclick={openAddModal}>
-        <Fa icon={faAdd} size="lg" title="Minimize" />
+<li class="flex items-center">
+    <button class="p-6 btn btn-circle btn-primary" onclick={openAddModal}>
+        <div class="flex flex-col">
+            <Fa icon={faAdd} title="Minimize" />
         <span class="text-xs">Add</span>
-    </a>
+        </div>
+    </button>
 </li>
