@@ -15,15 +15,19 @@
     <div
         class="flex flex-col w-48 sm:w-64 bg-base-100 border-r border-base-300"
     >
-        <FeedBar />
+        <div class="flex w-full flex-col overflow-y-auto">
+            <FeedBar />
+            
+            <div class="divider m-0 h-0 mb-1"></div>
 
-        <!-- Feed List -->
-        <ul class="menu menu-md overflow-y-auto overflow-x-hidden rounded-box w-full h-full">
-            <div>
-                {#each $filtered_feeds as feed}
-                    <FeedParent feed={feed}/>
-                {/each}
-            </div>
-        </ul>
+            <!-- Feed List -->
+            <ul class="menu menu-md overflow-y-auto overflow-x-hidden rounded-box w-full h-full">
+                <div>
+                    {#each $filtered_feeds as feed}
+                        <FeedParent feed={feed}/>
+                    {/each}
+                </div>
+            </ul>
+        </div>
     </div>
 {/if}
