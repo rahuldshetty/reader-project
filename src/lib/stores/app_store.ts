@@ -34,6 +34,7 @@ export const active_feed_name = writable('');
 
 
 // Post Configuration
+export const refreshing_posts = writable(false);
 export const posts_store = writable<PostResult[]>([]);
 export const posts_sort_by = writable(DB_ORDER_ENUM.NEWEST);
 export const filter_unread_posts = writable(false);

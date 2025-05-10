@@ -19,3 +19,16 @@ export const cleanHTML = (content:string, url:string) => {
   return div.innerHTML;
 }
 
+
+export const escape_title = (str: string) => {
+    if (!str) return "";
+    return str.replace(/[']/g, function (char) {
+        switch (char) {
+            case "'":
+                return '"'; // prepends a backslash to backslash, percent,
+            // and double/single quotes
+            default:
+                return char;
+        }
+    });
+}

@@ -8,18 +8,18 @@
 
 <!-- If its a feed -->
 {#if feed.type == FEED_TYPE.FEED}
-    <FeedItem favicon={feed.favicon} title={feed.title} id={feed.id} type={feed.type}/>
+    <FeedItem feed={feed}/>
 {:else}
     <!-- Feed is a folder with children -->
     <li>
         <details>
             <!-- Folder -->
-            <FeedItem favicon={feed.favicon} title={feed.title} id={feed.id} type={feed.type}/>
+            <FeedItem feed={feed}/>
             {#if feed.children.length > 0}
                 <ul>
                     {#each feed.children as child}
                         <!-- Children Feed Item -->
-                        <FeedItem favicon={child.favicon} title={child.title} id={child.id} type={child.type}/>
+                        <FeedItem feed={child}/>
                     {/each}
                 </ul>
             {/if}

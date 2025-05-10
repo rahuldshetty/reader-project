@@ -1,4 +1,4 @@
-import type { PostResult } from '$lib/types';
+import type { PostResult, FeedMetadata } from '$lib/types';
 import Database from '@tauri-apps/plugin-sql';
 import { 
     DB_PATH, 
@@ -6,6 +6,8 @@ import {
     NO_OF_POST_PULLS_PER_TIME,
     ROOT_PARENT_FEED_ID 
 } from '$lib/constants';
+import { convertToTimeStringForDB } from '$lib/utils/time';
+import { escape_title } from '$lib/utils/html';
 
 const db = await Database.load(DB_PATH);
 
@@ -117,4 +119,51 @@ export const mark_post_as_read = async (id: number, read_status: boolean) => {
         `UPDATE articles SET read = $1 WHERE id = $2`,
         [ status, id ]
     );
+}
+
+
+export const add_posts = async (feedMetadata: FeedMetadata) => {
+    const posts = feedMetadata.posts;
+
+    // Track individual posts to insert into DB
+    let value_string = ""
+
+    // Create a Set to track feeds that were updated
+    const feedsSet = new Set();
+
+    let inserted = 0;
+
+    for (const [i, post] of posts.entries()) {
+        try{
+            const date = convertToTimeStringForDB(post.pubDate);
+
+            value_string += `(${feedMetadata.id}, '${escape_title(post.title)}', '${post.link}', '${date}', '${escape_title(post.image)}')`;
+
+            if (i != posts.length - 1) {
+                value_string += ",\n"
+            }
+
+            await db.execute(
+                `INSERT OR IGNORE INTO articles (feed_id, title, link, pub_date, image_url) VALUES ${value_string}`
+            );
+
+            feedsSet.add(feedMetadata.id);
+
+            inserted++;
+        } catch{
+
+        }
+    }
+
+    // Update Last Refresh Time (LRT)
+    if (feedsSet.size > 0) {
+        const value_string_feeds = Array.from(feedsSet).join(", ");
+        const currentTime = new Date().toISOString();
+        await db.execute(
+            `UPDATE feeds SET last_refresh_time = "${currentTime}" WHERE id in (${value_string_feeds})`
+        );
+    }
+
+    console.log(`|| Refreshed feed: ${feedMetadata.name} ||`);
+    console.log(`|| Inserted ${inserted} posts||`);
 }

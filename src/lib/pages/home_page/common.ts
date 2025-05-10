@@ -2,7 +2,7 @@ import {
     fetch_feeds
 } from "$lib/dao/feed_db";
 
-import { fetch_posts } from "$lib/dao/post_db";
+import { add_posts, fetch_posts } from "$lib/dao/post_db";
 
 import {
     feeds_store,
@@ -21,6 +21,7 @@ import {
 } from "$lib/constants";
 
 import {get} from "svelte/store";
+import { fetchFeedDataFromFeedURL } from "$lib/services/feed_gather";
 
 export const refresh_app_data = async (
     only_feeds: boolean = true,
@@ -59,4 +60,16 @@ export const refresh_posts = async (
             is_fav,
         )
     );
+}
+
+export const refresh_post_data = async (
+    feed_id: number, 
+    url: string
+) => {
+    const latest_feed_info = await fetchFeedDataFromFeedURL(feed_id, url);
+
+    await add_posts(latest_feed_info);
+    
+    // update new post data in store
+    refresh_posts(feed_id);
 }
