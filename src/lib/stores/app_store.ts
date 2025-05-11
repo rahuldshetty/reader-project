@@ -22,7 +22,7 @@ export const collapse_sidebar = writable(false);
 export const active_modal = writable(MODAL_TYPE.NONE);
 
 // User Configuration for App
-export const user_settings = new LazyStore('settings.json', { autoSave: true });
+export const user_settings = new LazyStore('settings.json');
 export const local_user_setting = writable<UserSettings>({
     "LAST_REFRESH_TIME": LAST_REFRESH_TIME,
     "THEME_MODE": DEFAULT_DAISY_THEME,

@@ -19,28 +19,14 @@
   // Local setting State Variables
   // Why use Local vs Global?
   // Answer: Only when user submit to save in modal, we need to save
-  let color_theme = $state(DEFAULT_DAISY_THEME);
-  let refresh_time = $state(LAST_REFRESH_TIME);
-  let pull_posts_on_feed_select = $state(REFRESH_FEED_ON_SELECT);
+  let color_theme = $state($local_user_setting.THEME_MODE);
+  let refresh_time = $state($local_user_setting.LAST_REFRESH_TIME);
+  let pull_posts_on_feed_select = $state($local_user_setting.REFRESH_FEED_ON_SELECT);
 
   // Do not close when save is in progress
   let save_in_progress = $state(false);
 
-  const update_local_user_settings = () => {
-    // Whenever user closes/re-opens modal - we need to present
-    // current settings not the previous unsaved changes.
-    refresh_time = $local_user_setting.LAST_REFRESH_TIME;
-    color_theme = $local_user_setting.THEME_MODE;
-    pull_posts_on_feed_select = $local_user_setting.REFRESH_FEED_ON_SELECT;
-  };
-
-  // Load Settings
-  onMount(async () => {
-    update_local_user_settings();
-  });
-
   const closeModal = () => {
-    update_local_user_settings();
     $active_modal = MODAL_TYPE.NONE;
   };
 
@@ -63,10 +49,13 @@
       SETTINGS.REFRESH_FEED_ON_SELECT,
       pull_posts_on_feed_select,
     );
-    $local_user_setting = await fetch_latest_user_settings();
+
+    // Update local store
+    $local_user_setting.THEME_MODE = color_theme;
+    $local_user_setting.REFRESH_FEED_ON_SELECT = pull_posts_on_feed_select;
+    $local_user_setting.LAST_REFRESH_TIME = refresh_time;
 
     // Close Modal
-    update_local_user_settings();
     save_in_progress = false;
     $active_modal = MODAL_TYPE.NONE;
   };
@@ -129,19 +118,6 @@
         <fieldset
           class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
         >
-          <!-- Last Refresh Time -->
-          <div>
-            <legend class="fieldset-legend">Last Refresh Time (hours)</legend>
-            <p class="label">Expiry time before refreshing new posts.</p>
-          </div>
-          <div class="flex justify-end">
-            <input type="number" class="input" bind:value={refresh_time} />
-          </div>
-        </fieldset>
-
-        <fieldset
-          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
-        >
           <!-- Pull latest feed on select -->
           <div>
             <legend class="fieldset-legend">Refresh Feed</legend>
@@ -157,6 +133,20 @@
             />
           </div>
         </fieldset>
+        
+        <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+          <!-- Last Refresh Time -->
+          <div>
+            <legend class="fieldset-legend">Last Refresh Time (hours)</legend>
+            <p class="label">Expiry time before refreshing new posts.</p>
+          </div>
+          <div class="flex justify-end">
+            <input type="number" class="input" bind:value={refresh_time} disabled={!pull_posts_on_feed_select} />
+          </div>
+        </fieldset>
+        
       </div>
     </div>
 
