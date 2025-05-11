@@ -111,6 +111,13 @@ export const delete_feed = async (feed_id: number) => {
     console.log("|| DB: DELETE FEED ||");
 }
 
+export const update_feed = async (feed_id: number, title: string, folder: number) => {
+    await db.execute(
+        `UPDATE feeds SET title = $2, parent = $3 WHERE id = $1`,
+        [feed_id, title, folder],
+    );
+    console.log("|| UPDATE FEED ||")
+}
 
 export const check_feed_expired = async (feed_id: number) => {
     const feed = await fetch_feed_by_id(feed_id);

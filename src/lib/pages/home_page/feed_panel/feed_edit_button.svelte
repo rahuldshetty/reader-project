@@ -26,7 +26,7 @@
 
     const handleEditFeed = () => {
         closeEditDialog();
-
+        $active_modal = MODAL_TYPE.UPDATE;
     }
 
     const handleDeleteFeed = () => {
