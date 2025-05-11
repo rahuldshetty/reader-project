@@ -12,6 +12,7 @@
     import LoadingSpinner from "$lib/pages/components/loading_spinner.svelte";
 
     import { InfiniteLoader } from "svelte-infinite";
+    import PostBar from "./post_bar.svelte";
 
     let scrollContainer: Element;
 
@@ -40,6 +41,7 @@
 </script>
 
 <div class="flex flex-col w-64 sm:w-80 bg-base-100 border-r border-base-300">
+    <PostBar />
     {#if $refreshing_posts}
         <LoadingSpinner messaage="Refreshing feed..." />
     {:else}

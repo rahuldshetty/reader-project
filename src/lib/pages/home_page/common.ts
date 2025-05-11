@@ -55,6 +55,13 @@ export const refresh_posts = async (
     lastPubDate: string = "",
     is_fav: boolean | null = null,
 ) => {
+    console.log(`Refreshing Feed: ${feed_id}`);
+
+    // When by default there is no feed selected, avoid refresh data
+    if(feed_id == NO_FEED_SELECTED){
+        return;
+    }
+
     refreshing_posts.set(true);
     const sort_by = get(posts_sort_by);
     const unread = get(filter_unread_posts);
