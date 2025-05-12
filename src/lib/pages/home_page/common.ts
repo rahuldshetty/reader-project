@@ -44,6 +44,7 @@ export const refresh_app_data = async (
     }
     if(only_posts){
         active_post_id.set(-1);
+        posts_store.set([]);
     }
 }
 

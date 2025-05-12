@@ -1,4 +1,4 @@
-import { CONTENT_TYPES, TOAST_MESSAGE_TYPE } from "$lib/constants";
+import { CONTENT_TYPES, FEED_TYPE, TOAST_MESSAGE_TYPE } from "$lib/constants";
 
 export interface UserSettings {
     LAST_REFRESH_TIME: number;
@@ -53,12 +53,14 @@ export interface FeedMetadata {
     icon: string;
     posts: Post[];
     url: string;
+    type: FEED_TYPE;
 }
 
 export interface FeedMetadataFolder {
     id: number;
     name: string;
     children: FeedMetadata[];
+    type: FEED_TYPE;
 }
 
 

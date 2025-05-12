@@ -1,5 +1,5 @@
 import type { Post, FeedMetadata, FeedMetadataFolder } from "$lib/types";
-import { FEED_URL_CONTENT_TYPE } from "$lib/constants";
+import { FEED_TYPE, FEED_URL_CONTENT_TYPE } from "$lib/constants";
 import { fetch } from '@tauri-apps/plugin-http';
 
 export const fetchFeedName = (rssText: string) => {
@@ -129,6 +129,7 @@ export const fetchFeedDataFromFeedURL = async (id: number, url: string) : Promis
         icon: await fetchFeedIcon(url, xmlText),
         posts: await fetchPosts(xmlText),
         url: url,
+        type: FEED_TYPE.FEED
     }
 }
 

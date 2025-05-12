@@ -37,7 +37,7 @@
     <button
       class="btn btn-primary"
       onclick={addFeedFromURL}
-      disabled={$btn_in_progress}
+      disabled={$btn_in_progress || $url == ''}
     >
       {#if $btn_in_progress}
         <span class="loading loading-spinner"></span>
