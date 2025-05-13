@@ -2,18 +2,20 @@
     import {
         btn_in_progress,
         feeds_import_data,
+        skip_data_load_on_import
     } from "$lib/stores/add_modal_store";
     import { refresh_app_data } from "$lib/pages/home_page/common";
     import { fetchFeedDataFromURL, flattenFeedData } from "$lib/services/feed_gather";
     import { add_feed, fetch_folders } from "$lib/dao/feed_db";
     import { closeAddModal } from "../add_modal_methods";
     import { FEED_TYPE } from "$lib/constants";
-    import { onDestroy, onMount } from "svelte";
+    import { onDestroy } from "svelte";
     import type { FeedMetadata, FeedMetadataFolder } from "$lib/types";
     import { parseFeedDatafromOPML } from "$lib/services/opml_gather";
 
     let feed_metadata_imports: (FeedMetadata | FeedMetadataFolder)[] = $state([]);
     let feed_id_to_import = $state(new Set());
+    let select_all_size = $state(0);
 
     const unsubscribe = feeds_import_data.subscribe(async (data)=>{
         btn_in_progress.set(true);
@@ -22,22 +24,36 @@
         if(data.startsWith('http')){
             feed_metadata_imports = await fetchFeedDataFromURL(data);
         } else {
-            feed_metadata_imports = await parseFeedDatafromOPML(data);
+            const result = await parseFeedDatafromOPML(data, $skip_data_load_on_import);
+            feed_metadata_imports = result.items;
+            select_all_size = result.size;
         }
         btn_in_progress.set(false);
     });
 
     onDestroy(unsubscribe);
 
-    const handleOnClick = (e: Event, index: number) => {
-        const checked = (e.target as HTMLInputElement).checked;
-        if(checked){
+    const handleOnClick = (index: number) => {
+        const is_present = feed_id_to_import.has(index);
+        if(!is_present){
             feed_id_to_import.add(index);
         } else {
             feed_id_to_import.delete(index);
         }
         feed_id_to_import = new Set(feed_id_to_import);
     };
+
+    const handleSelectAll = (e: Event) => {
+        const checked = (e.target as HTMLInputElement).checked;
+        if(checked){
+            for(let i=0;i<select_all_size;i++){
+                feed_id_to_import.add(i);
+            }
+        } else {
+            feed_id_to_import.clear()
+        }
+        feed_id_to_import = new Set(feed_id_to_import);
+    }
 
     const handleAddFeedToDB = async () => {
         $btn_in_progress = true;
@@ -116,18 +132,26 @@
         <p class="prose prose-sm">Select feeds to import.</p>
     </div>
 
-    <div class="flex flex-col gap-2 mt-4">
+    <div class="flex flex-col gap-2 mt-4 max-h-[400px] overflow-y-auto pr-2">
+        <div class="flex items-center space-x-2">
+            <input
+                type="checkbox"
+                class="checkbox"
+                onchange={(e: Event) => handleSelectAll(e)}
+            />
+            <span>Select All</span>
+        </div>
         {#each feed_metadata_imports as import_data}
             <div class="rounded max-h-xl">
                 <div class="flex items-center space-x-2">
                     <input
                         type="checkbox"
                         class="checkbox"
-                        checked={"children" in import_data}
+                        checked={"children" in import_data || feed_id_to_import.has(import_data.id)}
                         disabled={"children" in import_data}
-                        onchange={(e: Event) => handleOnClick(e, import_data.id)}
+                        onchange={() => handleOnClick(import_data.id)}
                     />
-                    {#if 'icon' in import_data}
+                    {#if 'icon' in import_data && import_data.icon != ''}
                         <img class="w-6 h-6 object-cover" src={import_data.icon} alt={import_data.name} />
                     {/if}
                     <input
@@ -141,10 +165,13 @@
                         <ul class="ml-6 mt-2 space-y-2">
                             {#each import_data.children as child_import_data (child_import_data.id)}
                                 <li class="flex items-center space-x-2">
-                                    <input type="checkbox" class="checkbox"
-                                        onchange={(e: Event) => handleOnClick(e, child_import_data.id)}
+                                    <input 
+                                        type="checkbox"
+                                        class="checkbox"
+                                        checked={feed_id_to_import.has(import_data.id)}
+                                        onchange={() => handleOnClick(child_import_data.id)}
                                     />
-                                    {#if 'icon' in child_import_data}
+                                    {#if 'icon' in child_import_data && child_import_data.icon != ''}
                                         <img class="w-6 h-6 object-cover" src={child_import_data.icon} alt={child_import_data.name} />
                                     {/if}
                                     <input

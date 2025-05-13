@@ -38,9 +38,8 @@ export const addOPMLfromUpload = async () => {
     if(file){
       const text_file_content = await readTextFile(file);
       feeds_import_data.set(text_file_content);
+      active_page.set(1);
     }
-
     btn_in_progress.set(false);
-    active_page.set(1);
 };
 

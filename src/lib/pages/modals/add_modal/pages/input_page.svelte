@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { btn_in_progress, url } from "$lib/stores/add_modal_store";
+    import { btn_in_progress, url, skip_data_load_on_import } from "$lib/stores/add_modal_store";
     import { closeAddModal, addFeedFromURL, addOPMLfromUpload } from "../add_modal_methods";
 
 </script>
@@ -20,6 +20,26 @@
                 bind:value={$url}
             />
         </div>
+    </fieldset>
+
+    <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+      <!-- Pull latest feed on select -->
+      <div>
+        <legend class="fieldset-legend">Skip data fetch</legend>
+        <p class="label">
+          Enabling this option will skip the feed load.
+        </p>
+      </div>
+      <div class="flex justify-end">
+        <input
+          type="checkbox"
+          disabled={$url != ''}
+          bind:checked={$skip_data_load_on_import}
+          class="toggle toggle-success"
+        />
+      </div>
     </fieldset>
 </div>
 

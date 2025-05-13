@@ -1,6 +1,7 @@
 import {
     check_feed_expired,
-    fetch_feeds
+    fetch_feeds,
+    update_icon,
 } from "$lib/dao/feed_db";
 
 import { add_posts, fetch_posts } from "$lib/dao/post_db";
@@ -26,10 +27,12 @@ import {
     NO_FEED_SELECTED,
     NO_OF_POST_PULLS_PER_TIME,
     SETTINGS,
+    TOAST_MESSAGE_TYPE,
 } from "$lib/constants";
 
 import {get} from "svelte/store";
 import { fetchFeedDataFromFeedURL } from "$lib/services/feed_gather";
+import { toastStore } from "$lib/stores/toast_store";
 
 export const refresh_app_data = async (
     only_feeds: boolean = true,
@@ -124,14 +127,26 @@ export const refresh_post_data = async (
     url: string
 ) => {
     // Called when selecting "Refresh" option for a Feed
-    refreshing_posts.set(true);
+    try{
+        refreshing_posts.set(true);
 
-    const latest_feed_info = await fetchFeedDataFromFeedURL(feed_id, url);
+        const latest_feed_info = await fetchFeedDataFromFeedURL(feed_id, url);
 
-    await add_posts(latest_feed_info);
-    
-    // update new post data in store
-    refresh_posts(feed_id);
+        await add_posts(latest_feed_info);
+
+        // Update icon data if its not set
+        if(await update_icon(feed_id, latest_feed_info.icon)){
+            await refresh_app_data(true, false);
+            active_feed_id.set(feed_id);
+        };
+
+        // update new post data in store
+        await refresh_posts(feed_id);
+    } catch {
+        toastStore.add(TOAST_MESSAGE_TYPE.ERROR, "Unable to fetch feed :(")
+    } finally {
+        refreshing_posts.set(true);
+    }
 }
 
 

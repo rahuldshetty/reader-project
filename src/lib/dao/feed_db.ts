@@ -124,3 +124,17 @@ export const check_feed_expired = async (feed_id: number) => {
     const lrt = get(local_user_setting).LAST_REFRESH_TIME;
     return feed.last_refresh_time == null || feed.last_refresh_time == '' || isTimeExpired(feed.last_refresh_time, lrt);
 }
+
+export const update_icon = async (feed_id: number, icon: string) => {
+    const feed = await fetch_feed_by_id(feed_id);
+    if(feed.favicon == '' && icon != ''){
+        await db.execute(
+            `UPDATE feeds SET favicon = $2 WHERE id = $1`,
+            [feed_id, icon],
+        );
+        console.log("|| UPDATE FEED ICON ||");
+        return true;
+    } else {
+        return false;
+    }
+}

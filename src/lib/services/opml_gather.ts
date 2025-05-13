@@ -1,4 +1,4 @@
-import type { FeedMetadata, FeedMetadataFolder} from "$lib/types";
+import type { FeedMetadata, FeedMetadataFolder } from "$lib/types";
 import { fetchFeedDataFromFeedURL } from "./feed_gather";
 import { asyncPool } from "$lib/utils/async_job";
 import { FEED_TYPE } from "$lib/constants";
@@ -6,7 +6,7 @@ import { FEED_TYPE } from "$lib/constants";
 // returns both the flat list of [index, url] *and* how many URLs we found
 function gatherXmlUrls(
   outlines: NodeListOf<Element>,
-  startIndex: number
+  startIndex: number,
 ): { items: [number, string][]; urlCount: number } {
   const items: [number, string][] = []
   let count = 0
@@ -27,7 +27,39 @@ function gatherXmlUrls(
   return { items, urlCount: count }
 }
 
-export const parseFeedDatafromOPML = async (opmlString: string) => {
+
+function gatherFeedData(
+  outlines: NodeListOf<Element>,
+  startIndex: number,
+): { items: FeedMetadata[]; urlCount: number } {
+  const items: FeedMetadata[] = []
+  let count = 0;
+
+  function recurse_feed(outlines: NodeListOf<Element>) {
+    for (const o of outlines) {
+      if (o.hasAttribute("xmlUrl")) {
+        const name = o.getAttribute("text") ?? o.getAttribute("title") ?? ""
+        const url = o.getAttribute("xmlUrl")!
+        items.push({
+          icon: '',
+          id: startIndex + count,
+          name: name,
+          url: url,
+          posts: [],
+          type: FEED_TYPE.FEED,
+        })
+        count++
+      } else {
+        recurse_feed(o.querySelectorAll(":scope > outline"))
+      }
+    }
+  }
+
+  recurse_feed(outlines)
+  return { items, urlCount: count }
+}
+
+export const parseFeedDatafromOPML = async (opmlString: string, skip_loading_data: boolean) => {
   const doc = new DOMParser().parseFromString(opmlString, "text/xml")
   const top = doc.querySelectorAll("body > outline")
   const out: (FeedMetadata | FeedMetadataFolder)[] = []
@@ -35,25 +67,58 @@ export const parseFeedDatafromOPML = async (opmlString: string) => {
 
   for (const o of top) {
     if (o.hasAttribute("xmlUrl")) {
+      // Handle Feed
+      const name = o.getAttribute("text") ?? o.getAttribute("title") ?? ""
       const url = o.getAttribute("xmlUrl")!
-      out.push(await fetchFeedDataFromFeedURL(index, url))
+
+      // Skip loading data based on user selection
+      if (skip_loading_data) {
+        out.push({
+          id: index,
+          icon: '',
+          name: name,
+          url: url,
+          type: FEED_TYPE.FEED,
+          posts: [],
+        });
+      } else {
+        out.push(await fetchFeedDataFromFeedURL(index, url));
+      }
       index++
     } else {
+      // Handle Folder
       const name = o.getAttribute("text") ?? o.getAttribute("title") ?? ""
       const childrenOutlines = o.querySelectorAll(":scope > outline")
 
-      // 1) gather URLs *and* how many we found
-      const { items: flatList, urlCount } = gatherXmlUrls(childrenOutlines, index + 1)
+      if (skip_loading_data) {
+        // 1) gather URLs *and* how many we found
+        const { items: children, urlCount } = gatherFeedData(childrenOutlines, index + 1);
 
-      // 2) fetch them
-      const children = await asyncPool(10, flatList, fetchFeedDataFromFeedURL)
+        // 2) emit the folder
+        out.push({ id: index, name, children, type: FEED_TYPE.FOLDER })
 
-      // 3) emit the folder
-      out.push({ id: index, name, children, type: FEED_TYPE.FOLDER })
+        // 3) bump index: skip folder slot + all URLs we found
+        index = index + 1 + urlCount
 
-      // 4) bump index: skip folder slot + all URLs we found
-      index = index + 1 + urlCount
+      } else {
+        // 1) gather URLs *and* how many we found
+        const { items: flatList, urlCount } = gatherXmlUrls(childrenOutlines, index + 1)
+
+        // 2) fetch them
+        const children = await asyncPool(10, flatList, fetchFeedDataFromFeedURL)
+
+        // 3) emit the folder
+        out.push({ id: index, name, children, type: FEED_TYPE.FOLDER })
+
+        // 4) bump index: skip folder slot + all URLs we found
+        index = index + 1 + urlCount
+      }
+      
     }
   }
-  return out
+
+  return {
+    "items": out, 
+    "size": index
+  };
 }
