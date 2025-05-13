@@ -21,7 +21,9 @@
   // Answer: Only when user submit to save in modal, we need to save
   let color_theme = $state($local_user_setting.THEME_MODE);
   let refresh_time = $state($local_user_setting.LAST_REFRESH_TIME);
+  let enable_insecure_feeds = $state($local_user_setting.ENABLE_INSECURE_LINK);
   let pull_posts_on_feed_select = $state($local_user_setting.REFRESH_FEED_ON_SELECT);
+
 
   // Do not close when save is in progress
   let save_in_progress = $state(false);
@@ -45,6 +47,7 @@
     // Persist settings
     await user_settings.set(SETTINGS.LAST_REFRESH_TIME, refresh_time);
     await user_settings.set(SETTINGS.THEME_MODE, color_theme);
+    await user_settings.set(SETTINGS.ENABLE_INSECURE_LINK, enable_insecure_feeds);
     await user_settings.set(
       SETTINGS.REFRESH_FEED_ON_SELECT,
       pull_posts_on_feed_select,
@@ -54,6 +57,7 @@
     $local_user_setting.THEME_MODE = color_theme;
     $local_user_setting.REFRESH_FEED_ON_SELECT = pull_posts_on_feed_select;
     $local_user_setting.LAST_REFRESH_TIME = refresh_time;
+    $local_user_setting.ENABLE_INSECURE_LINK = enable_insecure_feeds;
 
     // Close Modal
     save_in_progress = false;
@@ -147,6 +151,26 @@
           </div>
         </fieldset>
         
+        <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+          <!-- Pull unsecure links -->
+          <div>
+            <legend class="fieldset-legend">Insecure Mode</legend>
+            <p class="label">
+              Enable this mode to pull feeds from unsecured HTTP urls.
+            </p>
+          </div>
+          <div class="flex justify-end">
+            <input
+              type="checkbox"
+              checked={enable_insecure_feeds}
+              onchange={() => enable_insecure_feeds=!enable_insecure_feeds}
+              class="toggle toggle-warning"
+            />
+          </div>
+        </fieldset>
+
       </div>
     </div>
 

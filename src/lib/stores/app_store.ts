@@ -13,7 +13,8 @@ import {
     FEED_VIEW,
     NO_FEED_SELECTED,
     REFRESH_FEED_ON_SELECT,
-    DB_ORDER_ENUM
+    DB_ORDER_ENUM,
+    ENABLE_INSECURE_LINK
 } from '$lib/constants';
 
 // UI States
@@ -28,7 +29,8 @@ export const local_user_setting = writable<UserSettings>({
     "THEME_MODE": DEFAULT_DAISY_THEME,
     "POST_EXPIRY_TIME": POST_EXPIRY_TIME,
     "CURRENT_FEED_VIEW": String(FEED_VIEW.LIST),
-    "REFRESH_FEED_ON_SELECT": REFRESH_FEED_ON_SELECT
+    "REFRESH_FEED_ON_SELECT": REFRESH_FEED_ON_SELECT,
+    "ENABLE_INSECURE_LINK": ENABLE_INSECURE_LINK,
 });
 
 // Feed Configuration

@@ -27,6 +27,7 @@ export enum SETTINGS {
     POST_EXPIRY_TIME = "POST_EXPIRY_TIME",
     CURRENT_FEED_VIEW = "CURRENT_FEED_VIEW",
     REFRESH_FEED_ON_SELECT = "REFRESH_FEED_ON_SELECT",
+    ENABLE_INSECURE_LINK = "ENABLE_INSECURE_LINK"
 }
 
 export enum THEMES{
@@ -77,6 +78,7 @@ export const DAISY_UI_THEMES = [
 ]
 export const DEFAULT_DAISY_THEME = "default";
 export const REFRESH_FEED_ON_SELECT = true;
+export const ENABLE_INSECURE_LINK = false;
 
 export const NO_FEED_SELECTED = -1000;
 export const ROOT_PARENT_FEED_ID = -1;

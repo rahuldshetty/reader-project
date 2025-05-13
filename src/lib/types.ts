@@ -6,6 +6,7 @@ export interface UserSettings {
     POST_EXPIRY_TIME: number;
     CURRENT_FEED_VIEW: string;
     REFRESH_FEED_ON_SELECT: boolean;
+    ENABLE_INSECURE_LINK: boolean;
 }
 
 export interface ToastMessage {

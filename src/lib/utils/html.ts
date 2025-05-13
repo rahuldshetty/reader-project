@@ -32,3 +32,7 @@ export const escape_title = (str: string) => {
         }
     });
 }
+
+export const validate_url_secure = (url: string) =>{
+  return url.startsWith('https://');
+}
