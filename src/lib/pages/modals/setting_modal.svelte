@@ -4,6 +4,7 @@
     active_modal,
     user_settings,
     local_user_setting,
+    feeds_store,
   } from "$lib/stores/app_store";
   import {
     MODAL_TYPE,
@@ -12,9 +13,13 @@
     REFRESH_FEED_ON_SELECT,
     LAST_REFRESH_TIME,
     SETTINGS,
+    TOAST_MESSAGE_TYPE,
   } from "$lib/constants";
   import { toInitCaps } from "$lib/utils";
-  import { fetch_latest_user_settings } from "$lib/utils/setting";
+  import { save } from '@tauri-apps/plugin-dialog';
+  import { writeTextFile } from '@tauri-apps/plugin-fs';
+    import { toastStore } from "$lib/stores/toast_store";
+    import { convertFeedDataToOPML } from "$lib/services/opml_gather";
 
   // Local setting State Variables
   // Why use Local vs Global?
@@ -63,6 +68,27 @@
     save_in_progress = false;
     $active_modal = MODAL_TYPE.NONE;
   };
+
+  const handleOPMLSave = async () => {
+    // Open Save dialog
+    const path = await save({
+      filters: [
+        {
+          name: 'OPML (XML)',
+          extensions: ['opml'],
+        },
+      ],
+    });
+
+    // Generate OPML
+    if(path){
+      const opml_result = convertFeedDataToOPML($feeds_store);
+      await writeTextFile(path, opml_result);
+      toastStore.add(TOAST_MESSAGE_TYPE.SUCCESS, "Feed saved successfully.")
+    } else {
+      toastStore.add(TOAST_MESSAGE_TYPE.WARNING, "Please provide valid file path.");
+    }
+  }
 </script>
 
 <dialog class="modal" class:modal-open={$active_modal == MODAL_TYPE.SETTINGS}>
@@ -168,6 +194,21 @@
               onchange={() => enable_insecure_feeds=!enable_insecure_feeds}
               class="toggle toggle-warning"
             />
+          </div>
+        </fieldset>
+
+        <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+          <!-- Export OPML -->
+          <div>
+            <legend class="fieldset-legend">Export OPML</legend>
+            <p class="label">
+              Export and save your feed data as OPML.
+            </p>
+          </div>
+          <div class="flex justify-end">
+            <button class="btn btn-neutral" onclick={handleOPMLSave}>Export OPML</button>
           </div>
         </fieldset>
 

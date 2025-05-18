@@ -1,4 +1,4 @@
-import type { FeedMetadata, FeedMetadataFolder } from "$lib/types";
+import type { FeedMetadata, FeedMetadataFolder, FeedResult } from "$lib/types";
 import { fetchFeedDataFromFeedURL } from "./feed_gather";
 import { asyncPool } from "$lib/utils/async_job";
 import { FEED_TYPE } from "$lib/constants";
@@ -121,4 +121,26 @@ export const parseFeedDatafromOPML = async (opmlString: string, skip_loading_dat
     "items": out, 
     "size": index
   };
+}
+
+
+export const convertFeedDataToOPML = (feed_data: FeedResult[]) => {
+    let opml_body = "";
+
+    for(const feed of feed_data){
+        console.log(feed);
+        if(feed.type == FEED_TYPE.FOLDER){
+            if(feed.children){
+                opml_body += `\t\t<outline text="${feed.title}">\n`
+                for(const child_feed of feed.children){
+                    opml_body += `\t\t\t\t<outline text="${child_feed.title}" xmlUrl="${child_feed.url}"/>\n`
+                }
+                opml_body += `\t\t</outline>\n`
+            }
+        } else{
+            opml_body += `\t\t<outline text="${feed.title}" xmlUrl="${feed.url}"/>\n`
+        }
+    }
+
+    return `<opml version="1.0">\t\n<body>\n${opml_body}\t</body>\n</opml>`;
 }
