@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { fetch } from '@tauri-apps/plugin-http';
 
-import { user_settings } from '$lib/store';
+import { user_settings } from '$lib/stores/app_store';
 import { SETTINGS, POST_EXPIRY_TIME, LAST_REFRESH_TIME, THEMES, FEED_VIEW, FEED_TYPE } from '$lib/constants';
 
 export const fetchRSSMetadata = async (id: Number, url: string) => {
@@ -303,4 +303,10 @@ export const parseOPML = (opmlString: string) => {
     traverseOutlines(topLevelOutlines);
 
     return items;
+}
+
+export const toInitCaps = (str: string) => {
+    return str.replace(/\w\S*/g, (txt) =>
+      txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase()
+    );
 }

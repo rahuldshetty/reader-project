@@ -6,7 +6,18 @@ export const DB_PATH = "sqlite:reader.db"
 
 export enum DB_ORDER_ENUM { NEWEST = "DESC", OLDEST = "ASC" }
 
-export enum MODAL_TYPE { NONE, ADD, UPDATE, SETTINGS, TRANSLATE, OPML_IMPORT }
+export enum MODAL_TYPE { 
+    NONE, 
+    ABOUT,
+    ADD, 
+    UPDATE, 
+    SETTINGS, 
+    TRANSLATE, 
+    OPML_IMPORT,
+    
+    DELETE_FEED,
+    ADD_FOLDER,
+}
 
 export enum SETTINGS {
     LAST_REFRESH_TIME = "LAST_REFRESH_TIME",
@@ -15,6 +26,8 @@ export enum SETTINGS {
     // Posts to clear from DB if they have passed this time
     POST_EXPIRY_TIME = "POST_EXPIRY_TIME",
     CURRENT_FEED_VIEW = "CURRENT_FEED_VIEW",
+    REFRESH_FEED_ON_SELECT = "REFRESH_FEED_ON_SELECT",
+    ENABLE_INSECURE_LINK = "ENABLE_INSECURE_LINK"
 }
 
 export enum THEMES{
@@ -48,3 +61,36 @@ export enum CONTENT_TYPES {
     pdf
 }
 
+// Based on data from https://daisyui.com/docs/themes/
+export const DAISY_UI_THEMES = [
+    "default",
+    "light",
+    "dark",
+    "retro",
+    "cyberpunk",
+    "valentine",
+    "dracula",
+    "coffee",
+    "aqua",
+    "night",
+    "winter",
+    "forest"
+]
+export const DEFAULT_DAISY_THEME = "default";
+export const REFRESH_FEED_ON_SELECT = true;
+export const ENABLE_INSECURE_LINK = false;
+
+export const NO_FEED_SELECTED = -1000;
+export const ROOT_PARENT_FEED_ID = -1;
+
+export enum FEED_URL_CONTENT_TYPE {
+    XML,
+    WEBSITE
+}
+
+export enum TOAST_MESSAGE_TYPE {
+    SUCCESS = "success",
+    WARNING = "warning",
+    INFO = "info",
+    ERROR = "error"
+}

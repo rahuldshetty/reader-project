@@ -26,18 +26,11 @@ async fn set_complete(
     // Check if both tasks are completed
     if state_lock.frontend_task {
         // Setup is complete, we can close the splashscreen
-        if let Some(splash_window) = app.get_webview_window("splashscreen") {
-            splash_window.close().unwrap();
-        } else {
-            println!("Splashscreen window not found");
-        }
-
         // and unhide the main window!
-        if let Some(main_window) = app.get_webview_window("main") {
-            main_window.show().unwrap();
-        } else {
-            println!("main window not found");
-        }
+        let splash_window = app.get_webview_window("splashscreen").unwrap();
+        let main_window = app.get_webview_window("main").unwrap();
+        splash_window.close().unwrap();
+        main_window.show().unwrap();
     }
     Ok(())
 }
@@ -51,6 +44,7 @@ fn greet(name: &str) -> String {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
         .manage(Mutex::new(SetupState {

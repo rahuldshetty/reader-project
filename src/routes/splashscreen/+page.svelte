@@ -16,9 +16,7 @@
       {/await}
     </div>
     <div class="flex w-full justify-center items-center mb-4">
-      <div
-        class="animate-spin h-10 w-10 border-4 border-white border-t-transparent rounded-full"
-      ></div>
+      
     </div>
   </div>
 </div>

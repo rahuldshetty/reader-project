@@ -3,7 +3,6 @@
 ![GitHub Release](https://img.shields.io/github/v/release/rahuldshetty/reader-project?include_prereleases) ![GitHub License](https://img.shields.io/github/license/rahuldshetty/reader-project) ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/rahuldshetty/reader-project) 
 
 
-
 **reader-project** is a privacy-focused RSS aggregator built with Tauri, SvelteKit and Tailwind.
 
 
@@ -19,7 +18,6 @@
 - 📁 Offline Storage - Persist articles in an SQLite database.
 - 🎨 Modern UI - Built with Tailwind CSS for a smooth experience.
 - 📰 Content Extraction - Load and display article contents efficiently.
-- 🔡 Article Translation powered by Google Translate.
 - 💾 Import & Export Feeds from OPML (XML).
 
 ## 🛠️ Tech Stack

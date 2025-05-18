@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Lora:wght@400;500&display=swap');
 
 :root {
@@ -9,4 +8,9 @@
 
 body {
   font-family: 'Roboto', sans-serif;
+}
+
+@plugin "daisyui" {
+  exclude: rootscrollgutter;
+  themes: all;
 }

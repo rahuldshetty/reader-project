@@ -10,8 +10,13 @@ import {
     themeMode,
     is_loading_splashscreen,
     feed_view,
-    feed_parent_open_status
+    feed_parent_open_status,
 } from "$lib/store";
+
+import {
+    local_user_setting
+} from "$lib/stores/app_store";
+
 import { get } from "svelte/store";
 
 import {
@@ -34,7 +39,7 @@ import "$lib/logging";
 
 import { NO_OF_POST_PULLS_PER_TIME, SETTINGS } from "$lib/constants";
 
-import { invoke } from "@tauri-apps/api/core";
+import { fetch_latest_user_settings } from "$lib/utils/setting";
 
 export const syncPostsInDB = async (
     feeds: {
@@ -79,6 +84,8 @@ export const appLoader = async () => {
     is_loading_splashscreen.set(true);
 
     // Load Default Settings
+    local_user_setting.set(await fetch_latest_user_settings());
+
     themeMode.set(await fetch_user_setting(SETTINGS.THEME_MODE));
     feed_view.set(await fetch_user_setting(SETTINGS.CURRENT_FEED_VIEW));
 
@@ -136,7 +143,7 @@ export const appLoader = async () => {
 
     // Set the frontend task as being completed
     console.log('FRONTEND TASK DONE!')
-    invoke("set_complete", { task: "frontend" });
+    // invoke("set_complete", { task: "frontend" });
     is_loading_splashscreen.set(false);
     console.log('APP LOAD FINISHED!')
 };
