@@ -1,5 +1,5 @@
 import {get} from "svelte/store";
-import type { Feed, FeedResult } from '$lib/types';
+import type { Feed, FeedResult, FeedUnreadCounter } from '$lib/types';
 import Database from '@tauri-apps/plugin-sql';
 import { DB_PATH, FEED_TYPE, ROOT_PARENT_FEED_ID } from '$lib/constants';
 import { isTimeExpired } from "$lib/utils/time";
@@ -145,4 +145,19 @@ export const fetch_refresheable_feeds = async (): Promise<Feed[]> => {
         "SELECT * from feeds where refresh_on_load = 1",
     )) as Feed[];
     return feeds;
+}
+
+
+export const fetch_unread_post_counts = async () => {
+    const results: {id: number, count: number}[] = (await db.select(
+        `SELECT feed_id as id, count(*) as count from articles where read=0 group by feed_id`
+    ));
+
+    let id2count: FeedUnreadCounter = {}
+    
+    for (const post of results) {
+         id2count[post.id] = post.count;
+    }
+
+    return id2count;
 }

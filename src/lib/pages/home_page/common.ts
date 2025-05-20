@@ -3,6 +3,7 @@ import {
     fetch_feeds,
     update_icon,
     fetch_refresheable_feeds,
+    fetch_unread_post_counts,
 } from "$lib/dao/feed_db";
 
 import { add_posts, fetch_posts } from "$lib/dao/post_db";
@@ -18,10 +19,8 @@ import {
     active_post_id,
     user_settings,
     refreshing_posts,
-} from "$lib/stores/app_store";
-
-import {
-    local_user_setting,
+    feed_count_by_id,
+    local_user_setting
 } from "$lib/stores/app_store";
 
 import {
@@ -43,6 +42,7 @@ export const refresh_app_data = async (
     // Refresh Feed List
     if(only_feeds)
     {
+        feed_count_by_id.set(await fetch_unread_post_counts());
         feeds_store.set(await fetch_feeds());
         active_feed_name.set('');
         active_feed_id.set(NO_FEED_SELECTED);

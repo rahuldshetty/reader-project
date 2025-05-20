@@ -1,4 +1,4 @@
-import type { FeedResult, UserSettings, PostResult } from '$lib/types';
+import type { FeedResult, UserSettings, PostResult, FeedUnreadCounter } from '$lib/types';
 
 import { LazyStore } from '@tauri-apps/plugin-store';
 import { writable } from 'svelte/store';
@@ -37,7 +37,7 @@ export const local_user_setting = writable<UserSettings>({
 export const feeds_store = writable<FeedResult[]>([]);
 export const active_feed_id = writable(NO_FEED_SELECTED);
 export const active_feed_name = writable('');
-
+export const feed_count_by_id = writable<FeedUnreadCounter>();
 
 // Post Configuration
 export const refreshing_posts = writable(false);

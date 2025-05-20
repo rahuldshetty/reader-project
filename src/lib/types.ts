@@ -89,3 +89,4 @@ export interface ContentResult {
     content_type: CONTENT_TYPES;
 }
 
+export type FeedUnreadCounter = Record<number, number>;

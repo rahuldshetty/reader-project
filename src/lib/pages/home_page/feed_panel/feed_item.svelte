@@ -5,14 +5,13 @@
     import { 
         active_feed_id,
         active_feed_name,
-        active_post_id,
-        refreshing_posts,
     } from "$lib/stores/app_store";
     import { FEED_TYPE } from "$lib/constants";
 
     import Fa from "svelte-fa";
     import { faFolder } from "@fortawesome/free-solid-svg-icons";
     import { check_and_pull_latest_feed_data, refresh_posts } from "$lib/pages/home_page/common";
+    import FeedCounterBadge from "./feed_counter_badge.svelte";
 
     const { feed }: { feed: FeedResult | Feed } = $props();
 
@@ -42,9 +41,11 @@
 
 {#if feed.type == FEED_TYPE.FOLDER}
     <!-- TODO: Handle selection of folders  -->
-    <summary class="m-0.5" onclick={handleFeedSelect}>
+    <summary class="flex m-0.5" onclick={handleFeedSelect}>
         <Fa icon={faFolder} size="lg" />
-        {feed.title}
+        <div class="grow">
+            <div class="max-w-24 truncate">{feed.title}</div>
+        </div>
         <FeedEditButton feed={feed} />
     </summary>
 {:else}
@@ -54,7 +55,8 @@
                 <img class="w-6 h-6 object-cover" src={feed.favicon} alt={feed.title} />
             {/if}
             <span class="truncate">{feed.title}</span>
-            <FeedEditButton feed={feed} />
+            <FeedCounterBadge ids={[feed.id]}/>
+            <FeedEditButton feed={feed}/>
         </div>
     </li>
 {/if}
