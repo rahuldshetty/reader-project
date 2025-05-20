@@ -2,6 +2,7 @@ import {
     check_feed_expired,
     fetch_feeds,
     update_icon,
+    fetch_refresheable_feeds,
 } from "$lib/dao/feed_db";
 
 import { add_posts, fetch_posts } from "$lib/dao/post_db";
@@ -154,7 +155,7 @@ export const refresh_post_data = async (
     } catch {
         toastStore.add(TOAST_MESSAGE_TYPE.ERROR, "Unable to fetch feed :(");
     } finally {
-        refreshing_posts.set(true);
+        refreshing_posts.set(false);
     }
 }
 
@@ -169,6 +170,15 @@ export const check_and_pull_latest_feed_data = async (
         if(await check_feed_expired(feed_id)){
             // Pull new data from feed
             await refresh_post_data(feed_id, url);
+        }
+    }
+}
+
+export const pull_feed_and_refresh_post_data = async () => {
+    const feeds = await fetch_refresheable_feeds();
+    for(const feed of feeds){
+        if(await check_feed_expired(feed.id)){
+            await refresh_post_data(feed.id, feed.url);
         }
     }
 }

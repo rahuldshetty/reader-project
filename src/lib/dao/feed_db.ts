@@ -111,10 +111,10 @@ export const delete_feed = async (feed_id: number) => {
     console.log("|| DB: DELETE FEED ||");
 }
 
-export const update_feed = async (feed_id: number, title: string, folder: number) => {
+export const update_feed = async (feed_id: number, title: string, folder: number, refresh_on_load: boolean) => {
     await db.execute(
-        `UPDATE feeds SET title = $2, parent = $3 WHERE id = $1`,
-        [feed_id, title, folder],
+        `UPDATE feeds SET title = $2, parent = $3, refresh_on_load = $4 WHERE id = $1`,
+        [feed_id, title, folder, Number(refresh_on_load)],
     );
     console.log("|| UPDATE FEED ||")
 }
@@ -137,4 +137,12 @@ export const update_icon = async (feed_id: number, icon: string) => {
     } else {
         return false;
     }
+}
+
+
+export const fetch_refresheable_feeds = async (): Promise<Feed[]> => {
+    const feeds = (await db.select(
+        "SELECT * from feeds where refresh_on_load = 1",
+    )) as Feed[];
+    return feeds;
 }

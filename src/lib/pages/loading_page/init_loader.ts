@@ -6,7 +6,7 @@ import {
 } from "$lib/stores/app_store";
 
 import { fetch_latest_user_settings } from "$lib/utils/setting";
-import { refresh_app_data } from "$lib/pages/home_page/common";
+import { refresh_app_data, pull_feed_and_refresh_post_data } from "$lib/pages/home_page/common";
 
 export const init_app = async () => {
     
@@ -15,8 +15,7 @@ export const init_app = async () => {
     // Load User Settings from settings.json
     local_user_setting.set(await fetch_latest_user_settings());
 
-    // TODO: Do rest of loading stuff
-    // 1. refreshing feed on load
+    await pull_feed_and_refresh_post_data();
 
     await refresh_app_data();
 

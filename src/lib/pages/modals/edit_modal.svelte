@@ -14,7 +14,8 @@
     parent: -1,
     type: 0,
     title: '',
-    url: ''
+    url: '',
+    refresh_on_load: false,
   });
 
   // Update feed id on change
@@ -31,7 +32,7 @@
     save_in_progress = true;
 
     try{
-      update_feed(feed.id, feed.title, feed.parent);
+      update_feed(feed.id, feed.title, feed.parent, feed.refresh_on_load);
       toastStore.add(TOAST_MESSAGE_TYPE.SUCCESS, "Edit Saved.")
     } catch{
       toastStore.add(TOAST_MESSAGE_TYPE.ERROR, "Edit operation failed.")
@@ -105,6 +106,25 @@
               </select>
           </div>
       </fieldset>
+
+      <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+          <!-- Enable on refresh -->
+          <div>
+            <legend class="fieldset-legend">Load Refresh</legend>
+            <p class="label">
+              Enable this option to refresh feed when app is launched.
+            </p>
+          </div>
+          <div class="flex justify-end">
+            <input
+              type="checkbox"
+              bind:checked={feed.refresh_on_load}
+              class="toggle toggle-success"
+            />
+          </div>
+        </fieldset>
     {/if}
 
   </div>

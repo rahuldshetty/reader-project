@@ -59,5 +59,18 @@ pub fn fetch_migrations() -> Vec<tauri_plugin_sql::Migration> {
             ",
             kind: MigrationKind::Up,
         },
+        Migration {
+            version: 6,
+            description: "add_refresh_on_load_to_feed",
+            // feeds.type: Represents whether the given feed is a folder or feed.
+            // Values: 0 (feed), 1 (folder)
+
+            // feeds.parent: Represents the parent folder for the feed
+            // Value: Id represents feeds.id, with -1 for root item
+            sql: "
+                ALTER TABLE feeds ADD COLUMN refresh_on_load BOOLEAN NOT NULL DEFAULT 0;
+            ",
+            kind: MigrationKind::Up,
+        },
     ];
 }

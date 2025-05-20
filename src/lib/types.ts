@@ -24,6 +24,7 @@ export interface Feed {
     last_refresh_time: string | null;
     type: number;
     parent: number;
+    refresh_on_load: boolean;
 }
 
 export interface FeedResult {
@@ -34,6 +35,7 @@ export interface FeedResult {
     last_refresh_time: string | null;
     type: number;
     parent: number;
+    refresh_on_load: boolean;
     children: Feed[];
 
     // UI-related state 
