@@ -4,6 +4,7 @@
     import AddModal from "./add_modal/add_modal.svelte";
     import DeleteModal from "./delete_modal.svelte";
     import EditModal from "./edit_modal.svelte";
+    import MarkReadModal from "./mark_read_modal.svelte";
     import SettingModal from "./setting_modal.svelte";
 </script>
 
@@ -13,3 +14,4 @@
 <DeleteModal/>
 <SettingModal/>
 <AddFolderModal/>
+<MarkReadModal/>

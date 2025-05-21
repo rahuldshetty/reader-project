@@ -15,6 +15,7 @@ export enum MODAL_TYPE {
     TRANSLATE, 
     OPML_IMPORT,
     
+    MARK_READ,
     DELETE_FEED,
     ADD_FOLDER,
 }

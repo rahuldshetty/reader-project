@@ -59,6 +59,8 @@
     "fs:default",
     "fs:allow-write-text-file",
     "fs:allow-read-text-file",
-    "clipboard-manager:allow-write-text"
+    "clipboard-manager:allow-write-text",
+    "process:default",
+    "process:allow-exit"
   ]
 }

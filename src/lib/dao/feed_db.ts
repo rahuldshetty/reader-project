@@ -161,3 +161,11 @@ export const fetch_unread_post_counts = async () => {
 
     return id2count;
 }
+
+
+export const mark_feed_as_read = async (id: number) => {
+    await db.execute(
+        `UPDATE articles SET read = 1 WHERE feed_id = $1`,
+        [ id ]
+    );
+}

@@ -55,7 +55,7 @@
                 <img class="w-6 h-6 object-cover" src={feed.favicon} alt={feed.title} />
             {/if}
             <span class="truncate">{feed.title}</span>
-            <FeedCounterBadge ids={[feed.id]}/>
+            <FeedCounterBadge id={feed.id}/>
             <FeedEditButton feed={feed}/>
         </div>
     </li>

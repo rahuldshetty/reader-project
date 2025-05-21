@@ -33,6 +33,11 @@
         closeEditDialog();
         $active_modal = MODAL_TYPE.DELETE_FEED;
     }
+
+    const handleFeedAsRead = () =>{
+        closeEditDialog();
+        $active_modal = MODAL_TYPE.MARK_READ;
+    }
 </script>
 
 <div class="dropdown dropdown-bottom flex justify-end">
@@ -44,6 +49,7 @@
     >
         {#if feed.type == FEED_TYPE.FEED}
             <li><button onclick={handleRefresh}>Refresh</button></li>
+            <li><button onclick={handleFeedAsRead}>Mark Read</button></li>
         {/if}
         <li><button onclick={handleEditFeed}>Edit</button></li>
         <li><button onclick={handleDeleteFeed}>Delete</button></li>
