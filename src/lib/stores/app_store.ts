@@ -14,10 +14,12 @@ import {
     NO_FEED_SELECTED,
     REFRESH_FEED_ON_SELECT,
     DB_ORDER_ENUM,
-    ENABLE_INSECURE_LINK
+    ENABLE_INSECURE_LINK,
+    SCREEN
 } from '$lib/constants';
 
 // UI States
+export const active_screen = writable(SCREEN.FEEDS);
 export const is_loading_splashscreen = writable(true);
 export const collapse_sidebar = writable(false);
 export const active_modal = writable(MODAL_TYPE.NONE);

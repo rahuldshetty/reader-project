@@ -1,4 +1,7 @@
 <script>
+    import { SCREEN } from "$lib/constants";
+    import { active_screen } from "$lib/stores/app_store";
+
     import SideBar from "./side_bar/side_bar.svelte";
     import MainModal from "../modals/main_modal.svelte";
     import FeedPanel from "./feed_panel/feed_panel.svelte";
@@ -8,11 +11,15 @@
 </script>
 
 <MainModal />
-<ToastManager/>
+<ToastManager />
 
 <div class="flex h-screen w-screen overflow-hidden pt-[var(--titlebar-height)]">
-    <SideBar/>
-    <FeedPanel />
-    <PostsPanel/>
-    <ContentPanel/>
+    <SideBar />
+    {#if $active_screen == SCREEN.FEEDS}
+        <FeedPanel />
+        <PostsPanel />
+        <ContentPanel />
+    {:else if $active_screen == SCREEN.HOME}
+        HOME PAGE HERE
+    {/if}
 </div>

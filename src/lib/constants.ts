@@ -20,6 +20,11 @@ export enum MODAL_TYPE {
     ADD_FOLDER,
 }
 
+export enum SCREEN {
+    FEEDS,
+    HOME
+}
+
 export enum SETTINGS {
     LAST_REFRESH_TIME = "LAST_REFRESH_TIME",
     THEME_MODE = "THEME_MODE",

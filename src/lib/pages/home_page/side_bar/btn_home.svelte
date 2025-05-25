@@ -1,7 +1,7 @@
 <script>
     import Fa from "svelte-fa";
     import {
-        faNewspaper,
+        faHome,
     } from "@fortawesome/free-solid-svg-icons";
 
     import { SCREEN } from "$lib/constants";
@@ -9,8 +9,8 @@
 </script>
 
 <li>
-    <a class="flex flex-col {$active_screen == SCREEN.FEEDS? "menu-active":""}" onclick={()=>$active_screen=SCREEN.FEEDS}>
-        <Fa icon={faNewspaper} title="Feeds" />
-        <span class="text-xs">Feeds</span>
+    <a class="flex flex-col {$active_screen == SCREEN.HOME? "menu-active":""}" onclick={()=>$active_screen=SCREEN.HOME}>
+        <Fa icon={faHome} title="Feeds" />
+        <span class="text-xs">Home</span>
     </a>
 </li>
