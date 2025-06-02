@@ -1,12 +1,16 @@
 <script lang="ts">
     import type { PostResult } from "$lib/types";
     import { timeAgo }  from "$lib/utils/time";
-    import { active_post_id } from "$lib/stores/app_store";
+    import { active_post_id, local_user_setting } from "$lib/stores/app_store";
+    import { mark_post_as_read } from "$lib/dao/post_db";
 
     const {post} : { post:PostResult } = $props();
 
     const handleOnPostClick = async () => {
         $active_post_id = post.id;
+        if($local_user_setting.AUTO_READ_ON_SELECT){
+          await mark_post_as_read(post.id, true);
+        }
     }
 </script>
 

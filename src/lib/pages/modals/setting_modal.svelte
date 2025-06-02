@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from "svelte";
   import {
     active_modal,
     user_settings,
@@ -9,17 +8,14 @@
   import {
     MODAL_TYPE,
     DAISY_UI_THEMES,
-    DEFAULT_DAISY_THEME,
-    REFRESH_FEED_ON_SELECT,
-    LAST_REFRESH_TIME,
     SETTINGS,
     TOAST_MESSAGE_TYPE,
   } from "$lib/constants";
   import { toInitCaps } from "$lib/utils";
-  import { save } from '@tauri-apps/plugin-dialog';
-  import { writeTextFile } from '@tauri-apps/plugin-fs';
-    import { toastStore } from "$lib/stores/toast_store";
-    import { convertFeedDataToOPML } from "$lib/services/opml_gather";
+  import { save } from "@tauri-apps/plugin-dialog";
+  import { writeTextFile } from "@tauri-apps/plugin-fs";
+  import { toastStore } from "$lib/stores/toast_store";
+  import { convertFeedDataToOPML } from "$lib/services/opml_gather";
 
   // Local setting State Variables
   // Why use Local vs Global?
@@ -27,8 +23,10 @@
   let color_theme = $state($local_user_setting.THEME_MODE);
   let refresh_time = $state($local_user_setting.LAST_REFRESH_TIME);
   let enable_insecure_feeds = $state($local_user_setting.ENABLE_INSECURE_LINK);
-  let pull_posts_on_feed_select = $state($local_user_setting.REFRESH_FEED_ON_SELECT);
-
+  let pull_posts_on_feed_select = $state(
+    $local_user_setting.REFRESH_FEED_ON_SELECT,
+  );
+  let enable_auto_read = $state($local_user_setting.AUTO_READ_ON_SELECT);
 
   // Do not close when save is in progress
   let save_in_progress = $state(false);
@@ -52,17 +50,25 @@
     // Persist settings
     await user_settings.set(SETTINGS.LAST_REFRESH_TIME, refresh_time);
     await user_settings.set(SETTINGS.THEME_MODE, color_theme);
-    await user_settings.set(SETTINGS.ENABLE_INSECURE_LINK, enable_insecure_feeds);
+    await user_settings.set(
+      SETTINGS.ENABLE_INSECURE_LINK,
+      enable_insecure_feeds
+    );
     await user_settings.set(
       SETTINGS.REFRESH_FEED_ON_SELECT,
-      pull_posts_on_feed_select,
+      pull_posts_on_feed_select
     );
+    await user_settings.set(
+      SETTINGS.AUTO_READ_ON_SELECT,
+      enable_auto_read
+    )
 
     // Update local store
     $local_user_setting.THEME_MODE = color_theme;
     $local_user_setting.REFRESH_FEED_ON_SELECT = pull_posts_on_feed_select;
     $local_user_setting.LAST_REFRESH_TIME = refresh_time;
     $local_user_setting.ENABLE_INSECURE_LINK = enable_insecure_feeds;
+    $local_user_setting.AUTO_READ_ON_SELECT = enable_auto_read;
 
     // Close Modal
     save_in_progress = false;
@@ -74,21 +80,24 @@
     const path = await save({
       filters: [
         {
-          name: 'OPML (XML)',
-          extensions: ['opml'],
+          name: "OPML (XML)",
+          extensions: ["opml"],
         },
       ],
     });
 
     // Generate OPML
-    if(path){
+    if (path) {
       const opml_result = convertFeedDataToOPML($feeds_store);
       await writeTextFile(path, opml_result);
-      toastStore.add(TOAST_MESSAGE_TYPE.SUCCESS, "Feed saved successfully.")
+      toastStore.add(TOAST_MESSAGE_TYPE.SUCCESS, "Feed saved successfully.");
     } else {
-      toastStore.add(TOAST_MESSAGE_TYPE.WARNING, "Please provide valid file path.");
+      toastStore.add(
+        TOAST_MESSAGE_TYPE.WARNING,
+        "Please provide valid file path.",
+      );
     }
-  }
+  };
 </script>
 
 <dialog class="modal" class:modal-open={$active_modal == MODAL_TYPE.SETTINGS}>
@@ -163,7 +172,7 @@
             />
           </div>
         </fieldset>
-        
+
         <fieldset
           class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
         >
@@ -173,10 +182,35 @@
             <p class="label">Expiry time before refreshing new posts.</p>
           </div>
           <div class="flex justify-end">
-            <input type="number" class="input" bind:value={refresh_time} disabled={!pull_posts_on_feed_select} />
+            <input
+              type="number"
+              class="input"
+              bind:value={refresh_time}
+              disabled={!pull_posts_on_feed_select}
+            />
           </div>
         </fieldset>
-        
+
+        <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+          <!-- Enable auto-read -->
+          <div>
+            <legend class="fieldset-legend">Auto-Read</legend>
+            <p class="label">
+              Selecting a post automatically marks the post as read.
+            </p>
+          </div>
+          <div class="flex justify-end">
+            <input
+              type="checkbox"
+              checked={enable_auto_read}
+              onchange={() => (enable_auto_read = !enable_auto_read)}
+              class="toggle toggle-success"
+            />
+          </div>
+        </fieldset>
+
         <fieldset
           class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
         >
@@ -191,7 +225,7 @@
             <input
               type="checkbox"
               checked={enable_insecure_feeds}
-              onchange={() => enable_insecure_feeds=!enable_insecure_feeds}
+              onchange={() => (enable_insecure_feeds = !enable_insecure_feeds)}
               class="toggle toggle-warning"
             />
           </div>
@@ -203,15 +237,14 @@
           <!-- Export OPML -->
           <div>
             <legend class="fieldset-legend">Export OPML</legend>
-            <p class="label">
-              Export and save your feed data as OPML.
-            </p>
+            <p class="label">Export and save your feed data as OPML.</p>
           </div>
           <div class="flex justify-end">
-            <button class="btn btn-neutral" onclick={handleOPMLSave}>Export OPML</button>
+            <button class="btn btn-neutral" onclick={handleOPMLSave}
+              >Export OPML</button
+            >
           </div>
         </fieldset>
-
       </div>
     </div>
 

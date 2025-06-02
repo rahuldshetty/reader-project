@@ -8,6 +8,7 @@
     import PostsPanel from "./posts_panel/posts_panel.svelte";
     import ContentPanel from "./content_panel/content_panel.svelte";
     import ToastManager from "../toast_manager/toast_manager.svelte";
+    import HomePanel from "./home_panel/home_panel.svelte";
 </script>
 
 <MainModal />
@@ -20,6 +21,6 @@
         <PostsPanel />
         <ContentPanel />
     {:else if $active_screen == SCREEN.HOME}
-        HOME PAGE HERE
+        <HomePanel />
     {/if}
 </div>

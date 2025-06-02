@@ -15,7 +15,8 @@ import {
     REFRESH_FEED_ON_SELECT,
     DB_ORDER_ENUM,
     ENABLE_INSECURE_LINK,
-    SCREEN
+    SCREEN,
+    AUTO_READ_ON_SELECT
 } from '$lib/constants';
 
 // UI States
@@ -33,6 +34,7 @@ export const local_user_setting = writable<UserSettings>({
     "CURRENT_FEED_VIEW": String(FEED_VIEW.LIST),
     "REFRESH_FEED_ON_SELECT": REFRESH_FEED_ON_SELECT,
     "ENABLE_INSECURE_LINK": ENABLE_INSECURE_LINK,
+    "AUTO_READ_ON_SELECT": AUTO_READ_ON_SELECT
 });
 
 // Feed Configuration
