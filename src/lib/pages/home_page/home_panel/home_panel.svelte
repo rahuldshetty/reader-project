@@ -1,29 +1,65 @@
 <script lang="ts">
-    const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    const feeds = [
-    { id: 1, title: "Breaking: Feed 1", description: "Exciting news from Feed 1", date: "2025-05-27" },
-    { id: 2, title: "Exclusive: Feed 2", description: "Latest updates from Feed 2", date: "2025-05-26" },
-    { id: 3, title: "Trending: Feed 3", description: "Hot topic from Feed 3", date: "2025-05-25" }
-  ];
+  const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  
+  	$effect(() => {
+      
+    });
 </script>
 
-<div class="container mx-auto p-4">
-  <!-- Main Content Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    {#each feeds as feed}
-      <div class="card bg-base-200 shadow hover:shadow-lg cursor-pointer">
-        <figure class="h-48 bg-gray-300 animate-pulse flex items-center justify-center">
-          <span class="text-gray-500">Image Placeholder</span>
-        </figure>
-        <div class="card-body">
-          <h2 class="card-title">{feed.title}</h2>
-          <p class="text-sm">{feed.description}</p>
-          <p class="text-xs text-gray-400">{feed.date}</p>
-          <div class="card-actions justify-end">
-            <button class="btn btn-sm btn-primary">Read More</button>
-          </div>
-        </div>
-      </div>
-    {/each}
+<section class="">
+  <div class="flex w-screen h-screen overflow-hidden">
+  <!-- Column 1: Medium -->
+  <div class="w-1/4 bg-base-200 p-4 overflow-hidden h-full flex flex-col">
+    <!-- Top Row -->
+    <div class="flex-1 bg-base-100 rounded-xl p-2">
+      <p class="text-lg font-bold">📄 Top Half</p>
+      <p>Content for row 1...</p>
+    </div>
+
+    <!-- Divider -->
+    <div class="divider"></div>
+
+    <!-- Bottom Row -->
+    <div class="flex-1 bg-base-100 rounded-xl p-2">
+      <p class="text-lg font-bold">📄 Bottom Half</p>
+      <p>Content for row 2...</p>
+    </div>
+  </div>
+
+
+  <!-- Column 2: Large -->
+  <div class="w-2/4 bg-base-100 p-4 overflow-y-auto">
+    <!-- Content here -->
+    <div class="flex-1 bg-base-100 rounded-xl p-2">
+      <p class="text-lg font-bold">📄 Large Main Column</p>
+      <p>Content for row 1...</p>
+    </div>
+  </div>
+
+  <!-- Column 3: Small -->
+  <div class="w-1/4 bg-base-200 p-4 overflow-hidden h-full flex flex-col">
+    <!-- First Row -->
+    <div class="flex-1 bg-base-100 rounded-xl p-2">
+      <p class="text-lg font-bold">📄 Top Half</p>
+      <p>Content for row 1...</p>
+    </div>
+
+    <!-- Divider -->
+    <div class="divider"></div>
+
+    <!-- Second Row -->
+    <div class="flex-1 bg-base-100 rounded-xl p-2">
+      <p class="text-lg font-bold">📄 Bottom Half</p>
+      <p>Content for row 2...</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Third Row -->
+    <div class="flex-1 bg-base-100 rounded-xl p-2">
+      <p class="text-lg font-bold">📄 Bottom Half</p>
+      <p>Content for row 2...</p>
+    </div>
   </div>
 </div>
+</section>

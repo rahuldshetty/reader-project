@@ -1,12 +1,21 @@
 <script>
-    import { active_modal } from "$lib/stores/app_store";
+    import { active_modal, active_post_id, refreshing_feeds } from "$lib/stores/app_store";
     import { MODAL_TYPE } from "$lib/constants";
 
     import Fa from "svelte-fa";
-    import { faFolderPlus } from "@fortawesome/free-solid-svg-icons";
+    import { faFolderPlus, faRefresh } from "@fortawesome/free-solid-svg-icons";
+    import { pull_feed_and_refresh_post_data, refresh_app_data } from "../common";
 
     const handleNewFolder = () => {
         $active_modal = MODAL_TYPE.ADD_FOLDER;
+    }
+
+    const handleRefresh = async () => {
+        refreshing_feeds.set(true);
+        active_post_id.set(-1);
+        // TODO: Takes too much time to refresh post data from feed link
+        // await pull_feed_and_refresh_post_data();
+        await refresh_app_data();
     }
 
 </script>
@@ -16,6 +25,10 @@
 >
     <button onclick={handleNewFolder} class="btn btn-ghost btn-sm btn-circle p-4">
         <Fa icon={faFolderPlus} size="lg"/>
+    </button>
+
+    <button onclick={handleRefresh} class="btn btn-ghost btn-sm btn-circle p-4">
+        <Fa icon={faRefresh} size="lg"/>
     </button>
      <!-- <button class="btn btn-ghost btn-sm btn-circle p-4">
         <Fa icon={faFolderPlus} size="lg"/>

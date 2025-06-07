@@ -21,7 +21,8 @@ import {
     user_settings,
     refreshing_posts,
     feed_count_by_id,
-    local_user_setting
+    local_user_setting,
+    refreshing_feeds
 } from "$lib/stores/app_store";
 
 import {
@@ -44,14 +45,16 @@ export const refresh_app_data = async (
     // Refresh Feed List
     if(only_feeds)
     {
+        active_feed_id.set(NO_FEED_SELECTED);
         feed_count_by_id.set(await fetch_unread_post_counts());
         feeds_store.set(await fetch_feeds());
         active_feed_name.set('');
-        active_feed_id.set(NO_FEED_SELECTED);
+        refreshing_feeds.set(false);
     }
     if(only_posts){
         active_post_id.set(-1);
         posts_store.set([]);
+        refreshing_posts.set(false);
     }
 }
 

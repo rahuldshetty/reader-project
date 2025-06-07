@@ -43,7 +43,7 @@
 <div class="flex flex-col w-64 sm:w-80 bg-base-100 border-r border-base-300">
     <PostBar />
     {#if $refreshing_posts}
-        <LoadingSpinner messaage="Refreshing feed..." />
+        <LoadingSpinner messaage="Refreshing posts..." />
     {:else}
         <div bind:this={scrollContainer} class="overflow-auto overflow-x-hidden">
             <ul class="menu gap-2 bg-base-100 rounded-box">
