@@ -148,6 +148,15 @@ export const fetch_refresheable_feeds = async (): Promise<Feed[]> => {
 }
 
 
+export const fetch_all_feeds = async (): Promise<Feed[]> => {
+    const feeds = (await db.select(
+        "SELECT * from feeds where type = $1",
+        [ FEED_TYPE.FEED ]
+    )) as Feed[];
+    return feeds;
+}
+
+
 export const fetch_unread_post_counts = async () => {
     const results: {id: number, count: number}[] = (await db.select(
         `SELECT feed_id as id, count(*) as count from articles where read=0 group by feed_id`

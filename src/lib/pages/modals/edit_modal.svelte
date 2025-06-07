@@ -1,6 +1,6 @@
 <script lang="ts">
   import type {Feed} from "$lib/types";
-  import { active_modal, active_feed_id, active_feed_name } from "$lib/stores/app_store";
+  import { active_modal, active_feed_id, active_feed_name, local_user_setting } from "$lib/stores/app_store";
   import { refresh_app_data } from "$lib/pages/home_page/common";
   import { MODAL_TYPE, NO_FEED_SELECTED, FEED_TYPE, TOAST_MESSAGE_TYPE } from "$lib/constants";
   import { fetch_feed_by_id, fetch_folders, update_feed } from "$lib/dao/feed_db";
@@ -106,25 +106,28 @@
               </select>
           </div>
       </fieldset>
+      
+      {#if $local_user_setting.REFRESH_ALL_FEED_ON_LAUNCH != true}
+        <fieldset
+            class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+          >
+            <!-- Enable on refresh -->
+            <div>
+              <legend class="fieldset-legend">Load Refresh</legend>
+              <p class="label">
+                Enable this option to refresh feed when app is launched.
+              </p>
+            </div>
+            <div class="flex justify-end">
+              <input
+                type="checkbox"
+                bind:checked={feed.refresh_on_load}
+                class="toggle toggle-success"
+              />
+            </div>
+          </fieldset>
+        {/if}
 
-      <fieldset
-          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
-        >
-          <!-- Enable on refresh -->
-          <div>
-            <legend class="fieldset-legend">Load Refresh</legend>
-            <p class="label">
-              Enable this option to refresh feed when app is launched.
-            </p>
-          </div>
-          <div class="flex justify-end">
-            <input
-              type="checkbox"
-              bind:checked={feed.refresh_on_load}
-              class="toggle toggle-success"
-            />
-          </div>
-        </fieldset>
     {/if}
 
   </div>

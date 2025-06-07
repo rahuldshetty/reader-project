@@ -35,6 +35,7 @@ export enum SETTINGS {
     REFRESH_FEED_ON_SELECT = "REFRESH_FEED_ON_SELECT",
     ENABLE_INSECURE_LINK = "ENABLE_INSECURE_LINK",
     AUTO_READ_ON_SELECT = "AUTO_READ_ON_SELECT",
+    REFRESH_ALL_FEED_ON_LAUNCH = "REFRESH_ALL_FEED_ON_LAUNCH"
 }
 
 export enum THEMES{
@@ -87,6 +88,7 @@ export const DEFAULT_DAISY_THEME = "default";
 export const REFRESH_FEED_ON_SELECT = true;
 export const ENABLE_INSECURE_LINK = false;
 export const AUTO_READ_ON_SELECT = false;
+export const REFRESH_ALL_FEED_ON_LAUNCH = false;
 
 export const NO_FEED_SELECTED = -1000;
 export const ROOT_PARENT_FEED_ID = -1;

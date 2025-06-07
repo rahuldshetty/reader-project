@@ -2,7 +2,8 @@ import type { UserSettings } from "$lib/types";
 import { user_settings } from "$lib/stores/app_store";
 import { 
     DEFAULT_DAISY_THEME, LAST_REFRESH_TIME, POST_EXPIRY_TIME, FEED_VIEW,
-    SETTINGS, REFRESH_FEED_ON_SELECT, ENABLE_INSECURE_LINK, AUTO_READ_ON_SELECT
+    SETTINGS, REFRESH_FEED_ON_SELECT, ENABLE_INSECURE_LINK, AUTO_READ_ON_SELECT,
+    REFRESH_ALL_FEED_ON_LAUNCH
 } from "$lib/constants";
 
 export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
@@ -13,6 +14,7 @@ export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
     const feed_view = await user_settings.get(SETTINGS.CURRENT_FEED_VIEW);
     const enable_insecure_link = await user_settings.get(SETTINGS.ENABLE_INSECURE_LINK);
     const auto_read_on_select = await user_settings.get(SETTINGS.AUTO_READ_ON_SELECT);
+    const refresh_all_feed_on_launch = await user_settings.get(SETTINGS.REFRESH_ALL_FEED_ON_LAUNCH);
     
     return {
         "LAST_REFRESH_TIME":  lrt as number ?? LAST_REFRESH_TIME,
@@ -22,5 +24,6 @@ export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
         "REFRESH_FEED_ON_SELECT": refresh_feed_on_select_enable as boolean ?? REFRESH_FEED_ON_SELECT,
         "ENABLE_INSECURE_LINK": enable_insecure_link as boolean ?? ENABLE_INSECURE_LINK,
         "AUTO_READ_ON_SELECT": auto_read_on_select as boolean ?? AUTO_READ_ON_SELECT,
+        "REFRESH_ALL_FEED_ON_LAUNCH": refresh_all_feed_on_launch as boolean?? REFRESH_ALL_FEED_ON_LAUNCH,
     }
 }

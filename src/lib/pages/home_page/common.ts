@@ -4,6 +4,7 @@ import {
     update_icon,
     fetch_refresheable_feeds,
     fetch_unread_post_counts,
+    fetch_all_feeds,
 } from "$lib/dao/feed_db";
 
 import { add_posts, fetch_posts } from "$lib/dao/post_db";
@@ -34,6 +35,7 @@ import {get} from "svelte/store";
 import { fetchFeedDataFromFeedURL } from "$lib/services/feed_gather";
 import { toastStore } from "$lib/stores/toast_store";
 import { validate_url_secure } from "$lib/utils/html";
+import type { Feed } from "$lib/types";
 
 export const refresh_app_data = async (
     only_feeds: boolean = true,
@@ -175,7 +177,14 @@ export const check_and_pull_latest_feed_data = async (
 }
 
 export const pull_feed_and_refresh_post_data = async () => {
-    const feeds = await fetch_refresheable_feeds();
+    const refresh_all_feeds_on_load = get(local_user_setting).REFRESH_ALL_FEED_ON_LAUNCH;
+    let feeds: Feed[] = [];
+    // If refresh all feeds is set, then fetch all feed info
+    if(refresh_all_feeds_on_load){
+        feeds = await fetch_all_feeds();
+    } else {
+        feeds = await fetch_refresheable_feeds();
+    }
     for(const feed of feeds){
         if(await check_feed_expired(feed.id)){
             await refresh_post_data(feed.id, feed.url);

@@ -8,6 +8,7 @@ export interface UserSettings {
     REFRESH_FEED_ON_SELECT: boolean;
     ENABLE_INSECURE_LINK: boolean;
     AUTO_READ_ON_SELECT: boolean;
+    REFRESH_ALL_FEED_ON_LAUNCH: boolean;
 }
 
 export interface ToastMessage {

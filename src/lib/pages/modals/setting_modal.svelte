@@ -27,6 +27,7 @@
     $local_user_setting.REFRESH_FEED_ON_SELECT,
   );
   let enable_auto_read = $state($local_user_setting.AUTO_READ_ON_SELECT);
+  let refresh_all_feed_on_launch = $state($local_user_setting.REFRESH_ALL_FEED_ON_LAUNCH);
 
   // Do not close when save is in progress
   let save_in_progress = $state(false);
@@ -62,6 +63,10 @@
       SETTINGS.AUTO_READ_ON_SELECT,
       enable_auto_read
     )
+    await user_settings.set(
+      SETTINGS.REFRESH_ALL_FEED_ON_LAUNCH,
+      refresh_all_feed_on_launch
+    )
 
     // Update local store
     $local_user_setting.THEME_MODE = color_theme;
@@ -69,6 +74,7 @@
     $local_user_setting.LAST_REFRESH_TIME = refresh_time;
     $local_user_setting.ENABLE_INSECURE_LINK = enable_insecure_feeds;
     $local_user_setting.AUTO_READ_ON_SELECT = enable_auto_read;
+    $local_user_setting.REFRESH_ALL_FEED_ON_LAUNCH = refresh_all_feed_on_launch;
 
     // Close Modal
     save_in_progress = false;
@@ -206,6 +212,26 @@
               type="checkbox"
               checked={enable_auto_read}
               onchange={() => (enable_auto_read = !enable_auto_read)}
+              class="toggle toggle-success"
+            />
+          </div>
+        </fieldset>
+
+        <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+          <!-- Enable auto-refresh-all-feed -->
+          <div>
+            <legend class="fieldset-legend">Auto-Refresh</legend>
+            <p class="label">
+              Refresh all feeds on launch (increases waiting time on launch)
+            </p>
+          </div>
+          <div class="flex justify-end">
+            <input
+              type="checkbox"
+              checked={refresh_all_feed_on_launch}
+              onchange={() => (refresh_all_feed_on_launch = !refresh_all_feed_on_launch)}
               class="toggle toggle-success"
             />
           </div>
