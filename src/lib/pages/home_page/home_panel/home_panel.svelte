@@ -3,7 +3,8 @@
   import type { PostResult } from "$lib/types";
   import { onMount } from "svelte";
   import LeftArticleCard from "./l_article_card.svelte";
-    import ArticleCardGallery from "./article_card_gallery.svelte";
+  import ArticleCardGallery from "./gallery/article_card_gallery.svelte";
+    import { getRandomKElements } from "$lib/utils/html";
 
   const today = new Date().toLocaleDateString("en-US", {
     year: "numeric",
@@ -24,20 +25,20 @@
 <section class="">
   <div class="flex w-screen h-screen overflow-hidden">
     <!-- Column 1: Medium -->
-    <div class="w-1/4 bg-base-200 p-4 overflow-hidden h-full flex flex-col pb-20">
-      {#each posts.slice(0, 3) as post}
+    <div class="w-1/4 p-4 overflow-hidden h-full flex flex-col pb-20">
+      {#each getRandomKElements(posts, 3) as post}
         <LeftArticleCard post={post} total={3}/>
         <div class="divider"></div>
       {/each}
     </div>
 
     <!-- Column 2: Large -->
-    <div class="w-2/4 bg-base-100 p-4 overflow-y-auto">
-      <ArticleCardGallery posts={posts.slice(3, 10)}/>
+    <div class="w-2/4 p-4 overflow-y-auto">
+      <ArticleCardGallery posts={getRandomKElements(posts, 6)}/>
     </div>
 
     <!-- Column 3: Small -->
-    <div class="w-1/4 bg-base-200 p-4 overflow-hidden h-full flex flex-col">
+    <div class="w-1/4 p-4 overflow-hidden h-full flex flex-col">
       <!-- First Row -->
       <div class="flex-1 bg-base-100 rounded-xl p-2">
         <p class="text-lg font-bold">📄 Top Half</p>

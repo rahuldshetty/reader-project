@@ -36,3 +36,18 @@ export const escape_title = (str: string) => {
 export const validate_url_secure = (url: string) =>{
   return url.startsWith('https://');
 }
+
+export function getRandomElement<T>(arr: T[]): T {
+  const randomIndex = Math.floor(Math.random() * arr.length);
+  return arr[randomIndex];
+}
+
+
+export function getRandomKElements<T>(arr: T[], k: number): T[] {
+  const shuffled = [...arr]; // Create a copy to avoid modifying original
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; // Swap
+  }
+  return shuffled.slice(0, k);
+}

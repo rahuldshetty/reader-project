@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { get_random_bg } from "$lib/pages/components/random_background";
     import type { PostResult } from "$lib/types";
 
     const { post, total }: { post: PostResult | null, total: number } = $props();
@@ -18,7 +19,7 @@
         <figure>
             <img
             class="w-full h-full object-cover"
-            src={post.image}
+            src={post.image == '' ? get_random_bg():post.image}
             alt={post.title}
             />
         </figure>
