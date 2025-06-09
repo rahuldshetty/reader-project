@@ -5,7 +5,7 @@
     import { onMount, onDestroy } from "svelte";
     import FeedInfo from "./feed_info.svelte";
 
-    const { posts }: { posts: PostResult[] } = $props();
+    const { posts, onclick }: { posts: PostResult[], onclick: CallableFunction } = $props();
 
     let index = $state(0);
     let bg_image = $state(get_random_bg());
@@ -53,6 +53,10 @@
     onDestroy(() => {
         clearInterval(interval);
     });
+
+    const handleOnClick = () =>{
+        onclick(posts[index].id);
+    }
 </script>
 
 {#if posts && posts.length > 0}
@@ -86,9 +90,12 @@
             <span>{timeAgo(posts[index].pubDate)}</span>
         </div>
         <div class="card-actions justify-end mt-auto">
+                <button class="btn btn-primary" onclick={handleOnClick}>Read More</button>
+        </div>
+        <div class="card-actions justify-end mt-auto">
             <div class="join">
-                <button on:click={prevPost} class="join-item btn">«</button>
-                <button on:click={nextPost} class="join-item btn">»</button>
+                <button onclick={prevPost} class="join-item btn">«</button>
+                <button onclick={nextPost} class="join-item btn">»</button>
             </div>
         </div>
     </div>

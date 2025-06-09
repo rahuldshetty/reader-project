@@ -1,8 +1,9 @@
 <script lang="ts">
     import { get_random_bg } from "$lib/pages/components/random_background";
     import type { PostResult } from "$lib/types";
+    import type { MouseEventHandler } from "svelte/elements";
 
-    const { post, total }: { post: PostResult | null, total: number } = $props();
+    const { post, onclick }: { post: PostResult | null, onclick: MouseEventHandler<HTMLButtonElement> } = $props();
 </script>
 
 {#if post == null}
@@ -26,7 +27,7 @@
         <div class="card-body">
             <h2 class="card-title">{post.title}</h2>
             <div class="card-actions justify-end mt-auto">
-                <button class="btn btn-primary">Read More</button>
+                <button class="btn btn-primary" onclick={onclick}>Read More</button>
             </div>
         </div>
     </div>

@@ -6,10 +6,16 @@
 
     import { SCREEN } from "$lib/constants";
     import { active_screen } from "$lib/stores/app_store";
+    import { refresh_app_data } from "../common";
+
+    const handleFeedClick = async () => {
+        await refresh_app_data();
+        $active_screen=SCREEN.FEEDS;
+    }
 </script>
 
 <li>
-    <a class="flex flex-col {$active_screen == SCREEN.FEEDS? "menu-active":""}" onclick={()=>$active_screen=SCREEN.FEEDS}>
+    <a class="flex flex-col {$active_screen == SCREEN.FEEDS? "menu-active":""}" onclick={handleFeedClick}>
         <Fa icon={faNewspaper} title="Feeds" />
         <span class="text-xs">Feeds</span>
     </a>
