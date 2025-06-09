@@ -7,10 +7,10 @@
 
 {#if total && total != 0}
     <div class="badge badge-sm badge-secondary">
-        {#if total < 100}
+        {#if total < 1000}
             {total}
         {:else}
-            +99
+            1000+
         {/if}
     </div>
 {/if}
