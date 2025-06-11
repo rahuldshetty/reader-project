@@ -15,6 +15,7 @@
     import PostBar from "./post_bar.svelte";
 
     let scrollContainer: Element;
+    let oldFeedValue = $state($active_feed_id);
 
     const loadMorePosts = async () => {
         if (loaderState.isFirstLoad) {
@@ -28,10 +29,13 @@
         }
     };
 
-    active_feed_id.subscribe((_)=> {
-        loaderState.reset();
-        if(scrollContainer){
-            scrollContainer.scrollTop = 0;
+    active_feed_id.subscribe((value)=> {
+        if(oldFeedValue != value){
+            oldFeedValue = value;
+            loaderState.reset();
+            if(scrollContainer){
+                scrollContainer.scrollTop = 0;
+            }
         }
     });
 
@@ -40,7 +44,7 @@
     });
 </script>
 
-<div class="flex flex-col w-64 sm:w-80 bg-base-100 border-r border-base-300">
+<div class="flex flex-col h-full w-64 sm:w-80 bg-base-100 border-r border-base-300">
     <PostBar />
     {#if $refreshing_posts}
         <LoadingSpinner messaage="Refreshing posts..." />
@@ -48,7 +52,7 @@
         <div bind:this={scrollContainer} class="overflow-auto overflow-x-hidden">
             <ul class="menu gap-2 bg-base-100 rounded-box">
                 <InfiniteLoader {loaderState} triggerLoad={loadMorePosts}>
-                    {#each $filtered_posts as post}
+                    {#each $filtered_posts as post (post.id)}
                         <PostItem {post} />
                     {/each}
 

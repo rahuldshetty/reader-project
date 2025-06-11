@@ -21,7 +21,54 @@
   <!-- Screenshot -->
   <section class="py-12 bg-gray-100">
     <div class="max-w-7xl mx-auto px-6 text-center">
-      <img src="https://raw.githubusercontent.com/rahuldshetty/reader-project/refs/heads/master/docs/media/demo-beta.jpg" alt="App Screenshot" class="rounded-lg shadow-lg mx-auto">
+      <img src="./media/0.2.1/feeds.jpg" alt="App Screenshot" class="rounded-lg shadow-lg mx-auto">
+    </div>
+  </section>
+
+  <section class="py-16 bg-white">
+  <div class="max-w-4xl mx-auto px-6 text-center">
+    <h2 class="text-3xl font-semibold mb-6">🎨 Theming Gallery</h2>
+    <p class="text-gray-600">
+      Browse over 10 different themes.
+    </p>
+
+    <div class="relative">
+        <!-- Gallery Container -->
+        <div id="themeGallery" class="overflow-hidden rounded-lg">
+          <div id="galleryTrack" class="flex transition-transform duration-500 ease-in-out">
+            <!-- Slides will be injected here -->
+          </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <button id="prevBtn" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-full shadow-lg">
+          ◀
+        </button>
+        <button id="nextBtn" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-full shadow-lg">
+          ▶
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Homepage Preview Section -->
+  <section class="py-16 bg-blue-50">
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 items-center gap-10">
+      
+      <!-- Image on the Left -->
+      <img src="./media/0.2.1/home_screen.jpg" alt="Homepage View" class="rounded-lg shadow-lg w-full max-h-[500px] object-contain" />
+
+      <!-- Text on the Right -->
+      <div>
+        <h2 class="text-3xl font-semibold mb-4">🏠 Homepage</h2>
+        <p class="text-gray-700 text-lg mb-4">
+          Get a quick glance at what's happening in your feed.
+        </p>
+        <p class="text-gray-600">
+          Experimental feature
+        </p>
+      </div>
+
     </div>
   </section>
 
@@ -52,11 +99,11 @@
       <h2 class="text-3xl font-semibold mb-6">📦 Download Now</h2>
       <p class="mb-10">Get Reader Project for your platform:</p>
       <div class="flex flex-col md:flex-row justify-center gap-6">
-        <a  target="_blank" href="https://github.com/rahuldshetty/reader-project/releases/download/v0.2.0/reader-project_0.2.0_x64-setup.exe"
+        <a  target="_blank" href="https://github.com/rahuldshetty/reader-project/releases/download/v0.2.1/reader-project_0.2.1_x64-setup.exe"
            class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-3 rounded shadow-md transition">🪟 Windows</a>
-        <a  target="_blank" href="https://github.com/rahuldshetty/reader-project/releases/download/v0.2.0/reader-project_0.2.0_aarch64.dmg"
+        <a  target="_blank" href="https://github.com/rahuldshetty/reader-project/releases/download/v0.2.1/reader-project_0.2.1_aarch64.dmg"
            class="bg-gray-800 hover:bg-gray-900 text-white px-5 py-3 rounded shadow-md transition">🍎 macOS</a>
-        <a  target="_blank" href="https://github.com/rahuldshetty/reader-project/releases/download/v0.2.0/reader-project_0.2.0_amd64.deb"
+        <a  target="_blank" href="https://github.com/rahuldshetty/reader-project/releases/download/v0.2.1/reader-project_0.2.1_amd64.deb"
            class="bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded shadow-md transition">🐧 Linux</a>
       </div>
       <p class="mt-6 text-sm text-gray-600">
@@ -69,6 +116,71 @@
   <footer class="py-8 text-center text-gray-500 text-sm">
     Built by <a  target="_blank" href="https://github.com/rahuldshetty" class="underline">rahuldshetty</a> • MIT License
   </footer>
+
+<script>
+  const themes = [
+    {
+      title: "Aqua",
+      image: "./media/0.2.1/themes/aqua.jpg",
+    },
+    {
+      title: "Coffee",
+      image: "./media/0.2.1/themes/coffee.jpg",
+    },
+    {
+      title: "Cyberpunk",
+      image: "./media/0.2.1/themes/cyberpunk.jpg",
+    },
+    {
+      title: "Dark",
+      image: "./media/0.2.1/themes/dark.jpg",
+    },
+    {
+      title: "Night",
+      image: "./media/0.2.1/themes/night.jpg",
+    },
+    {
+      title: "Retro",
+      image: "./media/0.2.1/themes/retro.jpg",
+    },
+    {
+      title: "Winter",
+      image: "./media/0.2.1/themes/winter.jpg",
+    },
+  ];
+
+  const galleryTrack = document.getElementById("galleryTrack");
+
+  themes.forEach((theme) => {
+    const slide = document.createElement("div");
+    slide.className = `min-w-full flex-shrink-0 p-6`;
+    slide.innerHTML = `
+      <h3 class="text-xl font-bold mb-2">${theme.title}</h3>
+      <img src="${theme.image}" alt="${theme.title}" class="rounded shadow mx-auto  w-auto object-contain max-h-80 sm:max-h-96" />
+    `;
+    galleryTrack.appendChild(slide);
+  });
+
+  // Carousel controls
+  let currentIndex = 0;
+  const totalSlides = themes.length;
+
+  function updateGallery() {
+    galleryTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
+  }
+
+  document.getElementById("prevBtn").addEventListener("click", () => {
+    currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+    updateGallery();
+  });
+
+  document.getElementById("nextBtn").addEventListener("click", () => {
+    currentIndex = (currentIndex + 1) % totalSlides;
+    updateGallery();
+  });
+
+  updateGallery(); // Initial position
+</script>
 
 </body>
 </html>

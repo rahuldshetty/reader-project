@@ -12,8 +12,8 @@
     const appWindow = getCurrentWindow();
 
     const exitApp = async () => {
-        appWindow.close();
-        await exit(0);
+        await appWindow.close();
+        // await exit(0);
     }
 </script>
 
