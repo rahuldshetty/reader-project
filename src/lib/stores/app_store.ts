@@ -3,8 +3,6 @@ import type { FeedResult, UserSettings, PostResult, FeedUnreadCounter } from '$l
 import { LazyStore } from '@tauri-apps/plugin-store';
 import { writable } from 'svelte/store';
 
-import { LoaderState } from "svelte-infinite"
-
 import { 
     MODAL_TYPE, 
     LAST_REFRESH_TIME, 
@@ -53,6 +51,3 @@ export const posts_sort_by = writable(DB_ORDER_ENUM.NEWEST);
 export const filter_unread_posts = writable(false);
 export const filter_liked_posts = writable(false);
 export const active_post_id = writable(-1);
-
-// Infinite scrolling 
-export const posts_infinite_loader = new LoaderState();
