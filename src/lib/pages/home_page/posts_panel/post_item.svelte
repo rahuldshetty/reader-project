@@ -21,6 +21,7 @@
         {#if post.image}
           <img
             src={post.image}
+            loading="lazy"
             alt="Post thumbnail"
             class="w-18 h-18 rounded object-cover"
           />
