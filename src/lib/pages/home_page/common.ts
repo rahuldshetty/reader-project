@@ -36,7 +36,7 @@ import {get} from "svelte/store";
 import { fetchFeedDataFromFeedURL } from "$lib/services/feed_gather";
 import { toastStore } from "$lib/stores/toast_store";
 import { validate_url_secure } from "$lib/utils/html";
-import type { Feed } from "$lib/types";
+import type { Feed, PostResult } from "$lib/types";
 
 export const refresh_app_data = async (
     only_feeds: boolean = true,
@@ -193,4 +193,26 @@ export const pull_feed_and_refresh_post_data = async () => {
             await refresh_post_data(feed.id, feed.url);
         }
     }
+}
+
+export const update_post_feed_counter_value = (feed_id: number, value: number) => {
+    let feed_count = get(feed_count_by_id);
+    if(feed_id in feed_count){
+        feed_count[feed_id] += value;
+        feed_count_by_id.set(feed_count);
+    }
+}
+
+
+// Post Store Updates
+
+export const update_post_store_item_by_id = (id: number, new_post: PostResult) => {
+    let posts = get(posts_store);
+    for(let i = 0; i < posts.length; i++){
+        if(posts[i].id == id){
+            posts[i] = new_post;
+            break;
+        }
+    }
+    posts_store.set(posts);
 }

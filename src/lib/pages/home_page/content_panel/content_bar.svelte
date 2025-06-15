@@ -16,6 +16,7 @@
     } from "@fortawesome/free-solid-svg-icons";
     import { mark_post_as_fav, mark_post_as_read } from "$lib/dao/post_db";
     import { TOAST_MESSAGE_TYPE } from "$lib/constants";
+    import { update_post_feed_counter_value } from "../common";
 
     const { data, post }: { data: ContentResult; post: PostResult } = $props();
 
@@ -34,6 +35,8 @@
     const handleReadButton = async () => {
         await mark_post_as_read(post.id, !read_status);
         read_status = !read_status;
+        
+        update_post_feed_counter_value(post.feed_id, read_status? -1:1);
     }
 
     const handleFavouriteButton = async () => {
