@@ -1,6 +1,7 @@
 <script lang="ts">
     import { 
-        active_feed_id
+        active_feed_id,
+        filter_unread_posts
     } from "$lib/stores/app_store";
     import { refresh_posts } from "$lib/pages/home_page/common";
 
@@ -8,6 +9,12 @@
     import {  faStar, faGripLines } from "@fortawesome/free-solid-svg-icons";
 
     const handleOnClick = async (feed_id: number) => {
+        // Since my_favourites is already ready,
+        // reset the filter_read
+        if(feed_id == -2){
+            $filter_unread_posts = false;
+        }
+
         $active_feed_id = feed_id;
         await refresh_posts(feed_id);
     }

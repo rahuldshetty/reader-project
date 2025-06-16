@@ -1,5 +1,5 @@
 <script>
-    import { active_feed_id, posts_sort_by } from "$lib/stores/app_store";
+    import { active_feed_id, posts_sort_by, filter_unread_posts } from "$lib/stores/app_store";
     import { MODAL_TYPE, DB_ORDER_ENUM } from "$lib/constants";
 
     import Fa from "svelte-fa";
@@ -22,11 +22,18 @@
         // Pull latest post feeds from DB
         await refresh_posts($active_feed_id);
     };
+
+    const handleChangeOnReadFilter = async () => {
+        await refresh_posts($active_feed_id);
+    }
 </script>
 
 <div
     class="sticky top-0 z-10 justify-end bg-base-100 p-2 flex space-x-1 border-b border-base-300"
 >
+    <div class="m-1">
+        <input type="checkbox" bind:checked={$filter_unread_posts} disabled={$active_feed_id == -2} onchange={handleChangeOnReadFilter} class="checkbox checkbox-sm checkbox-secondary" />
+    </div>
     <button
         onclick={handleSortDate}
         class="btn btn-ghost btn-sm btn-circle p-4"
@@ -37,7 +44,4 @@
             size="lg"
         />
     </button>
-    <!-- <button class="btn btn-ghost btn-sm btn-circle p-4">
-        <Fa icon={faFolderPlus} size="lg"/>
-    </button> -->
 </div>
