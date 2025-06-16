@@ -33,6 +33,14 @@
   let save_in_progress = $state(false);
 
   const closeModal = () => {
+    // Reset State
+    color_theme = $local_user_setting.THEME_MODE;
+    pull_posts_on_feed_select =$local_user_setting.REFRESH_FEED_ON_SELECT;
+    refresh_time = $local_user_setting.LAST_REFRESH_TIME;
+    enable_insecure_feeds = $local_user_setting.ENABLE_INSECURE_LINK;
+    enable_auto_read = $local_user_setting.AUTO_READ_ON_SELECT;
+    refresh_all_feed_on_launch = $local_user_setting.REFRESH_ALL_FEED_ON_LAUNCH;
+
     $active_modal = MODAL_TYPE.NONE;
   };
 
@@ -154,6 +162,41 @@
               </ul>
             </div>
           </fieldset>
+
+          <fieldset
+            class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+          >
+            <!-- Enable auto-refresh-all-feed -->
+            <div>
+              <legend class="fieldset-legend">Auto-Refresh</legend>
+              <p class="label">
+                Refresh all feeds on launch (increases waiting time on launch)
+              </p>
+            </div>
+            <div class="flex justify-end">
+              <input
+                type="checkbox"
+                checked={refresh_all_feed_on_launch}
+                onchange={() => (refresh_all_feed_on_launch = !refresh_all_feed_on_launch)}
+                class="toggle toggle-success"
+              />
+            </div>
+          </fieldset>
+
+          <fieldset
+            class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+          >
+            <!-- Export OPML -->
+            <div>
+              <legend class="fieldset-legend">Export OPML</legend>
+              <p class="label">Export and save your feed data as OPML.</p>
+            </div>
+            <div class="flex justify-end">
+              <button class="btn btn-neutral" onclick={handleOPMLSave}
+                >Export OPML</button
+              >
+            </div>
+          </fieldset>
         </div>
       </div>
 
@@ -220,26 +263,6 @@
         <fieldset
           class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
         >
-          <!-- Enable auto-refresh-all-feed -->
-          <div>
-            <legend class="fieldset-legend">Auto-Refresh</legend>
-            <p class="label">
-              Refresh all feeds on launch (increases waiting time on launch)
-            </p>
-          </div>
-          <div class="flex justify-end">
-            <input
-              type="checkbox"
-              checked={refresh_all_feed_on_launch}
-              onchange={() => (refresh_all_feed_on_launch = !refresh_all_feed_on_launch)}
-              class="toggle toggle-success"
-            />
-          </div>
-        </fieldset>
-
-        <fieldset
-          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
-        >
           <!-- Pull unsecure links -->
           <div>
             <legend class="fieldset-legend">Insecure Mode</legend>
@@ -254,21 +277,6 @@
               onchange={() => (enable_insecure_feeds = !enable_insecure_feeds)}
               class="toggle toggle-warning"
             />
-          </div>
-        </fieldset>
-
-        <fieldset
-          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
-        >
-          <!-- Export OPML -->
-          <div>
-            <legend class="fieldset-legend">Export OPML</legend>
-            <p class="label">Export and save your feed data as OPML.</p>
-          </div>
-          <div class="flex justify-end">
-            <button class="btn btn-neutral" onclick={handleOPMLSave}
-              >Export OPML</button
-            >
           </div>
         </fieldset>
       </div>

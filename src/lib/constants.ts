@@ -82,7 +82,22 @@ export const DAISY_UI_THEMES = [
     "aqua",
     "night",
     "winter",
-    "forest"
+    "forest",
+    "cupcake",
+    "bumblebee",
+    "emerald",
+    "corporate",
+    "synthwave",
+    "halloween",
+    "lofi",
+    "pastel",
+    "fantasy",
+    "wireframe",
+    "cmyk",
+    "autumn",
+    "dim",
+    "nord",
+    "silk"
 ]
 export const DEFAULT_DAISY_THEME = "default";
 export const REFRESH_FEED_ON_SELECT = true;
