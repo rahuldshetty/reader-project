@@ -120,12 +120,18 @@ export const update_feed = async (feed_id: number, title: string, folder: number
 }
 
 export const check_feed_expired = async (feed_id: number) => {
+    if(feed_id < 0){
+        return false;
+    }
     const feed = await fetch_feed_by_id(feed_id);
     const lrt = get(local_user_setting).LAST_REFRESH_TIME;
     return feed.last_refresh_time == null || feed.last_refresh_time == '' || isTimeExpired(feed.last_refresh_time, lrt);
 }
 
 export const update_icon = async (feed_id: number, icon: string) => {
+    if(feed_id < 0){
+        return false;
+    }
     const feed = await fetch_feed_by_id(feed_id);
     if(feed.favicon == '' && icon != ''){
         await db.execute(

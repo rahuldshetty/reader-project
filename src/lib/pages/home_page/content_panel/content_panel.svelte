@@ -6,6 +6,21 @@
     import HtmlRenderer from "./html_renderer.svelte";
     import PdfRenderer from "./pdf_renderer.svelte";
     import SkeletonContent from "./skeleton_content.svelte";
+    import DefaultRenderer from "./default_renderer.svelte";
+    import type { PostResult } from "$lib/types";
+
+    const prepareDefaultContent = (post: PostResult) => {
+        // Called to render a default page when unable to load
+        return {
+            title: post.title,
+            content: `<p>Unable to parse page. Please access the site directly.</p>`,
+            // TODO: Handle 0 word count here
+            word_count: 0, 
+            url: post.link,
+            image: post.image,
+            content_type: CONTENT_TYPES.html
+        }
+    }
 </script>
 
 {#if $active_post_id != -1}
@@ -19,6 +34,8 @@
                 {:else if content.content_type == CONTENT_TYPES.pdf}
                     <PdfRenderer data={content} post={post}/>
             {/if}
+        {:catch}
+            <DefaultRenderer data={prepareDefaultContent(post)} post={post}/>
         {/await}
     {/await}
 {/if}
