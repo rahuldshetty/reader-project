@@ -44,6 +44,11 @@ fn greet(name: &str) -> String {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .setup(|app| {
+                #[cfg(desktop)]
+                app.handle().plugin(tauri_plugin_single_instance::init(|app, args, cwd| {}));
+                Ok(())
+        })
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_fs::init())

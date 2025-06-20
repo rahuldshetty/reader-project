@@ -32,9 +32,6 @@
         }
       ]
     },
-    "store:default",
-    "store:default",
-    "opener:default",
     "log:default",
     "shell:default",
     "shell:allow-open",
