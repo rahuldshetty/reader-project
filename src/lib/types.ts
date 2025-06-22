@@ -46,6 +46,14 @@ export interface FeedResult {
     if_folder_open: boolean; 
 }
 
+export interface FeedMetric {
+    id: number;
+    total: number;
+    read: number;
+    posts_per_day: number;
+    last_refreshed: string;
+}
+
 export interface Post {
     title: string;
     link: string;

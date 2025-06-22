@@ -74,3 +74,67 @@ export const isTimeExpired = (time: string, expiry_in_hours: number) => {
 
     return false;
 }
+
+/**
+ * Parse a SQLite timestamp string into a Date.
+ * Supports:
+ *  - ISO strings: "2025-06-22T15:30:00Z" or with offset.
+ *  - SQLite default format: "YYYY-MM-DD HH:MM:SS" (assumed UTC here).
+ * @param ts - the timestamp string from DB
+ * @param assumeUTC - if true and format is "YYYY-MM-DD HH:MM:SS", treat as UTC by appending 'Z'
+ * @returns Date object or null if invalid
+ */
+export function parseSQLiteTimestamp(ts: string, assumeUTC = true): Date | null {
+    if (!ts) return null;
+    let iso: string;
+    // Match "YYYY-MM-DD HH:MM:SS"
+    const sqlitePattern = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+    if (sqlitePattern.test(ts)) {
+        // Convert space to 'T'; append 'Z' if UTC
+        iso = ts.replace(' ', 'T') + (assumeUTC ? 'Z' : '');
+    } else {
+        // Assume it's already ISO-like (e.g., with 'T' and maybe offset or 'Z')
+        iso = ts;
+    }
+    const d = new Date(iso);
+    return isNaN(d.getTime()) ? null : d;
+}
+
+/**
+ * Extract time part "HH:MM:SS" from timestamp.
+ * @param ts - timestamp string
+ * @param assumeUTC - whether to interpret as UTC when parsing
+ * @returns e.g. "15:30:00", or empty string if invalid
+ */
+export function extractTime(ts: string, assumeUTC = true): string {
+    const d = parseSQLiteTimestamp(ts, assumeUTC);
+    if (!d) return '';
+        // Use Intl.DateTimeFormat for consistent zero-padding
+        const opts: Intl.DateTimeFormatOptions = {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+        timeZone: assumeUTC ? 'UTC' : undefined,
+    };
+    return new Intl.DateTimeFormat('en-US', opts).format(d);
+}
+
+/**
+ * Extract formatted date "Month Day, Year" from timestamp.
+ * @param ts - timestamp string
+ * @param assumeUTC - whether to interpret as UTC when parsing
+ * @returns e.g. "June 22, 2025", or empty string if invalid
+*/
+export function extractFormattedDate(ts: string, assumeUTC = true): string {
+  const d = parseSQLiteTimestamp(ts, assumeUTC);
+  if (!d) return '';
+  const opts: Intl.DateTimeFormatOptions = {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: assumeUTC ? 'UTC' : undefined,
+  };
+  return new Intl.DateTimeFormat('en-US', opts).format(d);
+}
+

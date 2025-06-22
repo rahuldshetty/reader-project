@@ -1,5 +1,5 @@
 import {get} from "svelte/store";
-import type { Feed, FeedResult, FeedUnreadCounter } from '$lib/types';
+import type { Feed, FeedMetric, FeedResult, FeedUnreadCounter } from '$lib/types';
 import Database from '@tauri-apps/plugin-sql';
 import { DB_PATH, FEED_TYPE, ROOT_PARENT_FEED_ID } from '$lib/constants';
 import { isTimeExpired } from "$lib/utils/time";
@@ -183,4 +183,43 @@ export const mark_feed_as_read = async (id: number) => {
         `UPDATE articles SET read = 1 WHERE feed_id = $1`,
         [ id ]
     );
+}
+
+
+export const fetch_feed_metric_by_id = async (id: number): Promise<FeedMetric> => {
+    const feed_metrics = (await db.select(
+        `SELECT
+            id,
+            (Select count(id) from articles where feed_id = $1) as total,
+            (Select count(id) from articles where feed_id = $1 and read=1) as read,
+            (
+                SELECT 
+                    CASE 
+                        WHEN COUNT(DISTINCT DATE(pub_date)) = 0 THEN 0
+                        ELSE COUNT(*) * 1.0 / COUNT(DISTINCT DATE(pub_date))
+                    END AS avg_posts_per_day
+                FROM 
+                    articles
+                WHERE 
+                    feed_id = $1
+                    AND pub_date IS NOT NULL
+            ) as posts_per_day,
+            (
+                SELECT
+                    CASE
+                        WHEN last_refresh_time IS NULL THEN ''
+                        ELSE last_refresh_time
+                    END AS last_refreshed
+                FROM
+                    feeds
+                WHERE
+                    id = $1
+            ) as last_refreshed
+        from feeds where id = $1`,
+        [ id ]
+    )) as FeedMetric[];
+    if(feed_metrics.length == 0){
+        throw Error(`Feed data for id ${id} not found.`);
+    }
+    return feed_metrics[0];
 }
