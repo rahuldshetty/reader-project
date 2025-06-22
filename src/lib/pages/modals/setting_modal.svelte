@@ -28,6 +28,8 @@
   );
   let enable_auto_read = $state($local_user_setting.AUTO_READ_ON_SELECT);
   let refresh_all_feed_on_launch = $state($local_user_setting.REFRESH_ALL_FEED_ON_LAUNCH);
+  let enable_auto_purge = $state($local_user_setting.ENABLE_AUTO_PURGE);
+  let old_posts_save_period_in_days = $state($local_user_setting.POST_EXPIRY_TIME);
 
   // Do not close when save is in progress
   let save_in_progress = $state(false);
@@ -40,6 +42,8 @@
     enable_insecure_feeds = $local_user_setting.ENABLE_INSECURE_LINK;
     enable_auto_read = $local_user_setting.AUTO_READ_ON_SELECT;
     refresh_all_feed_on_launch = $local_user_setting.REFRESH_ALL_FEED_ON_LAUNCH;
+    enable_auto_purge = $local_user_setting.ENABLE_AUTO_PURGE;
+    old_posts_save_period_in_days = $local_user_setting.POST_EXPIRY_TIME;
 
     $active_modal = MODAL_TYPE.NONE;
   };
@@ -70,11 +74,19 @@
     await user_settings.set(
       SETTINGS.AUTO_READ_ON_SELECT,
       enable_auto_read
-    )
+    );
     await user_settings.set(
       SETTINGS.REFRESH_ALL_FEED_ON_LAUNCH,
       refresh_all_feed_on_launch
-    )
+    );
+    await user_settings.set(
+      SETTINGS.ENABLE_AUTO_PURGE,
+      enable_auto_purge
+    );
+    await user_settings.set(
+      SETTINGS.POST_EXPIRY_TIME,
+      old_posts_save_period_in_days
+    );
 
     // Update local store
     $local_user_setting.THEME_MODE = color_theme;
@@ -83,6 +95,8 @@
     $local_user_setting.ENABLE_INSECURE_LINK = enable_insecure_feeds;
     $local_user_setting.AUTO_READ_ON_SELECT = enable_auto_read;
     $local_user_setting.REFRESH_ALL_FEED_ON_LAUNCH = refresh_all_feed_on_launch;
+    $local_user_setting.ENABLE_AUTO_PURGE = enable_auto_purge;
+    $local_user_setting.POST_EXPIRY_TIME = old_posts_save_period_in_days;
 
     // Close Modal
     save_in_progress = false;
@@ -276,6 +290,47 @@
               checked={enable_insecure_feeds}
               onchange={() => (enable_insecure_feeds = !enable_insecure_feeds)}
               class="toggle toggle-warning"
+            />
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- Storage Setting -->
+      <input type="radio" name="setting_tabs" class="tab" aria-label="Storage" />
+      <div class="tab-content bg-base-100 p-4">
+        <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+          <!-- Auto Delete -->
+          <div>
+            <legend class="fieldset-legend">Auto Purge</legend>
+            <p class="label">
+              Automatically delete older posts (non-favorites & feeds > 100 posts).
+            </p>
+          </div>
+          <div class="flex justify-end">
+            <input
+              type="checkbox"
+              bind:checked={enable_auto_purge}
+              class="toggle toggle-success"
+            />
+          </div>
+        </fieldset>
+
+        <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+          <!-- Post Duration -->
+          <div>
+            <legend class="fieldset-legend">Post Duration</legend>
+            <p class="label">Number of days to persist a post.</p>
+          </div>
+          <div class="flex justify-end">
+            <input
+              type="number"
+              class="input"
+              bind:value={old_posts_save_period_in_days}
+              disabled={!enable_auto_purge}
             />
           </div>
         </fieldset>

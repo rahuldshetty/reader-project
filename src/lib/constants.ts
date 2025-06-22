@@ -30,6 +30,7 @@ export enum SETTINGS {
     THEME_MODE = "THEME_MODE",
 
     // Posts to clear from DB if they have passed this time
+    ENABLE_AUTO_PURGE = "ENABLE_AUTO_PURGE",
     POST_EXPIRY_TIME = "POST_EXPIRY_TIME",
     CURRENT_FEED_VIEW = "CURRENT_FEED_VIEW",
     REFRESH_FEED_ON_SELECT = "REFRESH_FEED_ON_SELECT",
@@ -61,6 +62,7 @@ export const LAST_REFRESH_TIME = 4;
 
 // Measured in Days
 export const POST_EXPIRY_TIME = 30;
+export const ENABLE_AUTO_PURGE = true;
 
 // Content Type displayed in parsed view
 export enum CONTENT_TYPES {

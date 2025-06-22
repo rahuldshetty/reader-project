@@ -3,12 +3,14 @@ import { CONTENT_TYPES, FEED_TYPE, TOAST_MESSAGE_TYPE } from "$lib/constants";
 export interface UserSettings {
     LAST_REFRESH_TIME: number;
     THEME_MODE: string;
-    POST_EXPIRY_TIME: number;
     CURRENT_FEED_VIEW: string;
     REFRESH_FEED_ON_SELECT: boolean;
     ENABLE_INSECURE_LINK: boolean;
     AUTO_READ_ON_SELECT: boolean;
     REFRESH_ALL_FEED_ON_LAUNCH: boolean;
+
+    ENABLE_AUTO_PURGE: boolean;
+    POST_EXPIRY_TIME: number;
 }
 
 export interface ToastMessage {

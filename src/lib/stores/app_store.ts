@@ -15,7 +15,8 @@ import {
     ENABLE_INSECURE_LINK,
     SCREEN,
     AUTO_READ_ON_SELECT,
-    REFRESH_ALL_FEED_ON_LAUNCH
+    REFRESH_ALL_FEED_ON_LAUNCH,
+    ENABLE_AUTO_PURGE,
 } from '$lib/constants';
 
 // UI States
@@ -29,6 +30,7 @@ export const user_settings = new LazyStore('settings.json');
 export const local_user_setting = writable<UserSettings>({
     "LAST_REFRESH_TIME": LAST_REFRESH_TIME,
     "THEME_MODE": DEFAULT_DAISY_THEME,
+    "ENABLE_AUTO_PURGE": ENABLE_AUTO_PURGE,
     "POST_EXPIRY_TIME": POST_EXPIRY_TIME,
     "CURRENT_FEED_VIEW": String(FEED_VIEW.LIST),
     "REFRESH_FEED_ON_SELECT": REFRESH_FEED_ON_SELECT,

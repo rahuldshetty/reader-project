@@ -7,7 +7,12 @@ import {
     fetch_all_feeds,
 } from "$lib/dao/feed_db";
 
-import { add_posts, fetch_posts } from "$lib/dao/post_db";
+import { 
+    add_posts,
+    fetch_posts,
+    fetch_old_post_count,
+    delete_old_posts,
+} from "$lib/dao/post_db";
 
 import {
     feeds_store,
@@ -215,4 +220,14 @@ export const update_post_store_item_by_id = (id: number, new_post: PostResult) =
         }
     }
     posts_store.set(posts);
+}
+
+
+// Delete old posts
+export const auto_purge_old_posts = async () => {
+    const post_expiry_time = get(local_user_setting).POST_EXPIRY_TIME;
+    const is_auto_purge_enabled = get(local_user_setting).ENABLE_AUTO_PURGE;
+    if(is_auto_purge_enabled){
+        await delete_old_posts(post_expiry_time);
+    }
 }

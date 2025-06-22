@@ -179,3 +179,27 @@ export const add_posts = async (feedMetadata: FeedMetadata) => {
     console.log(`|| Refreshed feed: ${feedMetadata.name} ||`);
     console.log(`|| Inserted ${inserted} posts||`);
 }
+
+export const fetch_old_post_count = async (days: number): Promise<number> => {
+    const query = `
+        Select count(id) as count FROM articles WHERE datetime(pub_date) <= date('now','-${days} day') AND is_fav = 0 AND 
+        feed_id in (
+            SELECT feed_id FROM articles group by feed_id having count(*) > 100
+        )
+    `
+    const result = (await db.select(query)) as Record<string, number>[];
+    return result[0]['count'];
+}
+
+
+export const delete_old_posts = async (days: number): Promise<boolean> => {
+    const query = `
+        DELETE FROM articles WHERE datetime(pub_date) <= date('now','-${days} day') AND is_fav = 0 AND 
+        feed_id in (
+            SELECT feed_id FROM articles group by feed_id having count(*) > 100
+        )
+    `
+    const result = await db.execute(query);
+    console.log(`|| Deleted ${result.rowsAffected} old posts ||`);
+    return result.rowsAffected != 0;
+}
