@@ -137,9 +137,6 @@ export const mark_post_as_fav = async (id: number, is_fav: boolean) => {
 export const add_posts = async (feedMetadata: FeedMetadata) => {
     const posts = feedMetadata.posts;
 
-    // Track individual posts to insert into DB
-    let value_string = ""
-
     // Create a Set to track feeds that were updated
     const feedsSet = new Set();
 
@@ -149,21 +146,17 @@ export const add_posts = async (feedMetadata: FeedMetadata) => {
         try{
             const date = convertToTimeStringForDB(post.pubDate);
 
-            value_string += `(${feedMetadata.id}, '${escape_title(post.title)}', '${post.link}', '${date}', '${escape_title(post.image)}')`;
-
-            if (i != posts.length - 1) {
-                value_string += ",\n"
-            }
-
-            await db.execute(
-                `INSERT OR IGNORE INTO articles (feed_id, title, link, pub_date, image_url) VALUES ${value_string}`
+            const result = await db.execute(
+                `INSERT OR IGNORE INTO articles (feed_id, title, link, pub_date, image_url) 
+                VALUES (${feedMetadata.id}, '${escape_title(post.title)}', '${post.link}', '${date}', '${escape_title(post.image)}')`
             );
+            console.log(result);
 
             feedsSet.add(feedMetadata.id);
 
             inserted++;
-        } catch{
-
+        } catch(e){
+            console.log(`|| Failed to insert post (${post.link}): ${e} ||`);
         }
     }
 
