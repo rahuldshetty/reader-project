@@ -92,6 +92,7 @@ export const refresh_posts = async (
             is_fav,
         )
     );
+    feed_count_by_id.set(await fetch_unread_post_counts());
     refreshing_posts.set(false);
 }
 

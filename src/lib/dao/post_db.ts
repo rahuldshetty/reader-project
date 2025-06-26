@@ -146,11 +146,10 @@ export const add_posts = async (feedMetadata: FeedMetadata) => {
         try{
             const date = convertToTimeStringForDB(post.pubDate);
 
-            const result = await db.execute(
+            await db.execute(
                 `INSERT OR IGNORE INTO articles (feed_id, title, link, pub_date, image_url) 
                 VALUES (${feedMetadata.id}, '${escape_title(post.title)}', '${post.link}', '${date}', '${escape_title(post.image)}')`
             );
-            console.log(result);
 
             feedsSet.add(feedMetadata.id);
 
