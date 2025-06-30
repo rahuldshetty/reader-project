@@ -30,18 +30,21 @@
 
 <div
     class="sticky top-0 z-10 justify-end bg-base-100 p-2 flex space-x-1 border-b border-base-300"
->
-    <div class="m-1">
+>   
+    <div class="m-1 tooltip" data-tip="Filter unread">
         <input type="checkbox" bind:checked={$filter_unread_posts} disabled={$active_feed_id == -2} onchange={handleChangeOnReadFilter} class="checkbox checkbox-sm checkbox-secondary" />
     </div>
-    <button
-        onclick={handleSortDate}
-        class="btn btn-ghost btn-sm btn-circle p-4"
-    >
-        <Fa
-            title={sort_by_asending ? "Latest First" : "Oldest First"}
-            icon={sort_by_asending ? faSortAlphaAsc : faSortAlphaDesc}
-            size="lg"
-        />
-    </button>
+
+    <div class="tooltip" data-tip="Sort By">
+        <button
+            onclick={handleSortDate}
+            class="btn btn-ghost btn-sm btn-circle p-4"
+        >
+            <Fa
+                title={sort_by_asending ? "Latest First" : "Oldest First"}
+                icon={sort_by_asending ? faSortAlphaAsc : faSortAlphaDesc}
+                size="lg"
+            />
+        </button>
+    </div>
 </div>

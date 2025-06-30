@@ -9,7 +9,10 @@
     };
 </script>
 
-<dialog class="modal" class:modal-open={$active_modal == MODAL_TYPE.ABOUT}>
+<dialog class="modal" 
+    class:modal-open={$active_modal == MODAL_TYPE.ABOUT}
+    onclick={closeModal}
+    >
     <div class="modal-box max-w-xl overflow-visible">
         <form method="dialog">
             <button onclick={closeModal} class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>

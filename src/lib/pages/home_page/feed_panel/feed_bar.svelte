@@ -23,13 +23,17 @@
 <div
     class="sticky top-0 z-10 justify-end bg-base-100 p-2 flex space-x-1 border-b border-base-300"
 >
-    <button onclick={handleNewFolder} class="btn btn-ghost btn-sm btn-circle p-4">
-        <Fa icon={faFolderPlus} size="lg"/>
-    </button>
+    <div class="tooltip" data-tip="Create a new folder">
+        <button onclick={handleNewFolder} class="btn btn-ghost btn-sm btn-circle p-4">
+            <Fa icon={faFolderPlus} size="lg"/>
+        </button>
+    </div>
 
-    <button onclick={handleRefresh} class="btn btn-ghost btn-sm btn-circle p-4">
-        <Fa icon={faRefresh} size="lg"/>
-    </button>
+    <div class="tooltip" data-tip="Refresh Feed">
+        <button onclick={handleRefresh} class="btn btn-ghost btn-sm btn-circle p-4">
+            <Fa icon={faRefresh} size="lg"/>
+        </button>
+    </div>
      <!-- <button class="btn btn-ghost btn-sm btn-circle p-4">
         <Fa icon={faFolderPlus} size="lg"/>
     </button> -->
