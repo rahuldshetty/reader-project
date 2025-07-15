@@ -1,6 +1,5 @@
 <script>
     import { getCurrentWindow } from "@tauri-apps/api/window";
-    import { exit } from '@tauri-apps/plugin-process';
 
     import Fa from "svelte-fa";
     import {

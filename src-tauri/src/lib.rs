@@ -83,6 +83,21 @@ pub fn run() {
             set_complete,
             experimental::translate_text
         ])
+        .on_window_event(|window, event| match event {
+            tauri::WindowEvent::CloseRequested { api, .. } => {
+                #[cfg(not(target_os = "macos"))]
+                {
+                    window.hide().unwrap();
+                }
+
+                #[cfg(target_os = "macos")]
+                {
+                    tauri::AppHandle::hide(&window.app_handle()).unwrap();
+                }
+                api.prevent_close();
+            }
+            _ => {}
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
