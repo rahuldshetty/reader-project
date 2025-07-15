@@ -11,10 +11,6 @@
 
     const appWindow = getCurrentWindow();
 
-    const exitApp = async () => {
-        //await appWindow.close();
-        await exit(0);
-    }
 </script>
 
 <div data-tauri-drag-region class="titlebar fixed top-0 left-0 right-0 w-full flex justify-end items-centerpy-2 rounded-t-lg">
@@ -27,7 +23,7 @@
             <Fa icon={faWindowRestore} size="lg" title="Maximize" />
         </button>
 
-        <button class="btn btn-ghost btn-xs" onclick={exitApp}>
+        <button class="btn btn-ghost btn-xs" onclick={appWindow.close}>
             <Fa icon={faXmark} size="lg" title="Exit" />
         </button>
     </div>

@@ -3,8 +3,7 @@
   "identifier": "default",
   "description": "Capability for the main window",
   "windows": [
-    "main",
-    "splashscreen"
+    "main"
   ],
   "permissions": [
     "core:default",
@@ -13,6 +12,7 @@
     "core:window:allow-minimize",
     "core:window:allow-toggle-maximize",
     "core:window:allow-close",
+    "core:app:allow-default-window-icon",
     "opener:default",
     "sql:default",
     "sql:allow-load",
