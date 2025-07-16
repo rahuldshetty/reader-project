@@ -17,6 +17,7 @@ import {
     AUTO_READ_ON_SELECT,
     REFRESH_ALL_FEED_ON_LAUNCH,
     ENABLE_AUTO_PURGE,
+    MINIMIZE_APP,
 } from '$lib/constants';
 
 // UI States
@@ -28,6 +29,7 @@ export const active_modal = writable(MODAL_TYPE.NONE);
 // User Configuration for App
 export const user_settings = new LazyStore('settings.json');
 export const local_user_setting = writable<UserSettings>({
+    "MINIMIZE_APP": MINIMIZE_APP,
     "LAST_REFRESH_TIME": LAST_REFRESH_TIME,
     "THEME_MODE": DEFAULT_DAISY_THEME,
     "ENABLE_AUTO_PURGE": ENABLE_AUTO_PURGE,

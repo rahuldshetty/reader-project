@@ -8,7 +8,22 @@
         faXmark,
     } from "@fortawesome/free-solid-svg-icons";
 
+    import { local_user_setting } from "$lib/stores/app_store";
+    import { exit } from "@tauri-apps/plugin-process";
+
     const appWindow = getCurrentWindow();
+
+    const closeWindow = async () => {
+        const minimize_app = $local_user_setting.MINIMIZE_APP;
+        if(minimize_app){
+            // Window Close is handled at rust to not close, but instead hide 
+            await appWindow.close();
+        } else {
+            // Force exit app
+            await exit(0);
+        }
+       
+    }
 
 </script>
 
@@ -22,7 +37,7 @@
             <Fa icon={faWindowRestore} size="lg" title="Maximize" />
         </button>
 
-        <button class="btn btn-ghost btn-xs" onclick={appWindow.close}>
+        <button class="btn btn-ghost btn-xs" onclick={closeWindow}>
             <Fa icon={faXmark} size="lg" title="Exit" />
         </button>
     </div>

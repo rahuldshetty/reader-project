@@ -60,6 +60,7 @@
     "fs:allow-read-text-file",
     "clipboard-manager:allow-write-text",
     "process:default",
-    "process:allow-exit"
+    "process:allow-exit",
+    "notification:default"
   ]
 }

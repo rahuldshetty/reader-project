@@ -30,6 +30,7 @@
   let refresh_all_feed_on_launch = $state($local_user_setting.REFRESH_ALL_FEED_ON_LAUNCH);
   let enable_auto_purge = $state($local_user_setting.ENABLE_AUTO_PURGE);
   let old_posts_save_period_in_days = $state($local_user_setting.POST_EXPIRY_TIME);
+  let minimize_app = $state($local_user_setting.MINIMIZE_APP);
 
   // Do not close when save is in progress
   let save_in_progress = $state(false);
@@ -44,6 +45,7 @@
     refresh_all_feed_on_launch = $local_user_setting.REFRESH_ALL_FEED_ON_LAUNCH;
     enable_auto_purge = $local_user_setting.ENABLE_AUTO_PURGE;
     old_posts_save_period_in_days = $local_user_setting.POST_EXPIRY_TIME;
+    minimize_app = $local_user_setting.MINIMIZE_APP;
 
     $active_modal = MODAL_TYPE.NONE;
   };
@@ -87,6 +89,10 @@
       SETTINGS.POST_EXPIRY_TIME,
       old_posts_save_period_in_days
     );
+    await user_settings.set(
+      SETTINGS.MINIMIZE_APP,
+      minimize_app
+    )
 
     // Update local store
     $local_user_setting.THEME_MODE = color_theme;
@@ -97,6 +103,7 @@
     $local_user_setting.REFRESH_ALL_FEED_ON_LAUNCH = refresh_all_feed_on_launch;
     $local_user_setting.ENABLE_AUTO_PURGE = enable_auto_purge;
     $local_user_setting.POST_EXPIRY_TIME = old_posts_save_period_in_days;
+    $local_user_setting.MINIMIZE_APP = minimize_app;
 
     // Close Modal
     save_in_progress = false;
@@ -174,6 +181,24 @@
                   </li>
                 {/each}
               </ul>
+            </div>
+          </fieldset>
+
+          <!-- App Close Behaviour -->
+          <fieldset
+            class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+          >
+            <div>
+              <legend class="fieldset-legend">Close Button</legend>
+              <p class="label">Minimize app to tray when clicking close button.</p>
+            </div>
+            <div class="flex justify-end">
+              <input
+                type="checkbox"
+                checked={minimize_app}
+                onchange={() => (minimize_app = !minimize_app)}
+                class="toggle toggle-success"
+              />
             </div>
           </fieldset>
 
