@@ -30,6 +30,7 @@
     "@tauri-apps/plugin-shell": "2.2.1",
     "@tauri-apps/plugin-sql": "2.2.0",
     "@tauri-apps/plugin-store": "2.2.0",
+    "cally": "^0.8.0",
     "dayjs": "^1.11.13",
     "linkedom": "^0.18.7",
     "pdfjs-dist": "^4.10.38",

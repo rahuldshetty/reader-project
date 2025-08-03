@@ -7,6 +7,7 @@
   import { getRandomKElements } from "$lib/utils/html";
   import ContentPanel from "../content_panel/content_panel.svelte";
   import { active_post_id } from "$lib/stores/app_store";
+    import Calendar from "./calendar.svelte";
 
   const today = new Date().toLocaleDateString("en-US", {
     year: "numeric",
@@ -31,12 +32,8 @@
 {#if $active_post_id == -1}
   <section>
     <div class="flex w-screen h-screen overflow-hidden">
-      <!-- Column 1: Medium -->
-      <div class="w-1/4 p-4 overflow-hidden h-full flex flex-col pb-20">
-        {#each getRandomKElements(posts, 3) as post}
-          <LeftArticleCard {post} onclick={() => handleReadMore(post.id)} />
-          <div class="divider"></div>
-        {/each}
+      <div class="p-4 overflow-y-auto">
+        <Calendar/>
       </div>
 
       <!-- Column 2: Large -->
@@ -46,16 +43,6 @@
           onclick={handleReadMore}
         />
       </div>
-
-      <!-- Column 3: Small -->
-      <div class="w-1/6 p-4 overflow-hidden h-full flex flex-col">
-        <!-- <h1 class="m-2 text-lg font-bold">What happened last week?</h1> -->
-        {#each getRandomKElements(posts, 3) as post}
-          <LeftArticleCard {post} onclick={() => handleReadMore(post.id)} />
-          <div class="divider"></div>
-        {/each}
-      </div>
-    </div>
   </section>
 {:else}
   <ContentPanel />
