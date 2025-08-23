@@ -7,14 +7,15 @@
   import ContentPanel from "../content_panel/content_panel.svelte";
   import { active_post_id } from "$lib/stores/app_store";
   import Calendar from "./calendar.svelte";
-    import { selected_date } from "$lib/stores/home_panel_store";
+  import HomePanelStats from "./stats.svelte";
 
+  let selected_date = $state(new Date().toISOString().split("T")[0]);
   let loading = $state(false);
   let posts: PostResult[] = $state([]);
 
   onMount(async () => {
     loading = true;
-    posts = await fetch_posts_by_date($selected_date);
+    posts = await fetch_posts_by_date(selected_date);
     loading = false;
   });
 
@@ -23,6 +24,7 @@
   };
 
   const changePostByDate = async (date: string) => {
+    selected_date = date;
     posts = await fetch_posts_by_date(date);
   }
 </script>
@@ -31,8 +33,12 @@
   <section>
     <div class="flex w-screen h-screen overflow-hidden">
       <div class="p-4 overflow-y-auto">
-        <Calendar {changePostByDate} />
+        <div class="flex flex-col gap-6">
+          <HomePanelStats total_posts={posts.length} date={selected_date}/>
+          <Calendar {changePostByDate} />
+        </div>
       </div>
+
 
       <!-- Column 2: Large -->
       <div class="w-2/4 p-4 overflow-y-auto">

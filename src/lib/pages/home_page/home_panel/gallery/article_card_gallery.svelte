@@ -60,20 +60,20 @@
 </script>
 
 {#if posts && posts.length > 0}
-<div class="h-full shadow-sm flex flex-col">
+<div class="shadow-sm flex flex-col">
     {#if posts[index].image != ""}
-        <figure class="h-3/4">
+        <figure class="">
             <img
                 src={posts[index].image}
                 alt={posts[index].title}
-                class="w-full h-full object-cover"
+                class="w-full object-cover max-h-96"
             />
         </figure>
     {:else}
-        <figure class="h-3/4">
+        <figure class="">
             <img
                 src={bg_image}
-                class="w-full h-full object-cover"
+                class="w-full object-cover max-h-96"
             />
         </figure>
     {/if}
