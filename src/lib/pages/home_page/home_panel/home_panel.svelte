@@ -1,39 +1,37 @@
 <script lang="ts">
-  import { fetch_posts } from "$lib/dao/post_db";
+  import { fetch_posts_by_date } from "$lib/dao/post_db";
   import type { PostResult } from "$lib/types";
   import { onMount } from "svelte";
-  import LeftArticleCard from "./l_article_card.svelte";
   import ArticleCardGallery from "./gallery/article_card_gallery.svelte";
   import { getRandomKElements } from "$lib/utils/html";
   import ContentPanel from "../content_panel/content_panel.svelte";
   import { active_post_id } from "$lib/stores/app_store";
-    import Calendar from "./calendar.svelte";
-
-  const today = new Date().toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  import Calendar from "./calendar.svelte";
+    import { selected_date } from "$lib/stores/home_panel_store";
 
   let loading = $state(false);
   let posts: PostResult[] = $state([]);
 
   onMount(async () => {
     loading = true;
-    posts = await fetch_posts();
+    posts = await fetch_posts_by_date($selected_date);
     loading = false;
   });
 
   const handleReadMore = (post_id: number) => {
     $active_post_id = post_id;
   };
+
+  const changePostByDate = async (date: string) => {
+    posts = await fetch_posts_by_date(date);
+  }
 </script>
 
 {#if $active_post_id == -1}
   <section>
     <div class="flex w-screen h-screen overflow-hidden">
       <div class="p-4 overflow-y-auto">
-        <Calendar/>
+        <Calendar {changePostByDate} />
       </div>
 
       <!-- Column 2: Large -->
@@ -43,6 +41,7 @@
           onclick={handleReadMore}
         />
       </div>
+    </div>
   </section>
 {:else}
   <ContentPanel />

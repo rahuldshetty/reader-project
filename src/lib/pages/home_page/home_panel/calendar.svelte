@@ -1,8 +1,9 @@
 <script lang="ts">
     import "cally";
+    const {changePostByDate} = $props();
 
     const onChange = (event) => {
-        console.log(event);
+      changePostByDate(event.target.value);
     }
 </script>
 

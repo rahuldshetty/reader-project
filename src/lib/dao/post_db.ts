@@ -83,6 +83,29 @@ export const fetch_posts = async (
     return result;
 }
 
+export const fetch_posts_by_date = async (date: string) : Promise<PostResult[]> =>{
+    const query = `
+        SELECT 
+            id, 
+            feed_id, 
+            title, 
+            link, 
+            pub_date as pubDate, 
+            read, 
+            is_fav, 
+            image_url as image, 
+            content, 
+            word_count 
+        from articles
+        where pub_date like '${date}%'
+    `
+
+    const result = (await db.select(query)) as PostResult[];
+    console.log(`|| Fetch Posts By date (${result.length}) ||`)
+
+    return result;
+}
+
 export const fetch_post_data = async (id: number): Promise<PostResult> => {
     const query = `
         SELECT 
