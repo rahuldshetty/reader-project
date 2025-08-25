@@ -5,6 +5,7 @@ import {
     SETTINGS, REFRESH_FEED_ON_SELECT, ENABLE_INSECURE_LINK, AUTO_READ_ON_SELECT,
     REFRESH_ALL_FEED_ON_LAUNCH, ENABLE_AUTO_PURGE,
     MINIMIZE_APP,
+    AI_SUMMARY,
 } from "$lib/constants";
 
 export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
@@ -18,6 +19,7 @@ export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
     const refresh_all_feed_on_launch = await user_settings.get(SETTINGS.REFRESH_ALL_FEED_ON_LAUNCH);
     const enable_auto_purge = await user_settings.get(SETTINGS.ENABLE_AUTO_PURGE);
     const minimize_app = await user_settings.get(SETTINGS.MINIMIZE_APP);
+    const ai_summary = await user_settings.get(SETTINGS.AI_SUMMARY);
     
     return {
         "LAST_REFRESH_TIME":  lrt as number ?? LAST_REFRESH_TIME,
@@ -30,5 +32,6 @@ export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
         "REFRESH_ALL_FEED_ON_LAUNCH": refresh_all_feed_on_launch as boolean?? REFRESH_ALL_FEED_ON_LAUNCH,
         "ENABLE_AUTO_PURGE": enable_auto_purge as boolean ?? ENABLE_AUTO_PURGE,
         "MINIMIZE_APP": minimize_app as boolean ?? MINIMIZE_APP,
+        "AI_SUMMARY": ai_summary as boolean?? AI_SUMMARY,
     }
 }

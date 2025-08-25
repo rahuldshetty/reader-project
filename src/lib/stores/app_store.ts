@@ -18,6 +18,7 @@ import {
     REFRESH_ALL_FEED_ON_LAUNCH,
     ENABLE_AUTO_PURGE,
     MINIMIZE_APP,
+    AI_SUMMARY,
 } from '$lib/constants';
 
 // UI States
@@ -39,6 +40,7 @@ export const local_user_setting = writable<UserSettings>({
     "ENABLE_INSECURE_LINK": ENABLE_INSECURE_LINK,
     "AUTO_READ_ON_SELECT": AUTO_READ_ON_SELECT,
     "REFRESH_ALL_FEED_ON_LAUNCH": REFRESH_ALL_FEED_ON_LAUNCH,
+    "AI_SUMMARY": AI_SUMMARY,
 });
 
 // Feed Configuration

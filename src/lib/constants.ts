@@ -37,7 +37,8 @@ export enum SETTINGS {
     ENABLE_INSECURE_LINK = "ENABLE_INSECURE_LINK",
     AUTO_READ_ON_SELECT = "AUTO_READ_ON_SELECT",
     REFRESH_ALL_FEED_ON_LAUNCH = "REFRESH_ALL_FEED_ON_LAUNCH",
-    MINIMIZE_APP = "MINIMIZE_APP"
+    MINIMIZE_APP = "MINIMIZE_APP",
+    AI_SUMMARY = "AI_SUMMARY",
 }
 
 export enum THEMES{
@@ -108,6 +109,8 @@ export const ENABLE_INSECURE_LINK = false;
 export const AUTO_READ_ON_SELECT = false;
 export const REFRESH_ALL_FEED_ON_LAUNCH = false;
 export const MINIMIZE_APP = false;
+
+export const AI_SUMMARY = false;
 
 export const NO_FEED_SELECTED = -1000;
 export const ROOT_PARENT_FEED_ID = -1;

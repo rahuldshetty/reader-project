@@ -12,6 +12,8 @@ export interface UserSettings {
 
     ENABLE_AUTO_PURGE: boolean;
     POST_EXPIRY_TIME: number;
+
+    AI_SUMMARY: boolean;
 }
 
 export interface ToastMessage {

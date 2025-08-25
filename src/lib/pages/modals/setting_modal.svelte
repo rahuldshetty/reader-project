@@ -32,6 +32,8 @@
   let old_posts_save_period_in_days = $state($local_user_setting.POST_EXPIRY_TIME);
   let minimize_app = $state($local_user_setting.MINIMIZE_APP);
 
+  let enable_ai_summary = $state($local_user_setting.AI_SUMMARY);
+
   // Do not close when save is in progress
   let save_in_progress = $state(false);
 
@@ -46,6 +48,7 @@
     enable_auto_purge = $local_user_setting.ENABLE_AUTO_PURGE;
     old_posts_save_period_in_days = $local_user_setting.POST_EXPIRY_TIME;
     minimize_app = $local_user_setting.MINIMIZE_APP;
+    enable_ai_summary = $local_user_setting.AI_SUMMARY;
 
     $active_modal = MODAL_TYPE.NONE;
   };
@@ -93,6 +96,10 @@
       SETTINGS.MINIMIZE_APP,
       minimize_app
     )
+    await user_settings.set(
+      SETTINGS.AI_SUMMARY,
+      enable_ai_summary
+    )
 
     // Update local store
     $local_user_setting.THEME_MODE = color_theme;
@@ -104,6 +111,7 @@
     $local_user_setting.ENABLE_AUTO_PURGE = enable_auto_purge;
     $local_user_setting.POST_EXPIRY_TIME = old_posts_save_period_in_days;
     $local_user_setting.MINIMIZE_APP = minimize_app;
+    $local_user_setting.AI_SUMMARY = enable_ai_summary;
 
     // Close Modal
     save_in_progress = false;
@@ -360,6 +368,32 @@
           </div>
         </fieldset>
       </div>
+
+
+      <!-- Experimental Setting -->
+      <input type="radio" name="setting_tabs" class="tab" aria-label="Experimental" />
+      <div class="tab-content bg-base-100 p-4">
+        <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+          <!-- Enable AI Summary -->
+          <div>
+            <legend class="fieldset-legend">Enable AI Summary</legend>
+            <p class="label">
+              Automatically summarize articles and generate pointers.
+            </p>
+          </div>
+          <div class="flex justify-end">
+            <input
+              type="checkbox"
+              bind:checked={enable_ai_summary}
+              class="toggle toggle-success"
+            />
+          </div>
+        </fieldset>
+
+      </div>
+  
     </div>
 
     <!-- Buttons -->
