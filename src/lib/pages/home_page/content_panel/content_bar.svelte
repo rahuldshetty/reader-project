@@ -13,15 +13,23 @@
         faShareNodes,
         faStar,
         faGlobe,
+        faBrain
     } from "@fortawesome/free-solid-svg-icons";
     import { mark_post_as_fav, mark_post_as_read } from "$lib/dao/post_db";
     import { TOAST_MESSAGE_TYPE } from "$lib/constants";
     import { update_post_feed_counter_value } from "../common";
+    import { local_user_setting } from "$lib/stores/app_store";
+    import LoadingSpinner from "$lib/pages/components/loading_spinner.svelte";
+    import { summarize } from "$lib/experimental/summarization";
+    import ToastManager from "$lib/pages/toast_manager/toast_manager.svelte";
 
     const { data, post }: { data: ContentResult; post: PostResult } = $props();
 
     let read_status = $state(post.read);
     let is_fav = $state(post.is_fav);
+
+    let loading = $state(false);
+    let ai_summaries = $state([] as string[]);
 
     const handleShareButton = async () => {
         await writeText(post.link);
@@ -47,6 +55,18 @@
     const handleOpenURL = async () => {
         await openUrl(post.link);
     }
+
+    const handleSummary = async () => {
+        loading = true;
+        try{
+            ai_summaries = await summarize(data.content as string);
+        } catch(e){
+            console.error(e);
+            ai_summaries = [];
+            toastStore.add(TOAST_MESSAGE_TYPE.ERROR, "Something happened while running AI summary :(");
+        }
+        loading = false;  
+    }
 </script>
 
 <div class="sticky top-0 z-50 bg-base-100 border-b border-base-300 flex items-center justify-between p-2 pl-6">
@@ -62,6 +82,13 @@
 
   <!-- Right section: action buttons -->
   <div class="flex items-center space-x-2">
+    <!-- AI Summary -->
+    {#if $local_user_setting.AI_SUMMARY}
+        <button class="btn btn-circle btn-ghost p-5" onclick={handleSummary}>
+        <Fa icon={faBrain} size="lg" title="Summarize (AI)" />
+    </button>
+    {/if}
+
     <!-- Share Button -->
     <button class="btn btn-circle btn-ghost p-5" onclick={handleShareButton}>
         <Fa icon={faShareNodes} size="lg" title="Copy link to Clipboard" />
@@ -87,3 +114,20 @@
     </button>
   </div>
 </div>
+
+{#if loading || ai_summaries.length != 0}
+    <div class="card m-4 shadow-md bg-primary">
+    <div class="card-body text-base-content">
+        <h2 class="card-title">AI Summary</h2>
+            {#if loading}
+                <LoadingSpinner messaage=""/>
+            {:else}
+                <ul class="list-disc list-inside space-y-2">
+                    {#each ai_summaries as summary}
+                        <li>{summary}</li>
+                    {/each}
+                </ul>
+            {/if}
+    </div>
+    </div>
+{/if}

@@ -51,3 +51,9 @@ export function getRandomKElements<T>(arr: T[], k: number): T[] {
   }
   return shuffled.slice(0, k);
 }
+
+export function stripHtml(htmlString:string) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, 'text/html');
+  return doc.body.textContent || "";
+}
