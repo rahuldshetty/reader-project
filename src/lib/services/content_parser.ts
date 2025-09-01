@@ -27,7 +27,8 @@ export const mercury_parser = async (url: string) :Promise<ContentResult> => {
                 content_type: CONTENT_TYPES.html,
             };
         } catch (error) {
-            console.log(`Parse FAILED for ${url}: ${error}`)
+            console.log(`Parse FAILED for ${url}: ${error}`);
+            throw new Error('Something happened :(');
         }
     }
     return {
