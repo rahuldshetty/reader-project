@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { get_random_bg } from "$lib/pages/components/random_background";
+    import { get_random_bg } from "$lib/components/random_background";
     import type { PostResult } from "$lib/types";
     import { timeAgo } from "$lib/utils/time";
     import { onMount, onDestroy } from "svelte";

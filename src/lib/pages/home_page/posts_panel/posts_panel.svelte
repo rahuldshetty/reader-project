@@ -8,7 +8,7 @@
 
     import { load_new_posts } from "$lib/pages/home_page/common";
     import PostItem from "./post_item.svelte";
-    import LoadingSpinner from "$lib/pages/components/loading_spinner.svelte";
+    import LoadingSpinner from "$lib/components/loading_spinner.svelte";
     import PostBar from "./post_bar.svelte";
 
 

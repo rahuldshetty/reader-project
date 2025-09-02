@@ -11,7 +11,16 @@
 
     onMount(async () => {
         await init_app();
+
+        // Disable Right-click context globally
+        document.addEventListener("contextmenu", (event) => {
+            if (!event.target.closest(".allow-context")) {
+                event.preventDefault();
+            }
+        });
     });
+
+    
 </script>
 
 <div>

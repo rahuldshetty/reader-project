@@ -5,7 +5,7 @@
     import FeedBar from "./feed_bar.svelte";
     import FeedParent from './feed_parent.svelte';
     import CustomFeedItems from "./custom_feed_items.svelte";
-    import LoadingSpinner from "$lib/pages/components/loading_spinner.svelte";
+    import LoadingSpinner from "$lib/components/loading_spinner.svelte";
 
     const filtered_feeds = derived([feeds_store], ([$feeds_store])=>{
         return $feeds_store;
