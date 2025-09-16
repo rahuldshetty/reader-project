@@ -60,7 +60,7 @@
 </script>
 
 {#if posts && posts.length > 0}
-<div class="shadow-sm flex flex-col">
+<div class="shadow-sm flex flex-col bg-base-100">
     {#if posts[index].image != ""}
         <figure class="">
             <img

@@ -32,7 +32,7 @@
 
 {#if $active_post_id == -1}
   <section>
-    <div class="flex w-screen h-screen overflow-hidden">
+    <div class="flex w-screen h-screen overflow-hidden bg-base-300">
       <div class="p-4 overflow-y-auto">
         <div class="flex flex-col gap-6 max-w-xs">
           <HomePanelStats total_posts={posts.length} date={selected_date}/>
