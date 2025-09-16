@@ -27,10 +27,16 @@
     $local_user_setting.REFRESH_FEED_ON_SELECT,
   );
   let enable_auto_read = $state($local_user_setting.AUTO_READ_ON_SELECT);
-  let refresh_all_feed_on_launch = $state($local_user_setting.REFRESH_ALL_FEED_ON_LAUNCH);
+  let refresh_all_feed_on_launch = $state(
+    $local_user_setting.REFRESH_ALL_FEED_ON_LAUNCH,
+  );
   let enable_auto_purge = $state($local_user_setting.ENABLE_AUTO_PURGE);
-  let old_posts_save_period_in_days = $state($local_user_setting.POST_EXPIRY_TIME);
+  let old_posts_save_period_in_days = $state(
+    $local_user_setting.POST_EXPIRY_TIME,
+  );
   let minimize_app = $state($local_user_setting.MINIMIZE_APP);
+  let longitude = $state($local_user_setting.LONGITUDE);
+  let latitude = $state($local_user_setting.LATITUDE);
 
   // Do not close when save is in progress
   let save_in_progress = $state(false);
@@ -38,7 +44,7 @@
   const closeModal = () => {
     // Reset State
     color_theme = $local_user_setting.THEME_MODE;
-    pull_posts_on_feed_select =$local_user_setting.REFRESH_FEED_ON_SELECT;
+    pull_posts_on_feed_select = $local_user_setting.REFRESH_FEED_ON_SELECT;
     refresh_time = $local_user_setting.LAST_REFRESH_TIME;
     enable_insecure_feeds = $local_user_setting.ENABLE_INSECURE_LINK;
     enable_auto_read = $local_user_setting.AUTO_READ_ON_SELECT;
@@ -46,6 +52,8 @@
     enable_auto_purge = $local_user_setting.ENABLE_AUTO_PURGE;
     old_posts_save_period_in_days = $local_user_setting.POST_EXPIRY_TIME;
     minimize_app = $local_user_setting.MINIMIZE_APP;
+    longitude = $local_user_setting.LONGITUDE;
+    latitude = $local_user_setting.LATITUDE;
 
     $active_modal = MODAL_TYPE.NONE;
   };
@@ -67,32 +75,25 @@
     await user_settings.set(SETTINGS.THEME_MODE, color_theme);
     await user_settings.set(
       SETTINGS.ENABLE_INSECURE_LINK,
-      enable_insecure_feeds
+      enable_insecure_feeds,
     );
     await user_settings.set(
       SETTINGS.REFRESH_FEED_ON_SELECT,
-      pull_posts_on_feed_select
+      pull_posts_on_feed_select,
     );
-    await user_settings.set(
-      SETTINGS.AUTO_READ_ON_SELECT,
-      enable_auto_read
-    );
+    await user_settings.set(SETTINGS.AUTO_READ_ON_SELECT, enable_auto_read);
     await user_settings.set(
       SETTINGS.REFRESH_ALL_FEED_ON_LAUNCH,
-      refresh_all_feed_on_launch
+      refresh_all_feed_on_launch,
     );
-    await user_settings.set(
-      SETTINGS.ENABLE_AUTO_PURGE,
-      enable_auto_purge
-    );
+    await user_settings.set(SETTINGS.ENABLE_AUTO_PURGE, enable_auto_purge);
     await user_settings.set(
       SETTINGS.POST_EXPIRY_TIME,
-      old_posts_save_period_in_days
+      old_posts_save_period_in_days,
     );
-    await user_settings.set(
-      SETTINGS.MINIMIZE_APP,
-      minimize_app
-    )
+    await user_settings.set(SETTINGS.MINIMIZE_APP, minimize_app);
+    await user_settings.set(SETTINGS.LONGITUDE, longitude);
+    await user_settings.set(SETTINGS.LATITUDE, latitude);
 
     // Update local store
     $local_user_setting.THEME_MODE = color_theme;
@@ -104,6 +105,8 @@
     $local_user_setting.ENABLE_AUTO_PURGE = enable_auto_purge;
     $local_user_setting.POST_EXPIRY_TIME = old_posts_save_period_in_days;
     $local_user_setting.MINIMIZE_APP = minimize_app;
+    $local_user_setting.LONGITUDE = longitude;
+    $local_user_setting.LATITUDE = latitude;
 
     // Close Modal
     save_in_progress = false;
@@ -190,7 +193,9 @@
           >
             <div>
               <legend class="fieldset-legend">Close Button</legend>
-              <p class="label">Minimize app to tray when clicking close button.</p>
+              <p class="label">
+                Minimize app to tray when clicking close button.
+              </p>
             </div>
             <div class="flex justify-end">
               <input
@@ -216,7 +221,8 @@
               <input
                 type="checkbox"
                 checked={refresh_all_feed_on_launch}
-                onchange={() => (refresh_all_feed_on_launch = !refresh_all_feed_on_launch)}
+                onchange={() =>
+                  (refresh_all_feed_on_launch = !refresh_all_feed_on_launch)}
                 class="toggle toggle-success"
               />
             </div>
@@ -237,6 +243,50 @@
             </div>
           </fieldset>
         </div>
+      </div>
+
+      <!-- Home Settings -->
+      <input type="radio" name="setting_tabs" class="tab" aria-label="Home" />
+      <div class="tab-content bg-base-100 p-4">
+        <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+          <!-- Latitude -->
+          <div>
+            <legend class="fieldset-legend">Latitude</legend>
+            <p class="label">Value of Latitude</p>
+          </div>
+          <div class="flex justify-end">
+            <input
+              type="number"
+              class="input"
+              min="-90"
+              max="90"
+              step="any"
+              bind:value={latitude}
+            />
+          </div>
+        </fieldset>
+
+        <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+          <!-- Longitude -->
+          <div>
+            <legend class="fieldset-legend">Longitude</legend>
+            <p class="label">Value of Longitude</p>
+          </div>
+          <div class="flex justify-end">
+            <input
+              type="number"
+              class="input"
+              min="-180"
+              max="180"
+              step="any"
+              bind:value={longitude}
+            />
+          </div>
+        </fieldset>
       </div>
 
       <!-- Feed Setting -->
@@ -321,7 +371,12 @@
       </div>
 
       <!-- Storage Setting -->
-      <input type="radio" name="setting_tabs" class="tab" aria-label="Storage" />
+      <input
+        type="radio"
+        name="setting_tabs"
+        class="tab"
+        aria-label="Storage"
+      />
       <div class="tab-content bg-base-100 p-4">
         <fieldset
           class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
@@ -330,7 +385,8 @@
           <div>
             <legend class="fieldset-legend">Auto Purge</legend>
             <p class="label">
-              Automatically delete older posts (non-favorites & feeds > 100 posts).
+              Automatically delete older posts (non-favorites & feeds > 100
+              posts).
             </p>
           </div>
           <div class="flex justify-end">

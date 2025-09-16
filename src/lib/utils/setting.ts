@@ -5,6 +5,8 @@ import {
     SETTINGS, REFRESH_FEED_ON_SELECT, ENABLE_INSECURE_LINK, AUTO_READ_ON_SELECT,
     REFRESH_ALL_FEED_ON_LAUNCH, ENABLE_AUTO_PURGE,
     MINIMIZE_APP,
+    LONGITUDE,
+    LATITUDE,
 } from "$lib/constants";
 
 export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
@@ -19,6 +21,9 @@ export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
     const enable_auto_purge = await user_settings.get(SETTINGS.ENABLE_AUTO_PURGE);
     const minimize_app = await user_settings.get(SETTINGS.MINIMIZE_APP);
     
+    const longitude = await user_settings.get(SETTINGS.LONGITUDE);
+    const latitude = await user_settings.get(SETTINGS.LATITUDE);
+    
     return {
         "LAST_REFRESH_TIME":  lrt as number ?? LAST_REFRESH_TIME,
         "THEME_MODE": theme as string ?? DEFAULT_DAISY_THEME,
@@ -30,5 +35,7 @@ export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
         "REFRESH_ALL_FEED_ON_LAUNCH": refresh_all_feed_on_launch as boolean?? REFRESH_ALL_FEED_ON_LAUNCH,
         "ENABLE_AUTO_PURGE": enable_auto_purge as boolean ?? ENABLE_AUTO_PURGE,
         "MINIMIZE_APP": minimize_app as boolean ?? MINIMIZE_APP,
+        "LONGITUDE": longitude as number ?? LONGITUDE,
+        "LATITUDE": latitude as number ?? LATITUDE,
     }
 }

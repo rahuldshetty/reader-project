@@ -8,6 +8,7 @@
   import { active_post_id } from "$lib/stores/app_store";
   import Calendar from "./calendar.svelte";
   import HomePanelStats from "./stats.svelte";
+    import Weather from "./weather.svelte";
 
   let selected_date = $state(new Date().toISOString().split("T")[0]);
   let loading = $state(false);
@@ -33,9 +34,10 @@
   <section>
     <div class="flex w-screen h-screen overflow-hidden">
       <div class="p-4 overflow-y-auto">
-        <div class="flex flex-col gap-6">
+        <div class="flex flex-col gap-6 max-w-xs">
           <HomePanelStats total_posts={posts.length} date={selected_date}/>
           <Calendar {changePostByDate} />
+          <Weather/>
         </div>
       </div>
 

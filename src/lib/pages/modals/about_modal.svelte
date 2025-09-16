@@ -9,11 +9,12 @@
     };
 </script>
 
+<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <dialog class="modal" 
     class:modal-open={$active_modal == MODAL_TYPE.ABOUT}
     onclick={closeModal}
     >
-    <div class="modal-box max-w-xl overflow-visible">
+    <div class="modal-box max-w-2xl overflow-visible">
         <form method="dialog">
             <button onclick={closeModal} class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
         </form>

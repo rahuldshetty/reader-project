@@ -12,6 +12,9 @@ export interface UserSettings {
 
     ENABLE_AUTO_PURGE: boolean;
     POST_EXPIRY_TIME: number;
+
+    LONGITUDE: number;
+    LATITUDE: number;
 }
 
 export interface ToastMessage {

@@ -51,3 +51,9 @@ export function getRandomKElements<T>(arr: T[], k: number): T[] {
   }
   return shuffled.slice(0, k);
 }
+
+export function get_color_var(key: string){
+  return getComputedStyle(document.documentElement)
+  .getPropertyValue(key)
+  .trim();
+}

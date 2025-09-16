@@ -4,10 +4,10 @@
     const day = $derived.by(()=>{
       const day = new Date(date).toLocaleDateString("en-US", { weekday: "long" });
       return day;
-    })
+    });
 </script>
 
-<div class="stats bg-base-100 border-base-300 border">
+<div class="stats bg-base-100 border-base-300 border shadow-sm">
   <div class="stat">
     <div class="stat-title">Day</div>
     <div class="stat-value">{day}</div>
