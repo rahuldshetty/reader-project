@@ -246,12 +246,11 @@
       </div>
 
       <!-- Home Settings -->
-      <input type="radio" name="setting_tabs" class="tab" aria-label="Home" />
+      <!-- <input type="radio" name="setting_tabs" class="tab" aria-label="Home" />
       <div class="tab-content bg-base-100 p-4">
         <fieldset
           class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
         >
-          <!-- Latitude -->
           <div>
             <legend class="fieldset-legend">Latitude</legend>
             <p class="label">Value of Latitude</p>
@@ -271,7 +270,6 @@
         <fieldset
           class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
         >
-          <!-- Longitude -->
           <div>
             <legend class="fieldset-legend">Longitude</legend>
             <p class="label">Value of Longitude</p>
@@ -287,7 +285,7 @@
             />
           </div>
         </fieldset>
-      </div>
+      </div> -->
 
       <!-- Feed Setting -->
       <input type="radio" name="setting_tabs" class="tab" aria-label="Feeds" />

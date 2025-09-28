@@ -15,7 +15,7 @@
 
 {#if !$collapse_sidebar}
     <div
-        class="flex flex-col w-48 sm:w-64 bg-base-100 border-r border-base-300"
+        class="flex flex-col sm:w-1/8 md:w-1/8 lg:w-1/6 bg-base-100 border-r border-base-300"
     >
     <FeedBar />
 

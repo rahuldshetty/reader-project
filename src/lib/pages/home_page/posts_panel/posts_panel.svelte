@@ -40,7 +40,7 @@
     }
 </script>
 
-<div class="flex flex-col h-full w-64 sm:w-80 bg-base-100 border-r border-base-300">
+<div class="flex flex-col h-full sm:w-1/8 md:w-1/8 lg:w-1/5 bg-base-100 border-r border-base-300">
     <PostBar />
     {#if $refreshing_posts}
         <LoadingSpinner messaage="Refreshing posts..." />
