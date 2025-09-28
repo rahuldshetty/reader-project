@@ -31,19 +31,20 @@
 </script>
 
 {#if $active_post_id == -1}
-  <section>
-    <div class="flex w-screen h-screen overflow-hidden bg-base-300">
-      <div class="p-4 overflow-y-auto">
-        <div class="flex flex-col gap-6 max-w-xs">
-          <HomePanelStats total_posts={posts.length} date={selected_date}/>
+  <section class="w-screen h-screen bg-base-300">
+    <div class="flex flex-col lg:flex-row h-full overflow-hidden">
+      
+      <!-- Sidebar -->
+      <div class="p-2 overflow-y-auto w-full lg:w-1/5">
+        <div class="flex flex-col gap-2 items-stretch">
+          <HomePanelStats total_posts={posts.length} date={selected_date} />
           <Calendar {changePostByDate} />
-          <Weather/>
+          <Weather />
         </div>
       </div>
 
-
-      <!-- Column 2: Large -->
-      <div class="w-2/4 p-4 overflow-y-auto">
+      <!-- Main Content -->
+      <div class="flex-1 p-2 overflow-y-auto">
         <ArticleCardGallery
           posts={getRandomKElements(posts, 6)}
           onclick={handleReadMore}
@@ -51,6 +52,7 @@
       </div>
     </div>
   </section>
+
 {:else}
   <ContentPanel />
 {/if}

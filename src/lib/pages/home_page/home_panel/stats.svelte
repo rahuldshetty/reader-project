@@ -7,7 +7,7 @@
     });
 </script>
 
-<div class="stats bg-base-100 border-base-300 border shadow-sm">
+<div class="stats w-full rounded-sm bg-base-100 border-base-300 border shadow-sm">
   <div class="stat">
     <div class="stat-title">Day</div>
     <div class="stat-value">{day}</div>
