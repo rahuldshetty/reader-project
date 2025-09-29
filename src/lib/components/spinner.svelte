@@ -1,1 +1,1 @@
-<span class="loading loading-spinner loading-md"></span>
+<span class="loading loading-spinner loading-md animate-pulse"></span>

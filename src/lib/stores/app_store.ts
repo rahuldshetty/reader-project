@@ -39,6 +39,11 @@ export const local_user_setting = writable<UserSettings>({
     "ENABLE_INSECURE_LINK": ENABLE_INSECURE_LINK,
     "AUTO_READ_ON_SELECT": AUTO_READ_ON_SELECT,
     "REFRESH_ALL_FEED_ON_LAUNCH": REFRESH_ALL_FEED_ON_LAUNCH,
+    "LONGITUDE": 0,
+    "LATITUDE": 0,
+    "OPENAI_URL": '',
+    "OPENAI_MODEL": '',
+    "OPENAI_TOKEN": '',
 });
 
 // Feed Configuration

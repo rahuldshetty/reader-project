@@ -32,7 +32,8 @@ tauri-plugin-dialog = "=2.2.2"
 tauri-plugin-fs = "=2.3.0"
 tauri-plugin-clipboard-manager = "=2.2.2"
 tauri-plugin-process = "=2.2.1"
-ort = "=2.0.0-rc.10"
+tauri-plugin-stronghold = "2.2.0"
+
 
 [profile.dev]
 incremental = true # Compile your binary in smaller steps.

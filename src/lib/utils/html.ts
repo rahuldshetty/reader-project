@@ -1,4 +1,4 @@
-export const cleanHTML = (content:string, url:string) => {
+export const renderHTML = (content:string, url:string) => {
   const div = document.createElement("div");
   div.innerHTML = content;
 
@@ -9,12 +9,6 @@ export const cleanHTML = (content:string, url:string) => {
     a.style.color = "inherit";
     a.style.textDecoration = "none";
   })
-
-    // Replace above with below code to use redirect when user clicks on link
-//   div.querySelectorAll("a").forEach((a) => {
-//     a.setAttribute("target", "_blank");
-//     a.setAttribute("rel", "noopener noreferrer");
-//   });
 
   return div.innerHTML;
 }
@@ -56,4 +50,34 @@ export function get_color_var(key: string){
   return getComputedStyle(document.documentElement)
   .getPropertyValue(key)
   .trim();
+}
+
+export function extractTextFromHtml(htmlString: string) {
+  // parse into a DOM
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, "text/html");
+
+  // remove all img elements
+  const imgs = doc.querySelectorAll("img");
+  imgs.forEach(img => img.remove());
+
+  // optionally remove script/style content too
+  doc.querySelectorAll("script, style").forEach(n => n.remove());
+
+  // get the visible text
+  const text = doc.body ? doc.body.textContent || "" : doc.textContent || "";
+  // trim and normalize whitespace
+  return text.replace(/\s+/g, " ").trim();
+}
+
+
+export async function hashString(inputString: string) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(inputString); 
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data); 
+
+    const hashArray = Array.from(new Uint8Array(hashBuffer)); 
+    const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join(''); 
+
+    return hashHex;
 }

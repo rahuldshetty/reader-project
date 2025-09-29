@@ -8,6 +8,7 @@ import {
     LONGITUDE,
     LATITUDE,
 } from "$lib/constants";
+import { getSecretRecord } from "$lib/stores/secret_store";
 
 export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
     const refresh_feed_on_select_enable = await user_settings.get(SETTINGS.REFRESH_FEED_ON_SELECT);
@@ -23,6 +24,10 @@ export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
     
     const longitude = await user_settings.get(SETTINGS.LONGITUDE);
     const latitude = await user_settings.get(SETTINGS.LATITUDE);
+
+    const openai_url = await user_settings.get(SETTINGS.OPENAI_URL);
+    const openai_model = await user_settings.get(SETTINGS.OPENAI_MODEL);
+    const openai_token = await getSecretRecord(SETTINGS.OPENAI_TOKEN);
     
     return {
         "LAST_REFRESH_TIME":  lrt as number ?? LAST_REFRESH_TIME,
@@ -37,5 +42,8 @@ export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
         "MINIMIZE_APP": minimize_app as boolean ?? MINIMIZE_APP,
         "LONGITUDE": longitude as number ?? LONGITUDE,
         "LATITUDE": latitude as number ?? LATITUDE,
+        "OPENAI_URL": openai_url as string ?? '',
+        "OPENAI_MODEL": openai_model as string ?? '',
+        "OPENAI_TOKEN": openai_token as string ?? '',
     }
 }

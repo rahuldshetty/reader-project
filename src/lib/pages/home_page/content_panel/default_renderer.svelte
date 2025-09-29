@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { ContentResult, PostResult } from "$lib/types";
-    import { cleanHTML } from "$lib/utils/html";
+    import { renderHTML } from "$lib/utils/html";
     import ContentBar from "./content_bar.svelte";
 
     const { data, post = $bindable() }: { data: ContentResult; post: PostResult } = $props();
@@ -8,7 +8,6 @@
 
 <div class="flex-1 overflow-y-auto">
     <ContentBar data={data} post={post}/>
-
     <div class="p-6">
         {#if data.image || post.image}
             <img
@@ -21,7 +20,7 @@
         {/if}
 
         <article class="prose prose-base text-text1 max-w-none">
-            {@html cleanHTML(data.content as string, data.url)}
+            {@html renderHTML(data.content as string, data.url)}
         </article>
     </div>
 </div>

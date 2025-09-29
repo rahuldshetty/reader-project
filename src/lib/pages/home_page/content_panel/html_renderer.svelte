@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { ContentResult, PostResult } from "$lib/types";
-    import { cleanHTML } from "$lib/utils/html";
+    import { renderHTML } from "$lib/utils/html";
     import ContentBar from "./content_bar.svelte";
 
     import { writeText } from "@tauri-apps/plugin-clipboard-manager";
@@ -10,6 +10,7 @@
     import { toastStore } from "$lib/stores/toast_store";
     import { detectWebRenderType, WEB_RENDER_TYPES } from "./renderers/detector";
     import YoutubeRender from "./renderers/youtube_render.svelte";
+    import AiSummary from "./ai_summary.svelte";
 
     const {
         data,
@@ -46,6 +47,9 @@
 
 <div class="flex-1 overflow-y-auto">
     <ContentBar {data} {post} />
+    {#if typeof data.content === "string"}
+        <AiSummary text={data.content}/>
+    {/if}
     {#if renderType == WEB_RENDER_TYPES.DEFAULT}
         <div class="p-6">
             {#if data.image || post.image}
@@ -62,7 +66,7 @@
                 class="prose prose-base text-text1 max-w-none"
                 oncontextmenu={openContextMenu}
             >
-                {@html cleanHTML(data.content as string, data.url)}
+                {@html renderHTML(data.content as string, data.url)}
             </article>
         </div>
     {:else if renderType == WEB_RENDER_TYPES.YOUTUBE}

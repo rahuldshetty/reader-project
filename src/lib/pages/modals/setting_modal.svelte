@@ -16,6 +16,7 @@
   import { writeTextFile } from "@tauri-apps/plugin-fs";
   import { toastStore } from "$lib/stores/toast_store";
   import { convertFeedDataToOPML } from "$lib/services/opml_gather";
+  import { setSecretRecord } from "$lib/stores/secret_store";
 
   // Local setting State Variables
   // Why use Local vs Global?
@@ -37,6 +38,10 @@
   let minimize_app = $state($local_user_setting.MINIMIZE_APP);
   let longitude = $state($local_user_setting.LONGITUDE);
   let latitude = $state($local_user_setting.LATITUDE);
+  
+  let openai_url = $state($local_user_setting.OPENAI_URL);
+  let openai_token = $state($local_user_setting.OPENAI_TOKEN);
+  let openai_model = $state($local_user_setting.OPENAI_MODEL);
 
   // Do not close when save is in progress
   let save_in_progress = $state(false);
@@ -54,6 +59,10 @@
     minimize_app = $local_user_setting.MINIMIZE_APP;
     longitude = $local_user_setting.LONGITUDE;
     latitude = $local_user_setting.LATITUDE;
+
+    openai_url = $local_user_setting.OPENAI_URL;
+    openai_token = $local_user_setting.OPENAI_TOKEN;
+    openai_model = $local_user_setting.OPENAI_MODEL;
 
     $active_modal = MODAL_TYPE.NONE;
   };
@@ -94,6 +103,9 @@
     await user_settings.set(SETTINGS.MINIMIZE_APP, minimize_app);
     await user_settings.set(SETTINGS.LONGITUDE, longitude);
     await user_settings.set(SETTINGS.LATITUDE, latitude);
+    await user_settings.set(SETTINGS.OPENAI_MODEL, openai_model);
+    await user_settings.set(SETTINGS.OPENAI_URL, openai_url);
+    await setSecretRecord(SETTINGS.OPENAI_TOKEN, openai_token);
 
     // Update local store
     $local_user_setting.THEME_MODE = color_theme;
@@ -107,6 +119,9 @@
     $local_user_setting.MINIMIZE_APP = minimize_app;
     $local_user_setting.LONGITUDE = longitude;
     $local_user_setting.LATITUDE = latitude;
+    $local_user_setting.OPENAI_MODEL = openai_model;
+    $local_user_setting.OPENAI_URL = openai_url;
+    $local_user_setting.OPENAI_TOKEN = openai_token;
 
     // Close Modal
     save_in_progress = false;
@@ -414,6 +429,62 @@
           </div>
         </fieldset>
       </div>
+
+      <!-- AI Settings -->
+      <input type="radio" name="setting_tabs" class="tab" aria-label="LLM" />
+      <div class="tab-content bg-base-100 p-4">
+        <!-- Open AI Base URL -->
+        <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+          <div>
+            <legend class="fieldset-legend">Base URL</legend>
+            <p class="label">Open-AI Base URL</p>
+          </div>
+          <div class="flex justify-end">
+            <input
+              type="text"
+              class="input"
+              bind:value={openai_url}
+            />
+          </div>
+        </fieldset>
+        
+        <!-- Open AI Model Name -->
+        <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+          <div>
+            <legend class="fieldset-legend">Model</legend>
+            <p class="label">Open-AI Model Name</p>
+          </div>
+          <div class="flex justify-end">
+            <input
+              type="text"
+              class="input"
+              bind:value={openai_model}
+            />
+          </div>
+        </fieldset>
+
+        <!-- Open AI Token -->
+        <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+          <div>
+            <legend class="fieldset-legend">Token</legend>
+            <p class="label">Open-AI Access Key</p>
+          </div>
+          <div class="flex justify-end">
+            <input
+              type="password"
+              class="input"
+              bind:value={openai_token}
+            />
+          </div>
+        </fieldset>
+      </div>
+
     </div>
 
     <!-- Buttons -->

@@ -42,6 +42,10 @@ export enum SETTINGS {
     // Home Panel Settings
     LONGITUDE = "LONGITUDE",
     LATITUDE = "LATITUDE",
+
+    OPENAI_URL = "OPENAI_URL",
+    OPENAI_MODEL = "OPENAI_MODEL",
+    OPENAI_TOKEN = "OPENAI_TOKEN"
 }
 
 export enum THEMES{
