@@ -3,7 +3,8 @@ import { extractTextFromHtml } from "$lib/utils/html";
 import { ai, ax } from "@ax-llm/ax";
 import { get } from "svelte/store";
 
-const MIN_CONTENT_LEN = 100;
+const MIN_CONTENT_LEN = 150;
+const MAX_POINTS = 3;
 
 export const summarize_content = async (
     text: string,
@@ -31,15 +32,15 @@ export const summarize_content = async (
     });
 
     const documentProcessor = ax(
-        'documentText:string -> keyPoints:string[] "main points"'
+        'documentText:string -> keyPoints:string[] "3 summary points, less than 250 characters"'
     );
 
-    documentProcessor.addAssert(({keyPoints})=>{
-        if(keyPoints.length == 3){
-            return true;
-        } 
-        return `keyPoints should contain 3 elements.`
-    });
+    // documentProcessor.addAssert(({keyPoints})=>{
+    //     if(keyPoints.length == 3){
+    //         return true;
+    //     } 
+    //     return `keyPoints should contain 3 elements.`
+    // });
 
     const result = await documentProcessor.forward(llm, {
         documentText: clean_text,
@@ -48,5 +49,5 @@ export const summarize_content = async (
         stream: false
     });
 
-    return result.keyPoints;
+    return result.keyPoints.slice(0, MAX_POINTS);
 }
