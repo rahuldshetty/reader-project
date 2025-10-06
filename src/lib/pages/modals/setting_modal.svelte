@@ -39,6 +39,7 @@
   let longitude = $state($local_user_setting.LONGITUDE);
   let latitude = $state($local_user_setting.LATITUDE);
   
+  let llm_enable = $state($local_user_setting.LLM_ENABLE);
   let openai_url = $state($local_user_setting.OPENAI_URL);
   let openai_token = $state($local_user_setting.OPENAI_TOKEN);
   let openai_model = $state($local_user_setting.OPENAI_MODEL);
@@ -60,6 +61,7 @@
     longitude = $local_user_setting.LONGITUDE;
     latitude = $local_user_setting.LATITUDE;
 
+    llm_enable = $local_user_setting.LLM_ENABLE;
     openai_url = $local_user_setting.OPENAI_URL;
     openai_token = $local_user_setting.OPENAI_TOKEN;
     openai_model = $local_user_setting.OPENAI_MODEL;
@@ -103,6 +105,7 @@
     await user_settings.set(SETTINGS.MINIMIZE_APP, minimize_app);
     await user_settings.set(SETTINGS.LONGITUDE, longitude);
     await user_settings.set(SETTINGS.LATITUDE, latitude);
+    await user_settings.set(SETTINGS.LLM_ENABLE, llm_enable);
     await user_settings.set(SETTINGS.OPENAI_MODEL, openai_model);
     await user_settings.set(SETTINGS.OPENAI_URL, openai_url);
     await setSecretRecord(SETTINGS.OPENAI_TOKEN, openai_token);
@@ -122,6 +125,7 @@
     $local_user_setting.OPENAI_MODEL = openai_model;
     $local_user_setting.OPENAI_URL = openai_url;
     $local_user_setting.OPENAI_TOKEN = openai_token;
+    $local_user_setting.LLM_ENABLE = llm_enable;
 
     // Close Modal
     save_in_progress = false;
@@ -433,6 +437,27 @@
       <!-- AI Settings -->
       <input type="radio" name="setting_tabs" class="tab" aria-label="LLM" />
       <div class="tab-content bg-base-100 p-4">
+        <!-- Enable LLM -->
+        <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+          <div>
+            <legend class="fieldset-legend">Enable LLM</legend>
+            <p class="label">
+              Run content summarization using LLM service (OpenAI-compatible).
+            </p>
+          </div>
+          <div class="flex justify-end">
+            <input
+              type="checkbox"
+              checked={llm_enable}
+              onchange={() =>
+                (llm_enable = !llm_enable)}
+              class="toggle toggle-success"
+            />
+          </div>
+        </fieldset>
+
         <!-- Open AI Base URL -->
         <fieldset
           class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
@@ -446,6 +471,7 @@
               type="text"
               class="input"
               bind:value={openai_url}
+              disabled={!llm_enable}
             />
           </div>
         </fieldset>
@@ -463,6 +489,7 @@
               type="text"
               class="input"
               bind:value={openai_model}
+              disabled={!llm_enable}
             />
           </div>
         </fieldset>
@@ -480,6 +507,7 @@
               type="password"
               class="input"
               bind:value={openai_token}
+              disabled={!llm_enable}
             />
           </div>
         </fieldset>

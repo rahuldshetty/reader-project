@@ -16,6 +16,7 @@ export interface UserSettings {
     LONGITUDE: number;
     LATITUDE: number;
 
+    LLM_ENABLE: boolean;
     OPENAI_URL: string;
     OPENAI_MODEL: string;
     OPENAI_TOKEN: string;
