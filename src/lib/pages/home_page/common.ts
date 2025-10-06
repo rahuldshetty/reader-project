@@ -27,7 +27,8 @@ import {
     refreshing_posts,
     feed_count_by_id,
     local_user_setting,
-    refreshing_feeds
+    refreshing_feeds,
+    search_keywords
 } from "$lib/stores/app_store";
 
 import {
@@ -81,6 +82,7 @@ export const refresh_posts = async (
     refreshing_posts.set(true);
     const sort_by = get(posts_sort_by);
     const unread = get(filter_unread_posts);
+    const keywords = get(search_keywords);
     posts_store.set(
         await fetch_posts(
             sort_by,
@@ -90,6 +92,7 @@ export const refresh_posts = async (
             unread,
             lastPubDate,
             is_fav,
+            keywords
         )
     );
     feed_count_by_id.set(await fetch_unread_post_counts());
@@ -105,6 +108,7 @@ export const load_new_posts = async (
 ) => {
     const sort_by = get(posts_sort_by);
     const unread = get(filter_unread_posts);
+    const keywords = get(search_keywords);
 
     // Get pubDate for last post
     const posts = get(posts_store);
@@ -122,6 +126,7 @@ export const load_new_posts = async (
         unread,
         lastPubDate,
         is_fav,
+        keywords
     )
 
     // Append posts into current store

@@ -20,6 +20,7 @@ export const fetch_posts = async (
     unread: boolean = false,
     lastPubDate: string = "",
     is_fav: boolean | null = null, // Set this to filter specific posts
+    search_keywords: string[] = [],
 ): Promise<PostResult[]> => {
     let whereCondition = "WHERE 1=1 ";
     if (last_id != null) {
@@ -54,6 +55,20 @@ export const fetch_posts = async (
             whereCondition += `AND is_fav=1 `
         else
             whereCondition += `AND is_fav=0 `
+    }
+
+    if(search_keywords.length > 0){
+        let searchTerms = '('
+        for(let i = 0; i < search_keywords.length; i++){
+            const key = search_keywords[i];
+            searchTerms += ` title like '%${key}%' `
+
+            if(i != search_keywords.length - 1){
+                // if not the last term
+                searchTerms += ' AND '
+            }
+        }
+        whereCondition += ' AND ' + searchTerms + ') ';
     }
 
     const query = `

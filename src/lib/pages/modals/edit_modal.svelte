@@ -2,7 +2,7 @@
   import type {Feed, FeedMetric} from "$lib/types";
   import { active_modal, active_feed_id, active_feed_name, local_user_setting } from "$lib/stores/app_store";
   import { refresh_app_data } from "$lib/pages/home_page/common";
-  import { MODAL_TYPE, NO_FEED_SELECTED, FEED_TYPE, TOAST_MESSAGE_TYPE } from "$lib/constants";
+  import { MODAL_TYPE, NO_FEED_SELECTED, FEED_TYPE, TOAST_MESSAGE_TYPE, ROOT_PARENT_FEED_ID } from "$lib/constants";
   import { fetch_feed_by_id, fetch_feed_metric_by_id, fetch_folders, update_feed } from "$lib/dao/feed_db";
   import { toastStore } from "$lib/stores/toast_store";
   import { extractTime, extractFormattedDate } from "$lib/utils/time";
@@ -31,7 +31,7 @@
 
   // Update feed id on change
   active_feed_id.subscribe(async (current_feed_id) => {
-    if(current_feed_id != NO_FEED_SELECTED){
+    if(current_feed_id != NO_FEED_SELECTED && current_feed_id != ROOT_PARENT_FEED_ID){
       feed = await fetch_feed_by_id(current_feed_id);
       feed_info = await fetch_feed_metric_by_id(current_feed_id);
     }

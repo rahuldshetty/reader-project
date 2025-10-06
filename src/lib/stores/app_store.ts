@@ -41,6 +41,7 @@ export const local_user_setting = writable<UserSettings>({
     "REFRESH_ALL_FEED_ON_LAUNCH": REFRESH_ALL_FEED_ON_LAUNCH,
     "LONGITUDE": 0,
     "LATITUDE": 0,
+    "LLM_ENABLE": false,
     "OPENAI_URL": '',
     "OPENAI_MODEL": '',
     "OPENAI_TOKEN": '',
@@ -60,3 +61,4 @@ export const posts_sort_by = writable(DB_ORDER_ENUM.NEWEST);
 export const filter_unread_posts = writable(false);
 export const filter_liked_posts = writable(false);
 export const active_post_id = writable(-1);
+export const search_keywords = writable<string[]>([]);
