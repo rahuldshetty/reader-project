@@ -48,7 +48,7 @@
 <div class="flex-1 overflow-y-auto">
     <ContentBar {data} {post} />
     {#if typeof data.content === "string"}
-        <AiSummary text={data.content}/>
+        <AiSummary title={data.title} text={data.content}/>
     {/if}
     {#if renderType == WEB_RENDER_TYPES.DEFAULT}
         <div class="p-6">

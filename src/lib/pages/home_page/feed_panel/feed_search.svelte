@@ -1,6 +1,6 @@
 <script lang="ts">
     import { ROOT_PARENT_FEED_ID } from "$lib/constants";
-    import { search_keywords, active_feed_id } from "$lib/stores/app_store";
+    import { search_keywords, active_feed_id, filter_unread_posts } from "$lib/stores/app_store";
     import { refresh_posts } from "../common";
 
 
@@ -9,6 +9,7 @@
         if(text.trim().length == 0){
             $search_keywords = [];
         } else{
+            $filter_unread_posts = false;
             $active_feed_id = ROOT_PARENT_FEED_ID;
             $search_keywords = text.toLowerCase().trim().split(/\s+/);
         }

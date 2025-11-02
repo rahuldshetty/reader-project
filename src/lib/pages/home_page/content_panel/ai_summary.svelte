@@ -7,11 +7,11 @@
     } from "@fortawesome/free-solid-svg-icons";
     import { local_user_setting } from "$lib/stores/app_store";
 
-    const { text }: { text: string } = $props();
+    const { text, title }: { title: string, text: string } = $props();
 </script>
 
 {#if $local_user_setting.LLM_ENABLE}
-    {#await summarize_content(text)}
+    {#await summarize_content(title, text)}
         <div class="mt-4 ml-4 mr-4">
                 <ul class="list bg-base-300 rounded-box shadow-md">
                     <li class="pl-4 pr-4 pt-4 text-xs opacity-80 tracking-wide">
