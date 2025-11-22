@@ -41,11 +41,12 @@
 </script>
 
 <div class="dropdown dropdown-bottom flex justify-end">
-    <button role="button" class="p-2 cursor-pointer">
+    <button tabindex="0" role="button" class="p-2 cursor-pointer">
         <Fa icon={faEllipsisVertical} />
     </button>
     <ul
-        class="dropdown-content overflow-auto text-base-content menu bg-base-200 rounded-box z-10 p-2 w-28 shadow-sm"
+        tabindex="-1"
+        class="dropdown-content overflow-auto text-base-content menu bg-base-200 rounded-box z-10 p-2 w-28 shadow-sm overflow-visible"
     >
         {#if feed.type == FEED_TYPE.FEED}
             <li><button onclick={handleRefresh}>Refresh</button></li>

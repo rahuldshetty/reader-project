@@ -12,7 +12,7 @@
 {:else}
     <!-- Feed is a folder with children -->
     <li>
-        <details>
+        <details class="overflow-visible">
             <!-- Folder -->
             <FeedItem feed={feed}/>
             {#if feed.children.length > 0}
