@@ -2,7 +2,6 @@ use std::sync::Mutex;
 use tauri::{AppHandle, Manager, State};
 
 mod db;
-mod experimental;
 
 // Create a struct we'll use to track the completion of
 // setup related tasks
@@ -48,12 +47,7 @@ pub fn run() {
             // use only in build
             // https://v2.tauri.app/develop/debug/#development-only-code
             if cfg!(dev) {
-                let salt_path = app
-                    .path()
-                    .app_local_data_dir()
-                    .expect("could not resolve app local data path")
-                    .join("salt.txt");
-                app.handle().plugin(tauri_plugin_stronghold::Builder::with_argon2(&salt_path).build())?;
+                
             }
             Ok(())
         })
@@ -89,7 +83,6 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             greet,
             set_complete,
-            experimental::translate_text
         ])
         .on_window_event(|window, event| match event {
             tauri::WindowEvent::CloseRequested { api, .. } => {

@@ -33,7 +33,7 @@ export const summarize_content = async (
     });
 
     const relevantProcessor = ax(
-        'documentText:string -> isUserContent:boolean "Is the given document text contains post related to user and not a generic message from a website"'
+        'documentText:string -> isRelevant:boolean "Is the given document text contains relevant content and not a generic message from a website"'
     )
 
     const documentProcessor = ax(
@@ -47,7 +47,7 @@ export const summarize_content = async (
         model: model,
         stream: false
     });
-    if(check_relevany_result.isUserContent){
+    if(check_relevany_result.isRelevant){
         const result = await documentProcessor.forward(llm, {
             titleText: title,
             documentText: clean_text,

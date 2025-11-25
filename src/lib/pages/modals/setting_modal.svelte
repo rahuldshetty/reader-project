@@ -16,7 +16,6 @@
   import { writeTextFile } from "@tauri-apps/plugin-fs";
   import { toastStore } from "$lib/stores/toast_store";
   import { convertFeedDataToOPML } from "$lib/services/opml_gather";
-  import { setSecretRecord } from "$lib/stores/secret_store";
 
   // Local setting State Variables
   // Why use Local vs Global?
@@ -108,7 +107,7 @@
     await user_settings.set(SETTINGS.LLM_ENABLE, llm_enable);
     await user_settings.set(SETTINGS.OPENAI_MODEL, openai_model);
     await user_settings.set(SETTINGS.OPENAI_URL, openai_url);
-    await setSecretRecord(SETTINGS.OPENAI_TOKEN, openai_token);
+    await user_settings.set(SETTINGS.OPENAI_TOKEN, openai_token);
 
     // Update local store
     $local_user_setting.THEME_MODE = color_theme;

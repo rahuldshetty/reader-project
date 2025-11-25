@@ -8,7 +8,6 @@ import {
     LONGITUDE,
     LATITUDE,
 } from "$lib/constants";
-import { getSecretRecord } from "$lib/stores/secret_store";
 
 export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
     const refresh_feed_on_select_enable = await user_settings.get(SETTINGS.REFRESH_FEED_ON_SELECT);
@@ -28,7 +27,7 @@ export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
     const llm_enable = await user_settings.get(SETTINGS.LLM_ENABLE);
     const openai_url = await user_settings.get(SETTINGS.OPENAI_URL);
     const openai_model = await user_settings.get(SETTINGS.OPENAI_MODEL);
-    const openai_token = await getSecretRecord(SETTINGS.OPENAI_TOKEN);
+    const openai_token = await user_settings.get(SETTINGS.OPENAI_TOKEN);
     
     return {
         "LAST_REFRESH_TIME":  lrt as number ?? LAST_REFRESH_TIME,
