@@ -37,7 +37,7 @@
   let minimize_app = $state($local_user_setting.MINIMIZE_APP);
   let longitude = $state($local_user_setting.LONGITUDE);
   let latitude = $state($local_user_setting.LATITUDE);
-  
+
   let llm_enable = $state($local_user_setting.LLM_ENABLE);
   let openai_url = $state($local_user_setting.OPENAI_URL);
   let openai_token = $state($local_user_setting.OPENAI_TOKEN);
@@ -157,7 +157,7 @@
 </script>
 
 <dialog class="modal" class:modal-open={$active_modal == MODAL_TYPE.SETTINGS}>
-  <div class="modal-box max-w-xl overflow-visible">
+  <div class="modal-box w-full max-w-xl mx-4 max-h-[90vh] overflow-y-auto">
     <h3 class="font-bold text-lg">Settings</h3>
 
     <!-- name of each tab group should be unique -->
@@ -450,8 +450,7 @@
             <input
               type="checkbox"
               checked={llm_enable}
-              onchange={() =>
-                (llm_enable = !llm_enable)}
+              onchange={() => (llm_enable = !llm_enable)}
               class="toggle toggle-success"
             />
           </div>
@@ -474,7 +473,7 @@
             />
           </div>
         </fieldset>
-        
+
         <!-- Open AI Model Name -->
         <fieldset
           class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
@@ -511,7 +510,6 @@
           </div>
         </fieldset>
       </div>
-
     </div>
 
     <!-- Buttons -->

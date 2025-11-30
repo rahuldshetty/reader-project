@@ -32,12 +32,11 @@
   class="modal"
   class:modal-open={$active_modal == MODAL_TYPE.DELETE_FEED}
 >
-  <div class="modal-box max-w-md overflow-visible">
+  <div class="modal-box w-full max-w-md mx-4">
     <h3 class="font-bold text-lg">Delete</h3>
 
     <p class="py-2">
-      You are about to delete <span class="font-bold"
-        >{$active_feed_name}</span
+      You are about to delete <span class="font-bold">{$active_feed_name}</span
       >. Are you sure you want to continue?
     </p>
 
@@ -58,5 +57,6 @@
         {/if}
         Delete
       </button>
+    </div>
   </div>
 </dialog>

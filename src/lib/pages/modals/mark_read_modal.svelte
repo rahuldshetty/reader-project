@@ -28,17 +28,12 @@
   };
 </script>
 
-<dialog
-  class="modal"
-  class:modal-open={$active_modal == MODAL_TYPE.MARK_READ}
->
-  <div class="modal-box max-w-md overflow-visible">
+<dialog class="modal" class:modal-open={$active_modal == MODAL_TYPE.MARK_READ}>
+  <div class="modal-box w-full max-w-md mx-4">
     <h3 class="font-bold text-lg">Mark Read</h3>
 
     <p class="py-2">
-      Mark all posts in <span class="font-bold"
-        >"{$active_feed_name}"</span
-      > as read?
+      Mark all posts in <span class="font-bold">"{$active_feed_name}"</span> as read?
     </p>
 
     <!-- Buttons -->
@@ -58,5 +53,6 @@
         {/if}
         Mark Read
       </button>
+    </div>
   </div>
 </dialog>

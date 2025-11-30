@@ -14,7 +14,7 @@
 <MainModal />
 <ToastManager />
 
-<div class="flex h-screen w-screen overflow-hidden pt-[var(--titlebar-height)]">
+<div class="flex h-screen w-full overflow-hidden pt-[var(--titlebar-height)]">
     <SideBar />
     {#if $active_screen == SCREEN.FEEDS}
         <FeedPanel />

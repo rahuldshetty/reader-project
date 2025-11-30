@@ -7,16 +7,15 @@
 </script>
 
 <div class="modal" class:modal-open={$active_modal == MODAL_TYPE.ADD}>
-  <div class="modal-box max-w-xl">
+  <div class="modal-box w-full max-w-xl mx-4">
     <h3 class="font-bold text-lg">Add Feed</h3>
 
     <!-- Page 1: Scan/Upload Feed -->
     {#if $active_page == 0}
       <InputPage />
     {:else if $active_page == 1}
-    <!-- Page 2: Import Page -->
-      <ImportPage/>
+      <!-- Page 2: Import Page -->
+      <ImportPage />
     {/if}
-
   </div>
 </div>
