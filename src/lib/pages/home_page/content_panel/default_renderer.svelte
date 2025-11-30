@@ -3,11 +3,14 @@
     import { renderHTML } from "$lib/utils/html";
     import ContentBar from "./content_bar.svelte";
 
-    const { data, post = $bindable() }: { data: ContentResult; post: PostResult } = $props();
+    const {
+        data,
+        post = $bindable(),
+    }: { data: ContentResult; post: PostResult } = $props();
 </script>
 
 <div class="flex-1 overflow-y-auto">
-    <ContentBar data={data} post={post}/>
+    <ContentBar {data} {post} />
     <div class="p-6">
         {#if data.image || post.image}
             <img
@@ -19,7 +22,9 @@
             />
         {/if}
 
-        <article class="prose prose-base text-text1 max-w-none">
+        <article
+            class="prose prose-base text-text1 max-w-none overflow-hidden break-words"
+        >
             {@html renderHTML(data.content as string, data.url)}
         </article>
     </div>

@@ -8,7 +8,10 @@
     import { Menu } from "@tauri-apps/api/menu";
     import { TOAST_MESSAGE_TYPE } from "$lib/constants";
     import { toastStore } from "$lib/stores/toast_store";
-    import { detectWebRenderType, WEB_RENDER_TYPES } from "./renderers/detector";
+    import {
+        detectWebRenderType,
+        WEB_RENDER_TYPES,
+    } from "./renderers/detector";
     import YoutubeRender from "./renderers/youtube_render.svelte";
     import AiSummary from "./ai_summary.svelte";
 
@@ -17,7 +20,9 @@
         post = $bindable(),
     }: { data: ContentResult; post: PostResult } = $props();
 
-    const renderType: WEB_RENDER_TYPES = $derived(detectWebRenderType(data.url));
+    const renderType: WEB_RENDER_TYPES = $derived(
+        detectWebRenderType(data.url),
+    );
 
     const copyTextToClipboard = async () => {
         const selection_data = window.getSelection();
@@ -36,7 +41,13 @@
     };
 
     const menuPromise = Menu.new({
-        items: [{ id: "context_menu_1", text: "Copy Text", action: copyTextToClipboard }],
+        items: [
+            {
+                id: "context_menu_1",
+                text: "Copy Text",
+                action: copyTextToClipboard,
+            },
+        ],
     });
 
     const openContextMenu = async () => {
@@ -48,7 +59,7 @@
 <div class="flex-1 overflow-y-auto">
     <ContentBar {data} {post} />
     {#if typeof data.content === "string"}
-        <AiSummary title={data.title} text={data.content}/>
+        <AiSummary title={data.title} text={data.content} />
     {/if}
     {#if renderType == WEB_RENDER_TYPES.DEFAULT}
         <div class="p-6">
@@ -63,13 +74,13 @@
             {/if}
 
             <article
-                class="prose prose-base text-text1 max-w-none"
+                class="prose prose-base text-text1 max-w-none overflow-hidden break-words"
                 oncontextmenu={openContextMenu}
             >
                 {@html renderHTML(data.content as string, data.url)}
             </article>
         </div>
     {:else if renderType == WEB_RENDER_TYPES.YOUTUBE}
-        <YoutubeRender url={data.url}/>
+        <YoutubeRender url={data.url} />
     {/if}
 </div>
