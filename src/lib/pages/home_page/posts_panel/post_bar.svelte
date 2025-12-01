@@ -1,5 +1,9 @@
 <script>
-    import { active_feed_id, posts_sort_by, filter_unread_posts } from "$lib/stores/app_store";
+    import {
+        active_feed_id,
+        posts_sort_by,
+        filter_unread_posts,
+    } from "$lib/stores/app_store";
     import { MODAL_TYPE, DB_ORDER_ENUM } from "$lib/constants";
 
     import Fa from "svelte-fa";
@@ -25,20 +29,26 @@
 
     const handleChangeOnReadFilter = async () => {
         await refresh_posts($active_feed_id);
-    }
+    };
 </script>
 
 <div
     class="sticky top-0 z-10 justify-end bg-base-100 p-2 flex space-x-1 border-b border-base-300"
->   
+>
     <div class="m-1 tooltip" data-tip="Filter unread">
-        <input type="checkbox" bind:checked={$filter_unread_posts} disabled={$active_feed_id == -2} onchange={handleChangeOnReadFilter} class="checkbox checkbox-sm checkbox-secondary" />
+        <input
+            type="checkbox"
+            bind:checked={$filter_unread_posts}
+            disabled={$active_feed_id == -2}
+            onchange={handleChangeOnReadFilter}
+            class="checkbox checkbox-sm checkbox-secondary smooth-transition"
+        />
     </div>
 
     <div class="tooltip" data-tip="Sort By">
         <button
             onclick={handleSortDate}
-            class="btn btn-ghost btn-sm btn-circle p-4"
+            class="btn btn-ghost btn-sm btn-circle p-4 btn-press smooth-transition"
         >
             <Fa
                 title={sort_by_asending ? "Latest First" : "Oldest First"}

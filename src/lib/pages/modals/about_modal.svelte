@@ -15,7 +15,9 @@
     class:modal-open={$active_modal == MODAL_TYPE.ABOUT}
     onclick={closeModal}
 >
-    <div class="modal-box w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+    <div
+        class="modal-box w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto animate-scale-in"
+    >
         <form method="dialog">
             <button
                 onclick={closeModal}

@@ -1,5 +1,6 @@
 <script>
     import "../app.css";
+    import "$lib/styles/animations.css";
     import { onMount } from "svelte";
     import "$lib/components/tray";
     import { init_app } from "$lib/pages/loading_page/init_loader";
@@ -19,8 +20,6 @@
             }
         });
     });
-
-    
 </script>
 
 <div>
@@ -28,6 +27,6 @@
     {#if !$is_loading_splashscreen}
         {@render children()}
     {:else}
-        <AppLoadScreen/>
+        <AppLoadScreen />
     {/if}
 </div>

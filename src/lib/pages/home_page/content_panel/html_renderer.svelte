@@ -56,7 +56,7 @@
     };
 </script>
 
-<div class="flex-1 overflow-y-auto">
+<div class="flex-1 overflow-y-auto animate-fade-in">
     <ContentBar {data} {post} />
     {#if typeof data.content === "string"}
         <AiSummary title={data.title} text={data.content} />

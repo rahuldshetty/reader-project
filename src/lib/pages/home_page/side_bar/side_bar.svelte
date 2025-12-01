@@ -8,13 +8,13 @@
 </script>
 
 <ul
-    class="menu bg-base-200 gap-2 rounded-box bg-base-200 border-r border-base-300"
+    class="menu bg-base-200 gap-2 rounded-box bg-base-200 border-r border-base-300 animate-fade-in"
 >
     <!-- <BtnHome/> -->
-    <BtnFeeds/>
-    <BtnSettings/>
+    <BtnFeeds />
+    <BtnSettings />
     <BtnAdd />
     <div class="flex-grow"></div>
     <BtnAbout />
-    <BtnCollapse/>
+    <BtnCollapse />
 </ul>

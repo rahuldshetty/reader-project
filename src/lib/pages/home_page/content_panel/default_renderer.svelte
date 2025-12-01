@@ -9,7 +9,7 @@
     }: { data: ContentResult; post: PostResult } = $props();
 </script>
 
-<div class="flex-1 overflow-y-auto">
+<div class="flex-1 overflow-y-auto animate-fade-in">
     <ContentBar {data} {post} />
     <div class="p-6">
         {#if data.image || post.image}
