@@ -1,10 +1,10 @@
 import type { PostResult, FeedMetadata } from '$lib/types';
 import Database from '@tauri-apps/plugin-sql';
-import { 
-    DB_PATH, 
-    DB_ORDER_ENUM, 
+import {
+    DB_PATH,
+    DB_ORDER_ENUM,
     NO_OF_POST_PULLS_PER_TIME,
-    ROOT_PARENT_FEED_ID 
+    ROOT_PARENT_FEED_ID
 } from '$lib/constants';
 import { convertToTimeStringForDB } from '$lib/utils/time';
 import { escape_title } from '$lib/utils/html';
@@ -42,28 +42,28 @@ export const fetch_posts = async (
     // Negative Feed ids reserved for All Posts, Favs
     if (feed_id >= 0) {
         whereCondition += `AND feed_id=${feed_id} `
-    } else if(feed_id == -2){
+    } else if (feed_id == -2) {
         is_fav = true;
     }
 
-    if(unread){
+    if (unread) {
         whereCondition += `AND read=0 `
     }
 
-    if(is_fav != null){
-        if(is_fav)
+    if (is_fav != null) {
+        if (is_fav)
             whereCondition += `AND is_fav=1 `
         else
             whereCondition += `AND is_fav=0 `
     }
 
-    if(search_keywords.length > 0){
+    if (search_keywords.length > 0) {
         let searchTerms = '('
-        for(let i = 0; i < search_keywords.length; i++){
+        for (let i = 0; i < search_keywords.length; i++) {
             const key = search_keywords[i];
             searchTerms += ` title like '%${key}%' `
 
-            if(i != search_keywords.length - 1){
+            if (i != search_keywords.length - 1) {
                 // if not the last term
                 searchTerms += ' AND '
             }
@@ -94,11 +94,11 @@ export const fetch_posts = async (
     const result = (await db.select(query)) as PostResult[];
 
     console.log("DB FETCH POSTS:" + result.length);
-    
+
     return result;
 }
 
-export const fetch_posts_by_date = async (date: string) : Promise<PostResult[]> =>{
+export const fetch_posts_by_date = async (date: string): Promise<PostResult[]> => {
     const query = `
         SELECT 
             id, 
@@ -140,7 +140,7 @@ export const fetch_post_data = async (id: number): Promise<PostResult> => {
 
     const result = (await db.select(query, [id])) as PostResult[];
 
-    if(result.length == 0){
+    if (result.length == 0) {
         throw Error(`No Article found with id ${id}`);
     }
 
@@ -150,19 +150,19 @@ export const fetch_post_data = async (id: number): Promise<PostResult> => {
 
 export const mark_post_as_read = async (id: number, read_status: boolean) => {
     let status = 1;
-    if(!read_status){
+    if (!read_status) {
         status = 0;
     }
     await db.execute(
         `UPDATE articles SET read = $1 WHERE id = $2`,
-        [ status, id ]
+        [status, id]
     );
 }
 
 
 export const mark_post_as_fav = async (id: number, is_fav: boolean) => {
     let fav = 1;
-    if(!is_fav){
+    if (!is_fav) {
         fav = 0;
     }
     await db.execute(
@@ -181,7 +181,7 @@ export const add_posts = async (feedMetadata: FeedMetadata) => {
     let inserted = 0;
 
     for (const [i, post] of posts.entries()) {
-        try{
+        try {
             const date = convertToTimeStringForDB(post.pubDate);
 
             await db.execute(
@@ -192,7 +192,7 @@ export const add_posts = async (feedMetadata: FeedMetadata) => {
             feedsSet.add(feedMetadata.id);
 
             inserted++;
-        } catch(e){
+        } catch (e) {
             console.log(`|| Failed to insert post (${post.link}): ${e} ||`);
         }
     }

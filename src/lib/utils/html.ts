@@ -11,51 +11,58 @@ export const renderHTML = (content: string, url: string) => {
     a.style.textDecoration = "none";
   });
 
-  // Constrain images to container width
-  div.querySelectorAll("img").forEach((img) => {
-    img.style.maxWidth = "100%";
-    img.style.height = "auto";
-    img.style.display = "block";
-  });
-
-  // Constrain iframes and videos
-  div.querySelectorAll("iframe, video").forEach((elem) => {
-    (elem as HTMLElement).style.maxWidth = "100%";
-    (elem as HTMLElement).style.height = "auto";
-  });
-
-  // Constrain tables
-  div.querySelectorAll("table").forEach((table) => {
-    table.style.maxWidth = "100%";
-    table.style.overflowX = "auto";
-    table.style.display = "block";
-  });
-
-  // Remove problematic positioning and width styles from all elements
+  // Aggressively constrain ALL elements
   div.querySelectorAll("*").forEach((elem) => {
     const htmlElem = elem as HTMLElement;
 
-    // Remove fixed/absolute positioning that can cause overflow
-    if (htmlElem.style.position === "fixed" || htmlElem.style.position === "absolute") {
-      htmlElem.style.position = "relative";
+    // Remove width and height attributes
+    htmlElem.removeAttribute("width");
+    htmlElem.removeAttribute("height");
+
+    // Remove sizes and srcset from images
+    if (elem.tagName === "IMG") {
+      htmlElem.removeAttribute("sizes");
+      htmlElem.removeAttribute("srcset");
     }
 
-    // Remove explicit widths that might be larger than container
-    if (htmlElem.style.width && htmlElem.style.width.includes("px")) {
-      const width = parseInt(htmlElem.style.width);
-      if (width > 800) { // If width is unreasonably large
-        htmlElem.style.width = "100%";
-        htmlElem.style.maxWidth = "100%";
+    // Get current style attribute
+    const styleAttr = htmlElem.getAttribute("style");
+    if (styleAttr) {
+      // Remove max-width from inline styles as it might be set to something problematic
+      const newStyle = styleAttr
+        .split(";")
+        .filter(s => {
+          const prop = s.trim().toLowerCase();
+          return !prop.startsWith("max-width") &&
+            !prop.startsWith("min-width") &&
+            prop !== "";
+        })
+        .join(";");
+
+      if (newStyle) {
+        htmlElem.setAttribute("style", newStyle);
+      } else {
+        htmlElem.removeAttribute("style");
       }
     }
 
-    // Ensure max-width is respected
-    if (!htmlElem.style.maxWidth || htmlElem.style.maxWidth === "none") {
-      htmlElem.style.maxWidth = "100%";
+    // Remove class attribute entirely to strip Tailwind classes
+    htmlElem.removeAttribute("class");
+
+    // Remove fixed/absolute positioning
+    if (htmlElem.style.position === "fixed" || htmlElem.style.position === "absolute") {
+      htmlElem.style.position = "static";
     }
   });
 
-  return div.innerHTML;
+  // Wrap everything in a constraining div
+  const wrapper = document.createElement("div");
+  wrapper.style.maxWidth = "100%";
+  wrapper.style.overflow = "hidden";
+  wrapper.style.wordWrap = "break-word";
+  wrapper.innerHTML = div.innerHTML;
+
+  return wrapper.outerHTML;
 }
 
 

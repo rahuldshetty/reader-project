@@ -84,3 +84,17 @@
         <YoutubeRender url={data.url} />
     {/if}
 </div>
+
+<style>
+    article :global(*) {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    article :global(img),
+    article :global(video),
+    article :global(iframe) {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
