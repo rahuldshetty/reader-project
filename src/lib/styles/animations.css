@@ -96,7 +96,7 @@
 
 /* Smooth transitions for interactive elements */
 .smooth-transition {
-    transition: all 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out, background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 /* Enhanced hover effects */
@@ -112,7 +112,7 @@
 /* Subtle glow effect for active items */
 .active-glow {
     position: relative;
-    transition: all 0.3s ease-in-out;
+    transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
 .active-glow::before {

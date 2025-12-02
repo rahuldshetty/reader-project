@@ -27,7 +27,7 @@
   onclick={handleOnPostClick}
 >
   <a
-    class="flex gap-2 p-3 rounded-lg transition-all duration-200 {$active_post_id ==
+    class="flex gap-2 p-3 rounded-lg transition-colors duration-200 {$active_post_id ==
     post.id
       ? 'menu-active active-glow'
       : ''}"
@@ -42,7 +42,7 @@
     {/if}
     <div class="flex flex-col p-1">
       <p
-        class="line-clamp-2 transition-all duration-200 {post.read
+        class="line-clamp-2 {post.read
           ? 'font-normal'
           : 'font-semibold'}"
       >
