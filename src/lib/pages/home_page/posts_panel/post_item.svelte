@@ -22,12 +22,11 @@
   };
 </script>
 
-<li
-  class="stagger-item rounded-lg hover-lift smooth-transition cursor-pointer"
-  onclick={handleOnPostClick}
->
-  <a
-    class="flex gap-2 p-3 rounded-lg transition-colors duration-200 {$active_post_id ==
+<li class="stagger-item rounded-lg hover-lift smooth-transition">
+  <button
+    type="button"
+    onclick={handleOnPostClick}
+    class="w-full text-left cursor-pointer flex gap-2 p-3 rounded-lg transition-colors duration-200 {$active_post_id ==
     post.id
       ? 'menu-active active-glow'
       : ''}"
@@ -41,14 +40,10 @@
       />
     {/if}
     <div class="flex flex-col p-1">
-      <p
-        class="line-clamp-2 {post.read
-          ? 'font-normal'
-          : 'font-semibold'}"
-      >
+      <p class="line-clamp-2 {post.read ? 'font-normal' : 'font-semibold'}">
         {post.title}
       </p>
       <span class="text-sm opacity-70">{timeAgo(post.pubDate)}</span>
     </div>
-  </a>
+  </button>
 </li>
