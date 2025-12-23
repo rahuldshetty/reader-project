@@ -5,7 +5,6 @@
 
     import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 
-    import { Menu } from "@tauri-apps/api/menu";
     import { TOAST_MESSAGE_TYPE } from "$lib/constants";
     import { toastStore } from "$lib/stores/toast_store";
     import {
@@ -14,6 +13,7 @@
     } from "./renderers/detector";
     import YoutubeRender from "./renderers/youtube_render.svelte";
     import AiSummary from "./ai_summary.svelte";
+    // import { Menu } from "@tauri-apps/api/menu";
 
     const {
         data,
@@ -40,19 +40,20 @@
         }
     };
 
-    const menuPromise = Menu.new({
-        items: [
-            {
-                id: "context_menu_1",
-                text: "Copy Text",
-                action: copyTextToClipboard,
-            },
-        ],
-    });
+    // TODO: Figure out way to get context menu working for both android and desktop
+    //    const menuPromise = Menu.new({
+    //         items: [
+    //             {
+    //                 id: "context_menu_1",
+    //                 text: "Copy Text",
+    //                 action: copyTextToClipboard,
+    //             },
+    //         ],
+    //     });
 
     const openContextMenu = async () => {
-        const menu = await menuPromise;
-        menu.popup();
+        // const menu = await menuPromise;
+        // menu.popup();
     };
 </script>
 
