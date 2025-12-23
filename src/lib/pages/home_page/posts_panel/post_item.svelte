@@ -1,7 +1,12 @@
 <script lang="ts">
   import type { PostResult } from "$lib/types";
   import { timeAgo } from "$lib/utils/time";
-  import { active_post_id, local_user_setting } from "$lib/stores/app_store";
+  import {
+    active_post_id,
+    local_user_setting,
+    is_mobile,
+    mobile_active_panel,
+  } from "$lib/stores/app_store";
   import { mark_post_as_read } from "$lib/dao/post_db";
   import {
     update_post_feed_counter_value,
@@ -19,6 +24,11 @@
       }
     }
     $active_post_id = post.id;
+
+    // Navigate to content panel on mobile
+    if ($is_mobile) {
+      mobile_active_panel.set("content");
+    }
   };
 </script>
 

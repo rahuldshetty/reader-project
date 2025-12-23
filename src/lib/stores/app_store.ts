@@ -3,11 +3,11 @@ import type { FeedResult, UserSettings, PostResult, FeedUnreadCounter } from '$l
 import { LazyStore } from '@tauri-apps/plugin-store';
 import { writable } from 'svelte/store';
 
-import { 
-    MODAL_TYPE, 
-    LAST_REFRESH_TIME, 
+import {
+    MODAL_TYPE,
+    LAST_REFRESH_TIME,
     DEFAULT_DAISY_THEME,
-    POST_EXPIRY_TIME, 
+    POST_EXPIRY_TIME,
     FEED_VIEW,
     NO_FEED_SELECTED,
     REFRESH_FEED_ON_SELECT,
@@ -62,3 +62,8 @@ export const filter_unread_posts = writable(false);
 export const filter_liked_posts = writable(false);
 export const active_post_id = writable(-1);
 export const search_keywords = writable<string[]>([]);
+
+// Mobile Navigation
+export type MobilePanel = 'feeds' | 'posts' | 'content';
+export const is_mobile = writable(false);
+export const mobile_active_panel = writable<MobilePanel>('feeds');

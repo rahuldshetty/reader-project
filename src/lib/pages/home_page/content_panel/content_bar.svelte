@@ -50,11 +50,11 @@
 </script>
 
 <div
-    class="sticky top-0 z-50 bg-base-100 border-b border-base-300 flex items-center justify-between p-2 pl-6"
+    class="sticky top-0 z-50 bg-base-100 border-b border-base-300 flex flex-col md:flex-row md:items-center md:justify-between p-2 px-4 gap-2"
 >
-    <!-- Left section: title and word count -->
+    <!-- Title and word count -->
     <div class="flex flex-col">
-        <span class="text-lg font-semibold text-text1 max-w-3xl">
+        <span class="text-lg font-semibold text-text1 md:max-w-3xl">
             {post.title}
         </span>
         <span class="text-sm">
@@ -64,11 +64,11 @@
         </span>
     </div>
 
-    <!-- Right section: action buttons -->
-    <div class="flex items-center space-x-2">
+    <!-- Action buttons - separate row on mobile -->
+    <div class="flex items-center justify-start md:justify-end gap-1">
         <!-- Share Button -->
         <button
-            class="btn btn-circle btn-ghost p-5 btn-press smooth-transition"
+            class="btn btn-circle btn-ghost btn-sm md:btn-md btn-press smooth-transition"
             onclick={handleShareButton}
         >
             <Fa icon={faShareNodes} size="lg" title="Copy link to Clipboard" />
@@ -76,7 +76,7 @@
 
         <!-- Mark Read -->
         <button
-            class="btn btn-ghost btn-circle p-5 btn-press smooth-transition"
+            class="btn btn-ghost btn-circle btn-sm md:btn-md btn-press smooth-transition"
             onclick={handleReadButton}
         >
             <Fa
@@ -89,7 +89,7 @@
 
         <!-- Mark Favourite -->
         <button
-            class="btn btn-circle btn-ghost p-5 btn-press smooth-transition"
+            class="btn btn-circle btn-ghost btn-sm md:btn-md btn-press smooth-transition"
             onclick={handleFavouriteButton}
         >
             <Fa
@@ -102,7 +102,7 @@
 
         <!-- Open URL -->
         <button
-            class="btn btn-circle btn-ghost p-5 btn-press smooth-transition"
+            class="btn btn-circle btn-ghost btn-sm md:btn-md btn-press smooth-transition"
             onclick={handleOpenURL}
         >
             <Fa icon={faGlobe} size="lg" title="Open in browser" />

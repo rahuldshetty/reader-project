@@ -15,19 +15,20 @@
 
     const closeWindow = async () => {
         const minimize_app = $local_user_setting.MINIMIZE_APP;
-        if(minimize_app){
-            // Window Close is handled at rust to not close, but instead hide 
+        if (minimize_app) {
+            // Window Close is handled at rust to not close, but instead hide
             await appWindow.close();
         } else {
             // Force exit app
             await exit(0);
         }
-       
-    }
-
+    };
 </script>
 
-<div data-tauri-drag-region class="titlebar fixed top-0 left-0 right-0 w-full flex justify-end items-centerpy-2 rounded-t-lg">
+<div
+    data-tauri-drag-region
+    class="titlebar fixed top-0 left-0 right-0 w-full hidden md:flex justify-end items-centerpy-2 rounded-t-lg"
+>
     <div class="flex items-center space-x-2">
         <button class="btn btn-ghost btn-xs" onclick={appWindow.minimize}>
             <Fa icon={faWindowMinimize} size="lg" title="Minimize" />

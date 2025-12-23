@@ -5,6 +5,7 @@
         collapse_sidebar,
         feeds_store,
         refreshing_feeds,
+        is_mobile,
     } from "$lib/stores/app_store";
     import FeedBar from "./feed_bar.svelte";
     import FeedParent from "./feed_parent.svelte";
@@ -16,9 +17,9 @@
     });
 </script>
 
-{#if !$collapse_sidebar}
+{#if !$collapse_sidebar || $is_mobile}
     <div
-        class="flex flex-col w-64 min-w-[200px] max-w-[300px] bg-base-100 border-r border-base-300 animate-slide-in-left"
+        class="flex flex-col w-full md:w-64 md:min-w-[200px] md:max-w-[300px] h-full bg-base-100 md:border-r border-base-300 animate-slide-in-left"
     >
         <FeedBar />
 

@@ -1,6 +1,10 @@
 <script lang="ts">
     import { fetch_post_data } from "$lib/dao/post_db";
-    import { active_post_id } from "$lib/stores/app_store";
+    import {
+        active_post_id,
+        is_mobile,
+        mobile_active_panel,
+    } from "$lib/stores/app_store";
     import {
         hybrid_parser,
         mercury_parser,
@@ -12,7 +16,7 @@
     import DefaultRenderer from "./default_renderer.svelte";
     import type { PostResult } from "$lib/types";
     import Fa from "svelte-fa";
-    import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
+    import { faBookOpen, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
     const prepareDefaultContent = (post: PostResult) => {
         // Called to render a default page when unable to load
@@ -29,8 +33,22 @@
 </script>
 
 <div
-    class="flex-1 h-full overflow-hidden flex flex-col bg-base-100 animate-fade-in"
+    class="flex-1 w-full h-full overflow-hidden flex flex-col bg-base-100 animate-fade-in"
 >
+    <!-- Mobile back button -->
+    {#if $is_mobile && $active_post_id != -1}
+        <div
+            class="flex items-center gap-2 p-2 border-b border-base-300 shrink-0"
+        >
+            <button
+                class="btn btn-ghost btn-sm"
+                onclick={() => mobile_active_panel.set("posts")}
+            >
+                <Fa icon={faArrowLeft} />
+                <span>Posts</span>
+            </button>
+        </div>
+    {/if}
     {#if $active_post_id != -1}
         {#await fetch_post_data($active_post_id) then post}
             {#await hybrid_parser(post.link)}

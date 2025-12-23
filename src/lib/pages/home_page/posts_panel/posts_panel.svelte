@@ -4,7 +4,11 @@
         posts_store,
         refreshing_posts,
         active_feed_id,
+        is_mobile,
+        mobile_active_panel,
     } from "$lib/stores/app_store";
+    import Fa from "svelte-fa";
+    import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
     import { load_new_posts } from "$lib/pages/home_page/common";
     import PostItem from "./post_item.svelte";
@@ -41,8 +45,20 @@
 </script>
 
 <div
-    class="flex flex-col h-full w-80 min-w-[280px] max-w-[400px] bg-base-100 border-r border-base-300 animate-fade-in"
+    class="flex flex-col h-full w-full md:w-80 md:min-w-[280px] md:max-w-[400px] bg-base-100 md:border-r border-base-300 animate-fade-in"
 >
+    <!-- Mobile back button -->
+    {#if $is_mobile}
+        <div class="flex items-center gap-2 p-2 border-b border-base-300">
+            <button
+                class="btn btn-ghost btn-sm"
+                onclick={() => mobile_active_panel.set("feeds")}
+            >
+                <Fa icon={faArrowLeft} />
+                <span>Feeds</span>
+            </button>
+        </div>
+    {/if}
     <PostBar />
     {#if $refreshing_posts}
         <div class="fade-transition">

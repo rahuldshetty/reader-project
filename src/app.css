@@ -3,11 +3,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Lora:wght@400;500&display=swap');
 
 :root {
-    --titlebar-height: 30px;
+    --titlebar-height: 0px;
+    /* Safe area for mobile notches and home indicators */
+    --safe-area-inset-top: env(safe-area-inset-top, 0px);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Desktop titlebar height */
+@media (min-width: 768px) {
+    :root {
+        --titlebar-height: 30px;
+    }
 }
 
 body {
   font-family: 'Roboto', sans-serif;
+  padding-top: var(--safe-area-inset-top);
+  padding-bottom: var(--safe-area-inset-bottom);
 }
 
 @plugin "daisyui" {
