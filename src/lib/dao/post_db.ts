@@ -1,4 +1,4 @@
-import type { PostResult, FeedMetadata } from '$lib/types';
+import type { PostResult, FeedMetadata, ContentResult } from '$lib/types';
 import Database from '@tauri-apps/plugin-sql';
 import {
     DB_PATH,
@@ -233,3 +233,59 @@ export const delete_old_posts = async (days: number): Promise<boolean> => {
     console.log(`|| Deleted ${result.rowsAffected} old posts ||`);
     return result.rowsAffected != 0;
 }
+
+
+// Post Cache Layer
+
+export const add_post_cache = async (post_id: number, data: ContentResult) => {
+    try {
+        const bytes = contentResultToBytes(data);
+
+        const query = `
+            INSERT INTO articles_cache (post_id, data, insert_date) 
+            VALUES ($1, $2, date('now'))
+        `
+        await db.execute(query, [post_id, bytes]);
+        console.log("Inserted bytes length:", bytes.length);
+        console.log(`|| Added post cache (${post_id}) ||`);
+    } catch (e) {
+        console.log(`|| Failed to add post cache (${post_id}): ${e} ||`);
+    }
+}
+
+export const fetch_post_cache = async (post_id: number): Promise<ContentResult | null> => {
+    try {
+        const query = `
+            SELECT data FROM articles_cache WHERE post_id = $1
+        `
+        const result = (await db.select(query, [post_id])) as Record<string, string>[];
+        const content_result = bytesToContentResult(result[0]['data']);
+        console.log(`|| Found record in post cache (${post_id}) ||`);
+        return content_result;
+    } catch (e) {
+        console.log(`|| Failed to fetch post cache (${post_id}): ${e} ||`);
+        return null;
+    }
+}
+
+const contentResultToBytes = (obj: ContentResult): Uint8Array => {
+    const json = JSON.stringify(obj);
+    return new TextEncoder().encode(json);
+};
+
+
+const bytesToContentResult = (data: string): ContentResult => {
+    // 1. Parse the string into number[]
+    const numbers = JSON.parse(data) as number[];
+
+    // 2. Convert to Uint8Array
+    const uint8 = new Uint8Array(numbers);
+
+    // 3. Decode UTF-8 JSON
+    const json = new TextDecoder("utf-8").decode(uint8);
+
+    // 4. Parse object
+    return JSON.parse(json) as ContentResult;
+};
+
+

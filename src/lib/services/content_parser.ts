@@ -5,17 +5,18 @@ import { parseHTML } from 'linkedom';
 import { runWithTimeout } from '$lib/utils/time';
 import { CONTENT_TYPES } from '$lib/constants';
 import type { ContentResult } from '$lib/types';
+import { add_post_cache, fetch_post_cache } from '$lib/dao/post_db';
 
-const runSideCar = async (url:string) => {
+const runSideCar = async (url: string) => {
     const command = Command.sidecar('binaries/app', ["parse", url]);
     const output = await command.execute();
     const response = JSON.parse(output.stdout);
     return response;
 }
 
-export const mercury_parser = async (url: string) :Promise<ContentResult> => {
+export const mercury_parser = async (url: string): Promise<ContentResult> => {
     console.log(`Parsing with mercury: ${url}`);
-    if(url){
+    if (url) {
         try {
             const document = await runWithTimeout(runSideCar(url));
             return {
@@ -41,14 +42,14 @@ export const mercury_parser = async (url: string) :Promise<ContentResult> => {
     };
 }
 
-export const morzilla_readability_parser = async (url: string, document: Document) :Promise<ContentResult> => {
+export const morzilla_readability_parser = async (url: string, document: Document): Promise<ContentResult> => {
     console.log(`Parsing with morzilla reader: ${url}`);
 
     let reader = new Readability(document);
 
-    try{
+    try {
         const article = reader.parse();
-        if(article)
+        if (article)
             return {
                 title: article.excerpt,
                 content: article.content,
@@ -57,7 +58,7 @@ export const morzilla_readability_parser = async (url: string, document: Documen
                 image: "",
                 content_type: CONTENT_TYPES.html,
             };
-    } catch(error){
+    } catch (error) {
         console.log(`Parse FAILED for ${url}: ${error}`);
         throw error;
     }
@@ -65,8 +66,8 @@ export const morzilla_readability_parser = async (url: string, document: Documen
     throw Error("Unable to parse webpage :(");
 }
 
-export const hybrid_parser = async (url: string) :Promise<ContentResult> => {
-    if(!url){
+export const hybrid_parser = async (url: string): Promise<ContentResult> => {
+    if (!url) {
         return {
             title: '',
             content: '',
@@ -76,10 +77,10 @@ export const hybrid_parser = async (url: string) :Promise<ContentResult> => {
             content_type: CONTENT_TYPES.none,
         };
     }
-    try{
+    try {
         const web_response = await fetch(url);
 
-        if(web_response?.headers.get('Content-Type') == 'application/pdf'){
+        if (web_response?.headers.get('Content-Type') == 'application/pdf') {
             return {
                 title: `PDF (${url.split('/').pop()})`,
                 content: await web_response.arrayBuffer(),
@@ -91,20 +92,37 @@ export const hybrid_parser = async (url: string) :Promise<ContentResult> => {
         }
 
         const html: string = await web_response.text();;
-        
+
         // Based on test
         // https://github.com/WebReflection/linkedom/blob/63c22fb48cea1179b7fdc9bcffe84d824c3bca04/test/html/document.js#L75
-        const location = {href: url};
-        const { document } = parseHTML(html, {location});
+        const location = { href: url };
+        const { document } = parseHTML(html, { location });
 
-        if(isProbablyReaderable(document, {
+        if (isProbablyReaderable(document, {
             minScore: 80
-        })){
+        })) {
             return morzilla_readability_parser(url, document);
         } else {
             throw new Error("Not enough content with Readability");
         }
-    } catch(error){
+    } catch (error) {
         return mercury_parser(url);
     }
 }
+
+
+export const cached_parser = async (
+    post_id: number,
+    url: string,
+): Promise<ContentResult> => {
+    const cached_data = await fetch_post_cache(post_id);
+    if (cached_data) {
+        return cached_data;
+    }
+    const result = await hybrid_parser(url);
+    if (result.content_type == CONTENT_TYPES.html) {
+        await add_post_cache(post_id, result);
+    }
+    return result;
+}
+

@@ -72,5 +72,16 @@ pub fn fetch_migrations() -> Vec<tauri_plugin_sql::Migration> {
             ",
             kind: MigrationKind::Up,
         },
+        Migration {
+            version: 7,
+            description: "create_cache_table",
+            sql: "CREATE TABLE articles_cache (
+                    post_id INTEGER NOT NULL UNIQUE,
+                    data BLOB,
+                    insert_date TEXT,
+                    FOREIGN KEY(post_id) REFERENCES articles(id) ON DELETE CASCADE
+                );",
+            kind: MigrationKind::Up,
+        },
     ];
 }

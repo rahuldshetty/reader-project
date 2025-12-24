@@ -5,10 +5,7 @@
         is_mobile,
         mobile_active_panel,
     } from "$lib/stores/app_store";
-    import {
-        hybrid_parser,
-        mercury_parser,
-    } from "$lib/services/content_parser";
+    import { hybrid_parser } from "$lib/services/content_parser";
     import { CONTENT_TYPES } from "$lib/constants";
     import HtmlRenderer from "./html_renderer.svelte";
     import PdfRenderer from "./pdf_renderer.svelte";

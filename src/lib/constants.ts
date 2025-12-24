@@ -6,15 +6,15 @@ export const DB_PATH = "sqlite:reader.db"
 
 export enum DB_ORDER_ENUM { NEWEST = "DESC", OLDEST = "ASC" }
 
-export enum MODAL_TYPE { 
-    NONE, 
+export enum MODAL_TYPE {
+    NONE,
     ABOUT,
-    ADD, 
-    UPDATE, 
-    SETTINGS, 
-    TRANSLATE, 
+    ADD,
+    UPDATE,
+    SETTINGS,
+    TRANSLATE,
     OPML_IMPORT,
-    
+
     MARK_READ,
     DELETE_FEED,
     ADD_FOLDER,
@@ -49,7 +49,7 @@ export enum SETTINGS {
     OPENAI_TOKEN = "OPENAI_TOKEN"
 }
 
-export enum THEMES{
+export enum THEMES {
     // Values must match the color configs in tailwind.config.js
     LIGHT = "light",
     DARK = "dark"

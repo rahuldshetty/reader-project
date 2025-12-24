@@ -13,7 +13,6 @@
 ## ✨ Features
 
 - 📌 Add & Manage Feeds - Easily add custom RSS feeds.
-- 🔄 Auto-Refresh - Refresh feeds periodically while avoiding unnecessary requests.
 - 📌 Read/Unread Tracking - Keep track of read articles.
 - 📁 Offline Storage - Persist articles in an SQLite database.
 - 🎨 Modern UI - Built with Tailwind CSS for a smooth experience.
