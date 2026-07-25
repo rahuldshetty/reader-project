@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Lora:wght@400;500;700&family=Merriweather:wght@300;400;700;900&family=Open+Sans:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Georgia&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=PT+Serif:wght@400;700&family=Source+Sans+3:wght@300;400;600;700&family=Nunito+Sans:wght@300;400;600;700&family=Georgia&display=swap');
 
 :root {
     --titlebar-height: 0px;
@@ -45,4 +45,38 @@ article p {
 /* Apply paragraph gap to prose content */
 .prose p {
   margin-bottom: var(--app-paragraph-gap);
+}
+
+/* Override Tailwind typography prose font-size with our variable */
+.prose {
+  font-size: var(--app-font-size);
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-size: calc(var(--app-font-size) * 1.5);
+}
+
+.prose h2 {
+  font-size: calc(var(--app-font-size) * 1.35);
+}
+
+.prose h3 {
+  font-size: calc(var(--app-font-size) * 1.15);
+}
+
+.prose small {
+  font-size: calc(var(--app-font-size) * 0.875);
+}
+
+.prose li {
+  font-size: var(--app-font-size);
+}
+
+.prose p,
+.prose blockquote,
+.prose .extract {
+  font-size: var(--app-font-size);
 }

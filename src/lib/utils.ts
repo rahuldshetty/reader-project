@@ -313,9 +313,8 @@ export const toInitCaps = (str: string) => {
 
 export const fontFamilies = [
     "Roboto",
-    "Lora",
-    "Merriweather",
-    "Open Sans",
-    "Inter",
+    "PT Serif",
+    "Source Sans 3",
+    "Nunito Sans",
     "Georgia",
 ];

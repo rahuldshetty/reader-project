@@ -91,10 +91,9 @@ export enum CONTENT_TYPES {
 // Based on data from https://daisyui.com/docs/themes/
 export const FONT_FAMILIES = [
     "Roboto",
-    "Lora",
-    "Merriweather",
-    "Open Sans",
-    "Inter",
+    "PT Serif",
+    "Source Sans 3",
+    "Nunito Sans",
     "Georgia",
 ];
 
