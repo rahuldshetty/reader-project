@@ -46,7 +46,14 @@ export enum SETTINGS {
     LLM_ENABLE = "LLM_ENABLE",
     OPENAI_URL = "OPENAI_URL",
     OPENAI_MODEL = "OPENAI_MODEL",
-    OPENAI_TOKEN = "OPENAI_TOKEN"
+    OPENAI_TOKEN = "OPENAI_TOKEN",
+
+    // Font Settings
+    FONT_FAMILY = "FONT_FAMILY",
+    FONT_SIZE = "FONT_SIZE",
+    LINE_HEIGHT = "LINE_HEIGHT",
+    LETTER_SPACING = "LETTER_SPACING",
+    PARAGRAPH_GAP = "PARAGRAPH_GAP"
 }
 
 export enum THEMES {
@@ -82,6 +89,21 @@ export enum CONTENT_TYPES {
 }
 
 // Based on data from https://daisyui.com/docs/themes/
+export const FONT_FAMILIES = [
+    "Roboto",
+    "Lora",
+    "Merriweather",
+    "Open Sans",
+    "Inter",
+    "Georgia",
+];
+
+export const DEFAULT_FONT_FAMILY = "Roboto";
+export const DEFAULT_FONT_SIZE = 16;
+export const DEFAULT_LINE_HEIGHT = 1.6;
+export const DEFAULT_LETTER_SPACING = 0;
+export const DEFAULT_PARAGRAPH_GAP = 16;
+
 export const DAISY_UI_THEMES = [
     "default",
     "light",

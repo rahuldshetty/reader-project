@@ -18,6 +18,11 @@ import {
     REFRESH_ALL_FEED_ON_LAUNCH,
     ENABLE_AUTO_PURGE,
     MINIMIZE_APP,
+    DEFAULT_FONT_FAMILY,
+    DEFAULT_FONT_SIZE,
+    DEFAULT_LINE_HEIGHT,
+    DEFAULT_LETTER_SPACING,
+    DEFAULT_PARAGRAPH_GAP,
 } from '$lib/constants';
 
 // UI States
@@ -45,6 +50,13 @@ export const local_user_setting = writable<UserSettings>({
     "OPENAI_URL": '',
     "OPENAI_MODEL": '',
     "OPENAI_TOKEN": '',
+    "FONT_SETTINGS": {
+        "FONT_FAMILY": DEFAULT_FONT_FAMILY,
+        "FONT_SIZE": DEFAULT_FONT_SIZE,
+        "LINE_HEIGHT": DEFAULT_LINE_HEIGHT,
+        "LETTER_SPACING": DEFAULT_LETTER_SPACING,
+        "PARAGRAPH_GAP": DEFAULT_PARAGRAPH_GAP,
+    },
 });
 
 // Feed Configuration

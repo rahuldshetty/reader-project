@@ -1,5 +1,13 @@
 import { CONTENT_TYPES, FEED_TYPE, TOAST_MESSAGE_TYPE } from "$lib/constants";
 
+export interface FontSettings {
+    FONT_FAMILY: string;
+    FONT_SIZE: number;
+    LINE_HEIGHT: number;
+    LETTER_SPACING: number;
+    PARAGRAPH_GAP: number;
+}
+
 export interface UserSettings {
     LAST_REFRESH_TIME: number;
     THEME_MODE: string;
@@ -20,6 +28,8 @@ export interface UserSettings {
     OPENAI_URL: string;
     OPENAI_MODEL: string;
     OPENAI_TOKEN: string;
+
+    FONT_SETTINGS: FontSettings;
 }
 
 export interface ToastMessage {

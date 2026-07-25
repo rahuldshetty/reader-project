@@ -11,7 +11,7 @@
     SETTINGS,
     TOAST_MESSAGE_TYPE,
   } from "$lib/constants";
-  import { toInitCaps } from "$lib/utils";
+  import { toInitCaps, fontFamilies } from "$lib/utils";
   import { save } from "@tauri-apps/plugin-dialog";
   import { writeTextFile } from "@tauri-apps/plugin-fs";
   import { toastStore } from "$lib/stores/toast_store";
@@ -43,6 +43,23 @@
   let openai_token = $state($local_user_setting.OPENAI_TOKEN);
   let openai_model = $state($local_user_setting.OPENAI_MODEL);
 
+  // Font Settings
+  let font_family = $state($local_user_setting.FONT_SETTINGS.FONT_FAMILY);
+  let font_size = $state($local_user_setting.FONT_SETTINGS.FONT_SIZE);
+  let line_height = $state($local_user_setting.FONT_SETTINGS.LINE_HEIGHT);
+  let letter_spacing = $state($local_user_setting.FONT_SETTINGS.LETTER_SPACING);
+  let paragraph_gap = $state($local_user_setting.FONT_SETTINGS.PARAGRAPH_GAP);
+
+  // Apply font settings to CSS custom properties for live preview
+  $effect(() => {
+    const root = document.documentElement;
+    root.style.setProperty('--app-font-family', font_family);
+    root.style.setProperty('--app-font-size', font_size + 'px');
+    root.style.setProperty('--app-line-height', String(line_height));
+    root.style.setProperty('--app-letter-spacing', letter_spacing + 'px');
+    root.style.setProperty('--app-paragraph-gap', paragraph_gap + 'px');
+  });
+
   // Do not close when save is in progress
   let save_in_progress = $state(false);
 
@@ -64,6 +81,12 @@
     openai_url = $local_user_setting.OPENAI_URL;
     openai_token = $local_user_setting.OPENAI_TOKEN;
     openai_model = $local_user_setting.OPENAI_MODEL;
+
+    font_family = $local_user_setting.FONT_SETTINGS.FONT_FAMILY;
+    font_size = $local_user_setting.FONT_SETTINGS.FONT_SIZE;
+    line_height = $local_user_setting.FONT_SETTINGS.LINE_HEIGHT;
+    letter_spacing = $local_user_setting.FONT_SETTINGS.LETTER_SPACING;
+    paragraph_gap = $local_user_setting.FONT_SETTINGS.PARAGRAPH_GAP;
 
     $active_modal = MODAL_TYPE.NONE;
   };
@@ -108,6 +131,11 @@
     await user_settings.set(SETTINGS.OPENAI_MODEL, openai_model);
     await user_settings.set(SETTINGS.OPENAI_URL, openai_url);
     await user_settings.set(SETTINGS.OPENAI_TOKEN, openai_token);
+    await user_settings.set(SETTINGS.FONT_FAMILY, font_family);
+    await user_settings.set(SETTINGS.FONT_SIZE, font_size);
+    await user_settings.set(SETTINGS.LINE_HEIGHT, line_height);
+    await user_settings.set(SETTINGS.LETTER_SPACING, letter_spacing);
+    await user_settings.set(SETTINGS.PARAGRAPH_GAP, paragraph_gap);
 
     // Update local store
     $local_user_setting.THEME_MODE = color_theme;
@@ -125,6 +153,11 @@
     $local_user_setting.OPENAI_URL = openai_url;
     $local_user_setting.OPENAI_TOKEN = openai_token;
     $local_user_setting.LLM_ENABLE = llm_enable;
+    $local_user_setting.FONT_SETTINGS.FONT_FAMILY = font_family;
+    $local_user_setting.FONT_SETTINGS.FONT_SIZE = font_size;
+    $local_user_setting.FONT_SETTINGS.LINE_HEIGHT = line_height;
+    $local_user_setting.FONT_SETTINGS.LETTER_SPACING = letter_spacing;
+    $local_user_setting.FONT_SETTINGS.PARAGRAPH_GAP = paragraph_gap;
 
     // Close Modal
     save_in_progress = false;
@@ -509,6 +542,91 @@
             />
           </div>
         </fieldset>
+      </div>
+
+      <!-- Fonts Settings -->
+      <input type="radio" name="setting_tabs" class="tab" aria-label="Fonts" />
+      <div class="tab-content bg-base-100 p-4">
+        <div class="grid grid-cols-1 gap-4">
+          <!-- Font Family -->
+          <fieldset class="fieldset w-full">
+            <legend class="fieldset-legend">Font Family</legend>
+            <p class="label">Choose the font for all text across the app.</p>
+            <select class="select select-bordered w-full" bind:value={font_family}>
+              {#each fontFamilies as family}
+                <option value={family} style="font-family: {family}">{family}</option>
+              {/each}
+            </select>
+          </fieldset>
+
+          <!-- Font Size -->
+          <fieldset class="fieldset w-full">
+            <legend class="fieldset-legend">Font Size</legend>
+            <p class="label">Base font size for all text (in pixels).</p>
+            <div class="flex items-center gap-3">
+              <input
+                type="range"
+                min="12"
+                max="24"
+                step="1"
+                bind:value={font_size}
+                class="range range-sm flex-1"
+              />
+              <span class="text-sm font-mono w-12 text-right">{font_size}px</span>
+            </div>
+          </fieldset>
+
+          <!-- Line Height -->
+          <fieldset class="fieldset w-full">
+            <legend class="fieldset-legend">Line Height</legend>
+            <p class="label">Spacing between lines of text.</p>
+            <div class="flex items-center gap-3">
+              <input
+                type="range"
+                min="1.0"
+                max="2.5"
+                step="0.1"
+                bind:value={line_height}
+                class="range range-sm flex-1"
+              />
+              <span class="text-sm font-mono w-12 text-right">{line_height}</span>
+            </div>
+          </fieldset>
+
+          <!-- Letter Spacing -->
+          <fieldset class="fieldset w-full">
+            <legend class="fieldset-legend">Letter Spacing</legend>
+            <p class="label">Spacing between characters (in pixels).</p>
+            <div class="flex items-center gap-3">
+              <input
+                type="range"
+                min="-1"
+                max="3"
+                step="0.1"
+                bind:value={letter_spacing}
+                class="range range-sm flex-1"
+              />
+              <span class="text-sm font-mono w-12 text-right">{letter_spacing}px</span>
+            </div>
+          </fieldset>
+
+          <!-- Paragraph Gap -->
+          <fieldset class="fieldset w-full">
+            <legend class="fieldset-legend">Paragraph Gap</legend>
+            <p class="label">Space between paragraphs (in pixels).</p>
+            <div class="flex items-center gap-3">
+              <input
+                type="range"
+                min="0"
+                max="48"
+                step="2"
+                bind:value={paragraph_gap}
+                class="range range-sm flex-1"
+              />
+              <span class="text-sm font-mono w-12 text-right">{paragraph_gap}px</span>
+            </div>
+          </fieldset>
+        </div>
       </div>
     </div>
 

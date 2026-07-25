@@ -1,12 +1,17 @@
 import type { UserSettings } from "$lib/types";
 import { user_settings } from "$lib/stores/app_store";
-import { 
+import {
     DEFAULT_DAISY_THEME, LAST_REFRESH_TIME, POST_EXPIRY_TIME, FEED_VIEW,
     SETTINGS, REFRESH_FEED_ON_SELECT, ENABLE_INSECURE_LINK, AUTO_READ_ON_SELECT,
     REFRESH_ALL_FEED_ON_LAUNCH, ENABLE_AUTO_PURGE,
     MINIMIZE_APP,
     LONGITUDE,
     LATITUDE,
+    DEFAULT_FONT_FAMILY,
+    DEFAULT_FONT_SIZE,
+    DEFAULT_LINE_HEIGHT,
+    DEFAULT_LETTER_SPACING,
+    DEFAULT_PARAGRAPH_GAP,
 } from "$lib/constants";
 
 export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
@@ -28,7 +33,13 @@ export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
     const openai_url = await user_settings.get(SETTINGS.OPENAI_URL);
     const openai_model = await user_settings.get(SETTINGS.OPENAI_MODEL);
     const openai_token = await user_settings.get(SETTINGS.OPENAI_TOKEN);
-    
+
+    const font_family = await user_settings.get(SETTINGS.FONT_FAMILY);
+    const font_size = await user_settings.get(SETTINGS.FONT_SIZE);
+    const line_height = await user_settings.get(SETTINGS.LINE_HEIGHT);
+    const letter_spacing = await user_settings.get(SETTINGS.LETTER_SPACING);
+    const paragraph_gap = await user_settings.get(SETTINGS.PARAGRAPH_GAP);
+
     return {
         "LAST_REFRESH_TIME":  lrt as number ?? LAST_REFRESH_TIME,
         "THEME_MODE": theme as string ?? DEFAULT_DAISY_THEME,
@@ -46,5 +57,12 @@ export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
         "OPENAI_URL": openai_url as string ?? '',
         "OPENAI_MODEL": openai_model as string ?? '',
         "OPENAI_TOKEN": openai_token as string ?? '',
+        "FONT_SETTINGS": {
+            "FONT_FAMILY": font_family as string ?? DEFAULT_FONT_FAMILY,
+            "FONT_SIZE": font_size as number ?? DEFAULT_FONT_SIZE,
+            "LINE_HEIGHT": line_height as number ?? DEFAULT_LINE_HEIGHT,
+            "LETTER_SPACING": letter_spacing as number ?? DEFAULT_LETTER_SPACING,
+            "PARAGRAPH_GAP": paragraph_gap as number ?? DEFAULT_PARAGRAPH_GAP,
+        },
     }
 }

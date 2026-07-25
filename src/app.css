@@ -1,12 +1,19 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Lora:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Lora:wght@400;500;700&family=Merriweather:wght@300;400;700;900&family=Open+Sans:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Georgia&display=swap');
 
 :root {
     --titlebar-height: 0px;
     /* Safe area for mobile notches and home indicators */
     --safe-area-inset-top: env(safe-area-inset-top, 0px);
     --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+
+    /* Font settings (overridden by JS at runtime) */
+    --app-font-family: 'Roboto', sans-serif;
+    --app-font-size: 16px;
+    --app-line-height: 1.6;
+    --app-letter-spacing: 0px;
+    --app-paragraph-gap: 16px;
 }
 
 /* Desktop titlebar height */
@@ -17,7 +24,10 @@
 }
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: var(--app-font-family);
+  font-size: var(--app-font-size);
+  line-height: var(--app-line-height);
+  letter-spacing: var(--app-letter-spacing);
   padding-top: var(--safe-area-inset-top);
   padding-bottom: var(--safe-area-inset-bottom);
 }
@@ -25,4 +35,14 @@ body {
 @plugin "daisyui" {
   exclude: rootscrollgutter;
   themes: all;
+}
+
+/* Paragraph gap for article content */
+article p {
+  margin-bottom: var(--app-paragraph-gap);
+}
+
+/* Apply paragraph gap to prose content */
+.prose p {
+  margin-bottom: var(--app-paragraph-gap);
 }

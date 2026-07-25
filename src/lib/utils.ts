@@ -310,3 +310,12 @@ export const toInitCaps = (str: string) => {
       txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase()
     );
 }
+
+export const fontFamilies = [
+    "Roboto",
+    "Lora",
+    "Merriweather",
+    "Open Sans",
+    "Inter",
+    "Georgia",
+];
