@@ -21,6 +21,7 @@ export const fetch_posts = async (
     lastPubDate: string = "",
     is_fav: boolean | null = null, // Set this to filter specific posts
     search_keywords: string[] = [],
+    feed_ids: number[] = [],
 ): Promise<PostResult[]> => {
     let whereCondition = "WHERE 1=1 ";
     if (last_id != null) {
@@ -40,7 +41,10 @@ export const fetch_posts = async (
     }
 
     // Negative Feed ids reserved for All Posts, Favs
-    if (feed_id >= 0) {
+    if (feed_ids.length > 0) {
+        // Folder aggregation: posts from any child feed.
+        whereCondition += `AND feed_id IN (${feed_ids.join(',')}) `
+    } else if (feed_id >= 0) {
         whereCondition += `AND feed_id=${feed_id} `
     } else if (feed_id == -2) {
         is_fav = true;

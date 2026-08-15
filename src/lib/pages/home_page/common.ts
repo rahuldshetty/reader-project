@@ -26,9 +26,10 @@ import {
     active_post_id,
     user_settings,
     refreshing_posts,
+    refreshing_feeds,
     feed_count_by_id,
     local_user_setting,
-    refreshing_feeds,
+    active_folder_feed_ids,
     search_keywords,
     is_mobile,
     mobile_active_panel,
@@ -75,6 +76,7 @@ export const refresh_posts = async (
     limit: number = NO_OF_POST_PULLS_PER_TIME,
     lastPubDate: string = "",
     is_fav: boolean | null = null,
+    feed_ids: number[] = [],
 ) => {
     console.log(`Refreshing Feed: ${feed_id}`);
 
@@ -95,7 +97,8 @@ export const refresh_posts = async (
         unread,
         lastPubDate,
         is_fav,
-        keywords
+        keywords,
+        feed_ids
     );
     posts_store.set(posts);
     // Keyboard cursor starts at the first post of the refreshed list
@@ -110,6 +113,7 @@ export const load_new_posts = async (
     last_id: number | null = null,
     limit: number = NO_OF_POST_PULLS_PER_TIME,
     is_fav: boolean | null = null,
+    feed_ids: number[] = [],
 ) => {
     const sort_by = get(posts_sort_by);
     const unread = get(filter_unread_posts);
@@ -131,7 +135,8 @@ export const load_new_posts = async (
         unread,
         lastPubDate,
         is_fav,
-        keywords
+        keywords,
+        feed_ids
     )
 
     // Append posts into current store
@@ -291,16 +296,21 @@ export const select_feed = async (feed_id: number) => {
         active_feed_id.set(feed_id);
         active_feed_name.set(feed ? feed.title : '');
 
+        active_folder_feed_ids.set([]);
+
         if (feed && feed.type == FEED_TYPE.FEED) {
             // Check and try to pull latest posts from RSS feed
             await check_and_pull_latest_feed_data(feed_id, feed.url);
             await refresh_posts(feed_id);
+        } else if (feed && feed.type == FEED_TYPE.FOLDER) {
+            // Aggregate every child feed's posts under the folder.
+            const ids = (feed as FeedResult).children?.map((c) => c.id) ?? [];
+            active_folder_feed_ids.set(ids);
+            await refresh_posts(feed_id, null, NO_OF_POST_PULLS_PER_TIME, "", null, ids);
         } else if (feed_id < 0) {
             // All Posts / Favourites
             await refresh_posts(feed_id);
         }
-        // Folders have no post list of their own; selection mirrors the
-        // previous click behavior and leaves the posts panel as-is.
     }
 
     // Navigate to posts panel on mobile (always, even if same feed)

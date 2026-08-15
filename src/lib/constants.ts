@@ -24,7 +24,7 @@ export enum MODAL_TYPE {
 
 export enum SCREEN {
     FEEDS,
-    HOME
+    BROWSE
 }
 
 export enum SETTINGS {

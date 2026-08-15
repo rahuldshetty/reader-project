@@ -16,7 +16,7 @@
     import PostsPanel from "./posts_panel/posts_panel.svelte";
     import ContentPanel from "./content_panel/content_panel.svelte";
     import ToastManager from "../toast_manager/toast_manager.svelte";
-    import HomePanel from "./home_panel/home_panel.svelte";
+    import BrowsePanel from "./browse_panel/browse_panel.svelte";
     import MobileNav from "$lib/components/mobile_nav.svelte";
 
     // Mobile detection based on viewport width
@@ -112,8 +112,8 @@
         {:else if $mobile_active_panel === "content"}
             <ContentPanel />
         {/if}
-    {:else if $active_screen == SCREEN.HOME}
-        <HomePanel />
+    {:else if $active_screen == SCREEN.BROWSE}
+        <BrowsePanel />
     {/if}
 </div>
 

@@ -3,13 +3,22 @@
         active_feed_id,
         posts_sort_by,
         filter_unread_posts,
+        feed_view,
+        user_settings,
     } from "$lib/stores/app_store";
-    import { MODAL_TYPE, DB_ORDER_ENUM } from "$lib/constants";
+    import {
+        MODAL_TYPE,
+        DB_ORDER_ENUM,
+        FEED_VIEW,
+        SETTINGS,
+    } from "$lib/constants";
 
     import Fa from "svelte-fa";
     import {
         faSortAlphaAsc,
         faSortAlphaDesc,
+        faList,
+        faThLarge,
     } from "@fortawesome/free-solid-svg-icons";
     import { refresh_posts } from "../common";
 
@@ -30,6 +39,12 @@
     const handleChangeOnReadFilter = async () => {
         await refresh_posts($active_feed_id);
     };
+
+    const handleToggleView = async () => {
+        $feed_view =
+            $feed_view == FEED_VIEW.LIST ? FEED_VIEW.THUMBNAIL : FEED_VIEW.LIST;
+        await user_settings.set(SETTINGS.CURRENT_FEED_VIEW, $feed_view);
+    };
 </script>
 
 <div
@@ -43,6 +58,23 @@
             onchange={handleChangeOnReadFilter}
             class="checkbox checkbox-sm checkbox-secondary smooth-transition"
         />
+    </div>
+
+    <div
+        class="tooltip tooltip-bottom"
+        data-tip={$feed_view == FEED_VIEW.LIST
+            ? "Comfortable view"
+            : "Compact view"}
+    >
+        <button
+            onclick={handleToggleView}
+            class="btn btn-ghost btn-sm btn-circle p-4 btn-press smooth-transition"
+        >
+            <Fa
+                icon={$feed_view == FEED_VIEW.LIST ? faThLarge : faList}
+                size="lg"
+            />
+        </button>
     </div>
 
     <div class="tooltip tooltip-bottom" data-tip="Sort By">

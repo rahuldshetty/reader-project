@@ -1,9 +1,11 @@
 import {
     local_user_setting,
-    is_loading_splashscreen
+    is_loading_splashscreen,
+    feed_view,
 } from "$lib/stores/app_store";
 
 import { fetch_latest_user_settings } from "$lib/utils/setting";
+import { FEED_VIEW } from "$lib/constants";
 
 import { 
     refresh_app_data,
@@ -16,10 +18,11 @@ export const init_app = async () => {
     is_loading_splashscreen.set(true);
 
     // Load User Settings from settings.json
-    local_user_setting.set(await fetch_latest_user_settings());
+    const loadedSettings = await fetch_latest_user_settings();
+    local_user_setting.set(loadedSettings);
+    feed_view.set(loadedSettings.CURRENT_FEED_VIEW as FEED_VIEW);
 
     // Apply font settings to CSS custom properties
-    const loadedSettings = await fetch_latest_user_settings();
     const root = document.documentElement;
     root.style.setProperty('--app-font-family', loadedSettings.FONT_SETTINGS.FONT_FAMILY);
     root.style.setProperty('--app-font-size', loadedSettings.FONT_SETTINGS.FONT_SIZE + 'px');

@@ -4,6 +4,7 @@
         active_post_id,
         is_mobile,
         mobile_active_panel,
+        reading_progress,
     } from "$lib/stores/app_store";
     import { hybrid_parser } from "$lib/services/content_parser";
     import { CONTENT_TYPES } from "$lib/constants";
@@ -32,6 +33,14 @@
 <div
     class="flex-1 w-full h-full overflow-hidden flex flex-col bg-base-100 animate-fade-in"
 >
+    {#if $active_post_id != -1}
+        <div class="h-0.5 w-full bg-base-300 shrink-0">
+            <div
+                class="h-full bg-primary transition-[width] duration-150"
+                style:width={`${$reading_progress * 100}%`}
+            ></div>
+        </div>
+    {/if}
     <!-- Mobile back button -->
     {#if $is_mobile && $active_post_id != -1}
         <div

@@ -105,6 +105,9 @@ export function get_color_var(key: string) {
 }
 
 export function extractTextFromHtml(htmlString: string) {
+  // Some feeds store NULL content; DOMParser would coerce it to the
+  // literal string "null" and leak it into snippets.
+  if (!htmlString) return "";
   // parse into a DOM
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlString, "text/html");

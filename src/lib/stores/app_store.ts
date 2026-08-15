@@ -1,7 +1,7 @@
 import type { FeedResult, UserSettings, PostResult, FeedUnreadCounter } from '$lib/types';
 
 import { LazyStore } from '@tauri-apps/plugin-store';
-import { writable } from 'svelte/store';
+import { writable, derived } from 'svelte/store';
 
 import {
     MODAL_TYPE,
@@ -64,6 +64,18 @@ export const local_user_setting = writable<UserSettings>({
 // Feed Configuration
 export const refreshing_feeds = writable(false);
 export const feeds_store = writable<FeedResult[]>([]);
+// Flat map of feed id -> attribution info (folders plus their children), used
+// to render source metadata on post items without a per-row DB join.
+export const feed_by_id = derived(feeds_store, ($feeds) => {
+    const map = new Map<number, { title: string; favicon: string | null }>();
+    for (const feed of $feeds) {
+        map.set(feed.id, { title: feed.title, favicon: feed.favicon });
+        for (const child of feed.children ?? []) {
+            map.set(child.id, { title: child.title, favicon: child.favicon });
+        }
+    }
+    return map;
+});
 export const active_feed_id = writable(NO_FEED_SELECTED);
 export const active_feed_name = writable('');
 export const feed_count_by_id = writable<FeedUnreadCounter>();
@@ -74,7 +86,13 @@ export const posts_store = writable<PostResult[]>([]);
 export const posts_sort_by = writable(DB_ORDER_ENUM.NEWEST);
 export const filter_unread_posts = writable(false);
 export const filter_liked_posts = writable(false);
+// Post list density: compact "list" vs thumbnail "comfortable" cards.
+export const feed_view = writable<FEED_VIEW>(FEED_VIEW.THUMBNAIL);
+// When a folder is selected, the set of child feed ids to aggregate.
+export const active_folder_feed_ids = writable<number[]>([]);
 export const active_post_id = writable(-1);
+// Scroll progress (0..1) of the open article, driven by the renderers.
+export const reading_progress = writable(0);
 // Keyboard-highlighted post in the current list (not necessarily open).
 export const cursor_post_id = writable(-1);
 export const search_keywords = writable<string[]>([]);

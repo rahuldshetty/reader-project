@@ -28,6 +28,16 @@ export const timeAgo = (dateString: string) => {
     }
 }
 
+// Bucket a post's publish date for list grouping (posts arrive DESC-sorted).
+export const dateGroupLabel = (dateString: string): string => {
+    const d = dayjs(dateString);
+    const now = dayjs();
+    if (d.isSame(now, 'day')) return 'Today';
+    if (d.isSame(now.subtract(1, 'day'), 'day')) return 'Yesterday';
+    if (d.isAfter(now.subtract(7, 'day'))) return 'This week';
+    return 'Older';
+};
+
 export const convertToTimeStringForDB = (dateString: string) => {
     const date = dayjs(dateString);
     return date.toISOString();

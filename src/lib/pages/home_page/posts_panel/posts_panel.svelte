@@ -4,41 +4,60 @@
         posts_store,
         refreshing_posts,
         active_feed_id,
+        active_folder_feed_ids,
         is_mobile,
         mobile_active_panel,
     } from "$lib/stores/app_store";
+    import type { PostResult } from "$lib/types";
     import Fa from "svelte-fa";
     import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
     import { load_new_posts } from "$lib/pages/home_page/common";
+    import { dateGroupLabel } from "$lib/utils/time";
     import PostItem from "./post_item.svelte";
     import LoadingSpinner from "$lib/components/loading_spinner.svelte";
     import PostBar from "./post_bar.svelte";
 
     let listElement: HTMLDivElement;
 
-    active_feed_id.subscribe((value) => {
+    active_feed_id.subscribe(() => {
         if (listElement) {
             listElement.scrollTop = 0;
         }
     });
 
-    const filtered_posts = derived([posts_store], ([$posts_store]) => {
-        return $posts_store;
+    const grouped_posts = derived([posts_store], ([$posts_store]) => {
+        const groups: { label: string; posts: PostResult[] }[] = [];
+        let currentLabel = "";
+        for (const post of $posts_store) {
+            const label = dateGroupLabel(post.pubDate);
+            if (label !== currentLabel) {
+                currentLabel = label;
+                groups.push({ label, posts: [post] });
+            } else {
+                groups[groups.length - 1].posts.push(post);
+            }
+        }
+        return groups;
     });
 
     const handleScrollEvent = async (
         event: UIEvent & { currentTarget: EventTarget & HTMLDivElement },
     ) => {
         if (listElement) {
-            console.log(listElement.clientHeight);
             const scrollTop = listElement.scrollTop;
             const clientHeight = listElement.clientHeight;
             const scrollHeight = listElement.scrollHeight;
             const threshold = 100; // px from bottom
 
             if (scrollTop + clientHeight >= scrollHeight - threshold) {
-                await load_new_posts($active_feed_id);
+                await load_new_posts(
+                    $active_feed_id,
+                    null,
+                    undefined,
+                    null,
+                    $active_folder_feed_ids,
+                );
             }
         }
     };
@@ -70,9 +89,16 @@
             onscroll={(e) => handleScrollEvent(e)}
             class="overflow-auto overflow-x-hidden fade-transition"
         >
-            <ul class="menu gap-2 bg-base-100 rounded-box">
-                {#each $filtered_posts as post}
-                    <PostItem {post} />
+            <ul class="menu gap-1 bg-base-100 rounded-box">
+                {#each $grouped_posts as group}
+                    <li
+                        class="menu-title px-3 pt-4 pb-1 text-xs uppercase tracking-wide text-base-content/50 select-none"
+                    >
+                        {group.label}
+                    </li>
+                    {#each group.posts as post}
+                        <PostItem {post} />
+                    {/each}
                 {/each}
             </ul>
         </div>

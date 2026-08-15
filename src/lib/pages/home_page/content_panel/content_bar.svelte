@@ -15,6 +15,8 @@
         faShareNodes,
         faStar,
         faGlobe,
+        faChevronUp,
+        faChevronDown,
     } from "@fortawesome/free-solid-svg-icons";
     import { mark_post_as_fav, mark_post_as_read } from "$lib/dao/post_db";
     import { TOAST_MESSAGE_TYPE, SHORTCUT_ACTION } from "$lib/constants";
@@ -22,6 +24,7 @@
         update_post_feed_counter_value,
         update_post_store_item_by_id,
     } from "../common";
+    import { select_post } from "../common";
 
     const { data, post }: { data: ContentResult; post: PostResult } = $props();
 
@@ -62,6 +65,21 @@
     const handleOpenURL = async () => {
         await openUrl(post.link);
     };
+
+    // Prev/next within the active posts list (feeds order). Bounded at ends.
+    const index = $derived($posts_store.findIndex((p) => p.id === post.id));
+    const prev_post = $derived(index > 0 ? $posts_store[index - 1] : null);
+    const next_post = $derived(
+        index >= 0 && index < $posts_store.length - 1
+            ? $posts_store[index + 1]
+            : null,
+    );
+    const handlePrev = () => {
+        if (prev_post) void select_post(prev_post);
+    };
+    const handleNext = () => {
+        if (next_post) void select_post(next_post);
+    };
 </script>
 
 <div
@@ -81,6 +99,22 @@
 
     <!-- Action buttons - separate row on mobile -->
     <div class="flex items-center justify-start md:justify-end gap-1">
+        <!-- Previous article -->
+        <button
+            class="btn btn-circle btn-ghost btn-sm md:btn-md btn-press smooth-transition"
+            disabled={!prev_post}
+            onclick={handlePrev}
+        >
+            <Fa icon={faChevronUp} size="lg" title="Previous article" />
+        </button>
+        <!-- Next article -->
+        <button
+            class="btn btn-circle btn-ghost btn-sm md:btn-md btn-press smooth-transition"
+            disabled={!next_post}
+            onclick={handleNext}
+        >
+            <Fa icon={faChevronDown} size="lg" title="Next article" />
+        </button>
         <!-- Share Button -->
         <button
             class="btn btn-circle btn-ghost btn-sm md:btn-md btn-press smooth-transition"
