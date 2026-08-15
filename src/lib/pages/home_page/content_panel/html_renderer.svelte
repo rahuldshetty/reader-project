@@ -63,23 +63,23 @@
         <AiSummary title={data.title} text={data.content} />
     {/if}
     {#if renderType == WEB_RENDER_TYPES.DEFAULT}
-        <div class="p-6">
-            {#if data.image || post.image}
-                <img
-                    src={data.image || post.image}
-                    alt={data.title}
-                    class="rounded-md object-cover max-h-96 w-full mb-4
-                        transition-transform duration-300 ease-in-out transform hover:scale-101
-                    "
-                />
-            {/if}
+        <div class="px-6 py-8 md:px-10 md:py-12">
+            <div class="mx-auto max-w-prose">
+                {#if data.image || post.image}
+                    <img
+                        src={data.image || post.image}
+                        alt={data.title}
+                        class="rounded-lg object-cover max-h-96 w-full mb-8"
+                    />
+                {/if}
 
-            <article
-                class="prose prose-base text-text1 max-w-none overflow-hidden break-words"
-                oncontextmenu={openContextMenu}
-            >
-                {@html renderHTML(data.content as string, data.url)}
-            </article>
+                <article
+                    class="prose prose-base text-base-content overflow-hidden break-words"
+                    oncontextmenu={openContextMenu}
+                >
+                    {@html renderHTML(data.content as string, data.url)}
+                </article>
+            </div>
         </div>
     {:else if renderType == WEB_RENDER_TYPES.YOUTUBE}
         <YoutubeRender url={data.url} />

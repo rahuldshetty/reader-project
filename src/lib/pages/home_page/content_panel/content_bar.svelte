@@ -69,7 +69,7 @@
 >
     <!-- Title and word count -->
     <div class="flex flex-col">
-        <span class="text-lg font-semibold text-text1 md:max-w-3xl">
+        <span class="text-lg font-semibold text-base-content md:max-w-3xl">
             {post.title}
         </span>
         <span class="text-sm">

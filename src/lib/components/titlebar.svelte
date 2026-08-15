@@ -27,7 +27,7 @@
 
 <div
     data-tauri-drag-region
-    class="titlebar fixed top-0 left-0 right-0 w-full hidden md:flex justify-end items-centerpy-2 rounded-t-lg"
+    class="titlebar fixed top-0 left-0 right-0 z-50 h-[var(--titlebar-height)] hidden md:flex items-center justify-end px-2 bg-base-100 border-b border-base-300"
 >
     <div class="flex items-center space-x-2">
         <button class="btn btn-ghost btn-xs" onclick={appWindow.minimize}>
