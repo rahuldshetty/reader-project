@@ -7,6 +7,7 @@
   import { refresh_app_data } from "$lib/pages/home_page/common";
   import { MODAL_TYPE } from "$lib/constants";
   import { delete_feed } from "$lib/dao/feed_db";
+  import ModalShell from "$lib/components/modals/ModalShell.svelte";
 
   let save_in_progress = $state(false);
 
@@ -28,35 +29,32 @@
   };
 </script>
 
-<dialog
-  class="modal"
-  class:modal-open={$active_modal == MODAL_TYPE.DELETE_FEED}
+<ModalShell
+  open={$active_modal == MODAL_TYPE.DELETE_FEED}
+  title="Delete Feed"
+  onClose={closeModal}
+  footer={footer}
 >
-  <div class="modal-box w-full max-w-md mx-4">
-    <h3 class="font-bold text-lg">Delete</h3>
+  <p class="py-2">
+    You are about to delete <span class="font-bold">{$active_feed_name}</span
+    >. Are you sure you want to continue?
+  </p>
+</ModalShell>
 
-    <p class="py-2">
-      You are about to delete <span class="font-bold">{$active_feed_name}</span
-      >. Are you sure you want to continue?
-    </p>
-
-    <!-- Buttons -->
-    <div class="modal-action">
-      <button
-        class="btn btn-ghost"
-        onclick={closeModal}
-        disabled={save_in_progress}>Cancel</button
-      >
-      <button
-        class="btn btn-soft btn-error"
-        onclick={handleDeleteFeed}
-        disabled={save_in_progress}
-      >
-        {#if save_in_progress}
-          <span class="loading loading-spinner"></span>
-        {/if}
-        Delete
-      </button>
-    </div>
-  </div>
-</dialog>
+{#snippet footer()}
+  <button
+    class="btn btn-ghost"
+    onclick={closeModal}
+    disabled={save_in_progress}>Cancel</button
+  >
+  <button
+    class="btn btn-soft btn-error"
+    onclick={handleDeleteFeed}
+    disabled={save_in_progress}
+  >
+    {#if save_in_progress}
+      <span class="loading loading-spinner"></span>
+    {/if}
+    Delete
+  </button>
+{/snippet}

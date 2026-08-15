@@ -7,6 +7,7 @@
   import { refresh_posts } from "$lib/pages/home_page/common";
   import { MODAL_TYPE } from "$lib/constants";
   import { mark_feed_as_read } from "$lib/dao/feed_db";
+  import ModalShell from "$lib/components/modals/ModalShell.svelte";
 
   let save_in_progress = $state(false);
 
@@ -29,31 +30,32 @@
   };
 </script>
 
-<dialog class="modal" class:modal-open={$active_modal == MODAL_TYPE.MARK_READ}>
-  <div class="modal-box w-full max-w-md mx-4">
-    <h3 class="font-bold text-lg">Mark Read</h3>
+<ModalShell
+  open={$active_modal == MODAL_TYPE.MARK_READ}
+  title="Mark Read"
+  onClose={closeModal}
+  footer={footer}
+>
+  <p class="py-2">
+    Mark all posts in <span class="font-bold">"{$active_feed_name}"</span> as
+    read?
+  </p>
+</ModalShell>
 
-    <p class="py-2">
-      Mark all posts in <span class="font-bold">"{$active_feed_name}"</span> as read?
-    </p>
-
-    <!-- Buttons -->
-    <div class="modal-action">
-      <button
-        class="btn btn-ghost"
-        onclick={closeModal}
-        disabled={save_in_progress}>Cancel</button
-      >
-      <button
-        class="btn btn-soft btn-primary"
-        onclick={handleMarkRead}
-        disabled={save_in_progress}
-      >
-        {#if save_in_progress}
-          <span class="loading loading-spinner"></span>
-        {/if}
-        Mark Read
-      </button>
-    </div>
-  </div>
-</dialog>
+{#snippet footer()}
+  <button
+    class="btn btn-ghost"
+    onclick={closeModal}
+    disabled={save_in_progress}>Cancel</button
+  >
+  <button
+    class="btn btn-soft btn-primary"
+    onclick={handleMarkRead}
+    disabled={save_in_progress}
+  >
+    {#if save_in_progress}
+      <span class="loading loading-spinner"></span>
+    {/if}
+    Mark Read
+  </button>
+{/snippet}

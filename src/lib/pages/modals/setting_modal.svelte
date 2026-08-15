@@ -26,6 +26,7 @@
   import { writeTextFile } from "@tauri-apps/plugin-fs";
   import { toastStore } from "$lib/stores/toast_store";
   import { convertFeedDataToOPML } from "$lib/services/opml_gather";
+  import ModalShell from "$lib/components/modals/ModalShell.svelte";
   import type { ShortcutBindings } from "$lib/types";
 
   // Local setting State Variables
@@ -287,12 +288,15 @@
   };
 </script>
 
-<dialog class="modal" class:modal-open={$active_modal == MODAL_TYPE.SETTINGS}>
-  <div class="modal-box w-full max-w-xl mx-4 max-h-[90vh] overflow-y-auto">
-    <h3 class="font-bold text-lg">Settings</h3>
-
-    <!-- name of each tab group should be unique -->
-    <div class="tabs tabs-border">
+<ModalShell
+  open={$active_modal == MODAL_TYPE.SETTINGS}
+  title="Settings"
+  widthClass="max-w-xl"
+  onClose={closeModal}
+  footer={settingsFooter}
+>
+  <!-- name of each tab group should be unique -->
+  <div class="tabs tabs-border">
       <!-- General Setting -->
       <input
         type="radio"
@@ -813,24 +817,22 @@
         </div>
       </div>
     </div>
+</ModalShell>
 
-    <!-- Buttons -->
-    <div class="modal-action">
-      <button
-        class="btn btn-ghost"
-        onclick={closeModal}
-        disabled={save_in_progress}>Cancel</button
-      >
-      <button
-        class="btn btn-primary"
-        onclick={saveSettings}
-        disabled={save_in_progress}
-      >
-        {#if save_in_progress}
-          <span class="loading loading-spinner"></span>
-        {/if}
-        Save
-      </button>
-    </div>
-  </div>
-</dialog>
+{#snippet settingsFooter()}
+  <button
+    class="btn btn-ghost"
+    onclick={closeModal}
+    disabled={save_in_progress}>Cancel</button
+  >
+  <button
+    class="btn btn-primary"
+    onclick={saveSettings}
+    disabled={save_in_progress}
+  >
+    {#if save_in_progress}
+      <span class="loading loading-spinner"></span>
+    {/if}
+    Save
+  </button>
+{/snippet}

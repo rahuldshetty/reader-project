@@ -80,3 +80,82 @@ article p {
 .prose .extract {
   font-size: var(--app-font-size);
 }
+
+/* ---------------------------------------------------------------------------
+   Modal shell — unified sizing and depth for every modal
+   --------------------------------------------------------------------------- */
+/* Constrain the box, fix the layout: header / scrollable body / footer */
+.app-modal-box {
+  max-height: min(85vh, 42rem);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  box-shadow: 0 25px 60px -15px oklch(0% 0 0 / 0.35);
+}
+
+.app-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-shrink: 0;
+  padding: 1rem 1.25rem;
+  background-color: var(--color-base-100);
+  border-bottom: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent);
+  border-radius: var(--radius-box) var(--radius-box) 0 0;
+}
+
+.app-modal-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1.25rem;
+}
+
+.app-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  padding: 1rem 1.25rem;
+  background-color: var(--color-base-100);
+  border-top: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent);
+  border-radius: 0 0 var(--radius-box) var(--radius-box);
+}
+
+/* Action bar rendered inside the body (add-modal pages): pin it to the
+   bottom of the scroll area as a full-width footer band. */
+.app-modal-body:has(.modal-action) {
+  padding-bottom: 0;
+}
+
+.app-modal-body .modal-action {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin: 1rem -1.25rem 0;
+  padding: 0.75rem 1.25rem 1.25rem;
+  background-color: var(--color-base-100);
+  border-top: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent);
+}
+
+/* Sticky tab bar in the settings modal: stays visible while the body scrolls */
+.app-modal-body .tabs {
+  position: sticky;
+  top: -1.25rem;
+  z-index: 10;
+  margin: -1.25rem -1.25rem 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background-color: var(--color-base-100);
+  border-bottom: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent);
+}
+
+/* Soft blur behind the dimmed backdrop for depth */
+.modal-open {
+  backdrop-filter: blur(3px);
+}

@@ -22,6 +22,7 @@
   } from "$lib/dao/feed_db";
   import { toastStore } from "$lib/stores/toast_store";
   import { extractTime, extractFormattedDate } from "$lib/utils/time";
+  import ModalShell from "$lib/components/modals/ModalShell.svelte";
 
   let save_in_progress = $state(false);
   let feed: Feed = $state({
@@ -82,135 +83,135 @@
   };
 </script>
 
-<dialog class="modal" class:modal-open={$active_modal == MODAL_TYPE.UPDATE}>
-  <div class="modal-box max-w-xl w-full mx-4">
-    <h3 class="font-bold text-lg">
-      Edit {feed.type == FEED_TYPE.FEED ? "Feed" : "Folder"}
-    </h3>
+<ModalShell
+  open={$active_modal == MODAL_TYPE.UPDATE}
+  title={`Edit ${feed.type == FEED_TYPE.FEED ? "Feed" : "Folder"}`}
+  widthClass="max-w-xl"
+  onClose={closeModal}
+  footer={footer}
+>
+  {#if feed.type == FEED_TYPE.FEED && feed.favicon != ""}
+    <fieldset class="fieldset flex items-center justify-center gap-2">
+      <img
+        class="w-20 h-20 object-cover"
+        src={feed.favicon}
+        alt={feed.title}
+      />
+    </fieldset>
+  {/if}
 
-    {#if feed.type == FEED_TYPE.FEED && feed.favicon != ""}
-      <fieldset class="fieldset flex items-center justify-center gap-2">
-        <img
-          class="w-20 h-20 object-cover"
-          src={feed.favicon}
-          alt={feed.title}
+  <div class="w-full">
+    <fieldset class="fieldset items-center gap-2">
+      <!-- URL -->
+      <div>
+        <!-- <legend class="fieldset-legend">Folder</legend> -->
+        <p class="label">Title</p>
+      </div>
+      <div>
+        <input
+          type="text"
+          class="input w-full"
+          disabled={save_in_progress}
+          bind:value={feed.title}
         />
-      </fieldset>
-    {/if}
+      </div>
+    </fieldset>
 
-    <div class="w-full">
+    {#if feed.type == FEED_TYPE.FEED}
       <fieldset class="fieldset items-center gap-2">
         <!-- URL -->
         <div>
           <!-- <legend class="fieldset-legend">Folder</legend> -->
-          <p class="label">Title</p>
+          <p class="label">URL</p>
         </div>
         <div>
           <input
             type="text"
             class="input w-full"
-            disabled={save_in_progress}
-            bind:value={feed.title}
+            disabled
+            bind:value={feed.url}
           />
         </div>
       </fieldset>
 
-      {#if feed.type == FEED_TYPE.FEED}
-        <fieldset class="fieldset items-center gap-2">
-          <!-- URL -->
+      <fieldset class="fieldset items-center gap-2">
+        <!-- URL -->
+        <div>
+          <!-- <legend class="fieldset-legend">Folder</legend> -->
+          <p class="label">Folder</p>
+        </div>
+        <div>
+          <select class="select w-full" bind:value={feed.parent}>
+            <option selected value={-1}>Pick a folder</option>
+            {#await fetch_folders() then folders}
+              {#each folders as folder}
+                <option value={folder.id}>{folder.title}</option>
+              {/each}
+            {/await}
+          </select>
+        </div>
+      </fieldset>
+
+      {#if $local_user_setting.REFRESH_ALL_FEED_ON_LAUNCH != true}
+        <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+          <!-- Enable on refresh -->
           <div>
-            <!-- <legend class="fieldset-legend">Folder</legend> -->
-            <p class="label">URL</p>
+            <legend class="fieldset-legend">Load Refresh</legend>
+            <p class="label">
+              Enable this option to refresh feed when app is launched.
+            </p>
           </div>
-          <div>
+          <div class="flex justify-end">
             <input
-              type="text"
-              class="input w-full"
-              disabled
-              bind:value={feed.url}
+              type="checkbox"
+              bind:checked={feed.refresh_on_load}
+              class="toggle toggle-success"
             />
           </div>
         </fieldset>
-
-        <fieldset class="fieldset items-center gap-2">
-          <!-- URL -->
-          <div>
-            <!-- <legend class="fieldset-legend">Folder</legend> -->
-            <p class="label">Folder</p>
-          </div>
-          <div>
-            <select class="select w-full" bind:value={feed.parent}>
-              <option selected value={-1}>Pick a folder</option>
-              {#await fetch_folders() then folders}
-                {#each folders as folder}
-                  <option value={folder.id}>{folder.title}</option>
-                {/each}
-              {/await}
-            </select>
-          </div>
-        </fieldset>
-
-        {#if $local_user_setting.REFRESH_ALL_FEED_ON_LAUNCH != true}
-          <fieldset
-            class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
-          >
-            <!-- Enable on refresh -->
-            <div>
-              <legend class="fieldset-legend">Load Refresh</legend>
-              <p class="label">
-                Enable this option to refresh feed when app is launched.
-              </p>
-            </div>
-            <div class="flex justify-end">
-              <input
-                type="checkbox"
-                bind:checked={feed.refresh_on_load}
-                class="toggle toggle-success"
-              />
-            </div>
-          </fieldset>
-        {/if}
-
-        <fieldset class="fieldset items-center gap-2">
-          <div class="stats stats-vertical lg:stats-horizontal">
-            <div class="stat">
-              <div class="stat-title">Total</div>
-              <div class="stat-value">{feed_info.total}</div>
-              <div class="stat-desc">Posts</div>
-            </div>
-
-            <div class="stat">
-              <div class="stat-title">Posts Rate</div>
-              <div class="stat-value">{feed_info.posts_per_day.toFixed(2)}</div>
-              <div class="stat-desc">posts/day</div>
-            </div>
-
-            <div class="stat">
-              <div class="stat-title">Last Refreshed</div>
-              <div class="stat-value">{timePart}</div>
-              <div class="stat-desc">{formattedDate}</div>
-            </div>
-          </div>
-        </fieldset>
       {/if}
-    </div>
-    <!-- Buttons -->
-    <div class="modal-action">
-      <button
-        class="btn btn-ghost"
-        onclick={closeModal}
-        disabled={save_in_progress}>Cancel</button
-      >
-      <button
-        class="btn btn-primary"
-        onclick={handleEdit}
-        disabled={save_in_progress}
-      >
-        {#if save_in_progress}
-          <span class="loading loading-spinner"></span>
-        {/if}
-        Update
-      </button>
-    </div>
+
+      <fieldset class="fieldset items-center gap-2">
+        <div class="stats stats-vertical lg:stats-horizontal">
+          <div class="stat">
+            <div class="stat-title">Total</div>
+            <div class="stat-value">{feed_info.total}</div>
+            <div class="stat-desc">Posts</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-title">Posts Rate</div>
+            <div class="stat-value">{feed_info.posts_per_day.toFixed(2)}</div>
+            <div class="stat-desc">posts/day</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat-title">Last Refreshed</div>
+            <div class="stat-value">{timePart}</div>
+            <div class="stat-desc">{formattedDate}</div>
+          </div>
+        </div>
+      </fieldset>
+    {/if}
   </div>
-</dialog>
+</ModalShell>
+
+{#snippet footer()}
+  <button
+    class="btn btn-ghost"
+    onclick={closeModal}
+    disabled={save_in_progress}>Cancel</button
+  >
+  <button
+    class="btn btn-primary"
+    onclick={handleEdit}
+    disabled={save_in_progress}
+  >
+    {#if save_in_progress}
+      <span class="loading loading-spinner"></span>
+    {/if}
+    Update
+  </button>
+{/snippet}
