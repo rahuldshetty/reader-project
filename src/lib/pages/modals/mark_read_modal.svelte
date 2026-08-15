@@ -4,7 +4,7 @@
     active_feed_id,
     active_feed_name,
   } from "$lib/stores/app_store";
-  import { refresh_app_data } from "$lib/pages/home_page/common";
+  import { refresh_posts } from "$lib/pages/home_page/common";
   import { MODAL_TYPE } from "$lib/constants";
   import { mark_feed_as_read } from "$lib/dao/feed_db";
 
@@ -17,10 +17,11 @@
   const handleMarkRead = async () => {
     save_in_progress = true;
 
-    await mark_feed_as_read($active_feed_id);
+    const feed_id = $active_feed_id;
+    await mark_feed_as_read(feed_id);
 
-    // Refresh App Data
-    await refresh_app_data();
+    // Keep the current feed selected and refresh its posts
+    await refresh_posts(feed_id);
 
     // Close Modal
     save_in_progress = false;
