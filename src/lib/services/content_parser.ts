@@ -14,15 +14,28 @@ interface PostlightResult {
     lead_image_url: string | null;
 }
 
+// Crate fetch timeout is 10s/page; 20s covers slow sites plus extraction.
+const POSTLIGHT_PARSE_TIMEOUT_MS = 20_000;
+
+// Reuse an in-flight parse per URL so re-clicking a post doesn't re-invoke Rust.
+const inFlightParses = new Map<string, Promise<PostlightResult>>();
+
 const runPostlightParser = (url: string): Promise<PostlightResult> => {
-    return invoke('postlight_parse', { url });
+    let parse = inFlightParses.get(url);
+    if (!parse) {
+        parse = invoke('postlight_parse', { url });
+        inFlightParses.set(url, parse);
+        parse
+            .catch(() => {})
+            .finally(() => inFlightParses.delete(url));
+    }
+    return parse;
 }
 
 export const mercury_parser = async (url: string): Promise<ContentResult> => {
-    console.log(`Parsing with mercury: ${url}`);
     if (url) {
         try {
-            const document = await runWithTimeout(runPostlightParser(url));
+            const document = await runWithTimeout(runPostlightParser(url), POSTLIGHT_PARSE_TIMEOUT_MS);
             return {
                 title: document.title ?? '',
                 content: document.content ?? '',
@@ -32,7 +45,6 @@ export const mercury_parser = async (url: string): Promise<ContentResult> => {
                 content_type: CONTENT_TYPES.html,
             };
         } catch (error) {
-            console.log(`Parse FAILED for ${url}: ${error}`);
             throw new Error('Something happened :(');
         }
     }
@@ -47,8 +59,6 @@ export const mercury_parser = async (url: string): Promise<ContentResult> => {
 }
 
 export const morzilla_readability_parser = async (url: string, document: Document): Promise<ContentResult> => {
-    console.log(`Parsing with morzilla reader: ${url}`);
-
     let reader = new Readability(document);
 
     try {
@@ -63,7 +73,6 @@ export const morzilla_readability_parser = async (url: string, document: Documen
                 content_type: CONTENT_TYPES.html,
             };
     } catch (error) {
-        console.log(`Parse FAILED for ${url}: ${error}`);
         throw error;
     }
 
