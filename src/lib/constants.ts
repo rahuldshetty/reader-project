@@ -57,7 +57,7 @@ export enum SETTINGS {
 }
 
 export enum THEMES {
-    // Values must match the color configs in tailwind.config.js
+    // Values must match the daisyUI theme names enabled in src/app.css (@plugin "daisyui")
     LIGHT = "light",
     DARK = "dark"
 }

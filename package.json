@@ -47,7 +47,7 @@
     "@tailwindcss/typography": "^0.5.19",
     "@tauri-apps/cli": "^2.9.4",
     "autoprefixer": "^10.4.22",
-    "daisyui": "^5.5.5",
+    "daisyui": "^5.7.17",
     "postcss": "^8.5.6",
     "svelte": "^5.43.14",
     "svelte-check": "^4.3.4",
