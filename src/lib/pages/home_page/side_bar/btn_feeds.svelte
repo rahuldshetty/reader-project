@@ -4,11 +4,13 @@
 
     import { SCREEN } from "$lib/constants";
     import { active_screen } from "$lib/stores/app_store";
-    import { refresh_app_data } from "../common";
+    import { refresh_app_data, select_feed } from "../common";
 
     const handleFeedClick = async () => {
         await refresh_app_data();
         $active_screen = SCREEN.FEEDS;
+        // Default to the aggregate "All Posts" view on entry.
+        await select_feed(-1);
     };
 </script>
 
