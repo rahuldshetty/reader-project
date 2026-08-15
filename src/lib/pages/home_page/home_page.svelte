@@ -8,6 +8,7 @@
         mobile_active_panel,
         type MobilePanel,
     } from "$lib/stores/app_store";
+    import { handle_keydown } from "$lib/services/keyboard_shortcuts";
 
     import SideBar from "./side_bar/side_bar.svelte";
     import MainModal from "../modals/main_modal.svelte";
@@ -68,6 +69,7 @@
         updateMobileState();
         window.addEventListener("resize", updateMobileState);
         window.addEventListener("popstate", handleBackButton);
+        window.addEventListener("keydown", handle_keydown);
 
         // Push initial state
         if (get(is_mobile)) {
@@ -79,6 +81,7 @@
         if (typeof window !== "undefined") {
             window.removeEventListener("resize", updateMobileState);
             window.removeEventListener("popstate", handleBackButton);
+            window.removeEventListener("keydown", handle_keydown);
         }
         unsubscribePanel();
     });

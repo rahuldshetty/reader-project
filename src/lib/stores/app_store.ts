@@ -23,6 +23,7 @@ import {
     DEFAULT_LINE_HEIGHT,
     DEFAULT_LETTER_SPACING,
     DEFAULT_PARAGRAPH_GAP,
+    DEFAULT_SHORTCUTS,
 } from '$lib/constants';
 
 // UI States
@@ -57,6 +58,7 @@ export const local_user_setting = writable<UserSettings>({
         "LETTER_SPACING": DEFAULT_LETTER_SPACING,
         "PARAGRAPH_GAP": DEFAULT_PARAGRAPH_GAP,
     },
+    "SHORTCUTS": DEFAULT_SHORTCUTS,
 });
 
 // Feed Configuration
@@ -73,6 +75,8 @@ export const posts_sort_by = writable(DB_ORDER_ENUM.NEWEST);
 export const filter_unread_posts = writable(false);
 export const filter_liked_posts = writable(false);
 export const active_post_id = writable(-1);
+// Keyboard-highlighted post in the current list (not necessarily open).
+export const cursor_post_id = writable(-1);
 export const search_keywords = writable<string[]>([]);
 
 // Mobile Navigation

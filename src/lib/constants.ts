@@ -1,3 +1,5 @@
+import type { ShortcutBinding } from "./types";
+
 export const FEED_URL2ICON_MAP = {
     "www.nytimes.com": ""
 }
@@ -53,7 +55,10 @@ export enum SETTINGS {
     FONT_SIZE = "FONT_SIZE",
     LINE_HEIGHT = "LINE_HEIGHT",
     LETTER_SPACING = "LETTER_SPACING",
-    PARAGRAPH_GAP = "PARAGRAPH_GAP"
+    PARAGRAPH_GAP = "PARAGRAPH_GAP",
+
+    // Keyboard Shortcuts
+    SHORTCUTS = "SHORTCUTS",
 }
 
 export enum THEMES {
@@ -156,3 +161,85 @@ export enum TOAST_MESSAGE_TYPE {
     INFO = "info",
     ERROR = "error"
 }
+
+// ---------------------------------------------------------------------------
+// Keyboard Shortcuts
+// ---------------------------------------------------------------------------
+
+// Action names are persisted as keys in the SHORTCUTS setting, so keep the
+// string values stable across renames.
+export enum SHORTCUT_ACTION {
+    NEXT_POST = "NEXT_POST",
+    PREV_POST = "PREV_POST",
+    OPEN_POST = "OPEN_POST",
+    MARK_READ = "MARK_READ",
+    MARK_FAV = "MARK_FAV",
+    OPEN_ORIGINAL = "OPEN_ORIGINAL",
+    FOCUS_SEARCH = "FOCUS_SEARCH",
+    NEXT_FEED = "NEXT_FEED",
+    PREV_FEED = "PREV_FEED",
+}
+
+export interface ShortcutActionMeta {
+    label: string;
+    description: string;
+}
+
+export const SHORTCUT_ACTION_META: Record<SHORTCUT_ACTION, ShortcutActionMeta> = {
+    [SHORTCUT_ACTION.NEXT_POST]: {
+        label: "Next Post",
+        description: "Move to the next post in the list. Opens the next post while reading.",
+    },
+    [SHORTCUT_ACTION.PREV_POST]: {
+        label: "Previous Post",
+        description: "Move to the previous post in the list. Opens the previous post while reading.",
+    },
+    [SHORTCUT_ACTION.OPEN_POST]: {
+        label: "Open Post",
+        description: "Open the highlighted post.",
+    },
+    [SHORTCUT_ACTION.MARK_READ]: {
+        label: "Mark Read / Unread",
+        description: "Toggle read status of the highlighted or open post.",
+    },
+    [SHORTCUT_ACTION.MARK_FAV]: {
+        label: "Mark Favourite",
+        description: "Toggle favourite status of the highlighted or open post.",
+    },
+    [SHORTCUT_ACTION.OPEN_ORIGINAL]: {
+        label: "Open Original",
+        description: "Open the post link in the default browser.",
+    },
+    [SHORTCUT_ACTION.FOCUS_SEARCH]: {
+        label: "Focus Search",
+        description: "Jump to the feed search box.",
+    },
+    [SHORTCUT_ACTION.NEXT_FEED]: {
+        label: "Next Feed",
+        description: "Move to and select the next feed in the list.",
+    },
+    [SHORTCUT_ACTION.PREV_FEED]: {
+        label: "Previous Feed",
+        description: "Move to and select the previous feed in the list.",
+    },
+};
+
+// Feature is opt-in; disabled by default.
+export const SHORTCUTS_ENABLED_DEFAULT = false;
+
+export const DEFAULT_SHORTCUT_BINDINGS: Record<SHORTCUT_ACTION, ShortcutBinding> = {
+    [SHORTCUT_ACTION.NEXT_POST]: { key: "j", ctrl: false, alt: false, shift: false },
+    [SHORTCUT_ACTION.PREV_POST]: { key: "k", ctrl: false, alt: false, shift: false },
+    [SHORTCUT_ACTION.OPEN_POST]: { key: "enter", ctrl: false, alt: false, shift: false },
+    [SHORTCUT_ACTION.MARK_READ]: { key: "m", ctrl: false, alt: false, shift: false },
+    [SHORTCUT_ACTION.MARK_FAV]: { key: "f", ctrl: false, alt: false, shift: false },
+    [SHORTCUT_ACTION.OPEN_ORIGINAL]: { key: "o", ctrl: false, alt: false, shift: false },
+    [SHORTCUT_ACTION.FOCUS_SEARCH]: { key: "/", ctrl: false, alt: false, shift: false },
+    [SHORTCUT_ACTION.NEXT_FEED]: { key: "tab", ctrl: false, alt: false, shift: false },
+    [SHORTCUT_ACTION.PREV_FEED]: { key: "tab", ctrl: false, alt: false, shift: true },
+};
+
+export const DEFAULT_SHORTCUTS = {
+    ENABLED: SHORTCUTS_ENABLED_DEFAULT,
+    BINDINGS: DEFAULT_SHORTCUT_BINDINGS,
+};

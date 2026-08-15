@@ -8,6 +8,22 @@ export interface FontSettings {
     PARAGRAPH_GAP: number;
 }
 
+// A single keybinding: the physical key (event.key value) plus optional modifiers.
+export interface ShortcutBinding {
+    key: string;
+    ctrl: boolean;
+    alt: boolean;
+    shift: boolean;
+}
+
+// Map of action name -> binding. Action names match SHORTCUT_ACTION enum values.
+export type ShortcutBindings = Record<string, ShortcutBinding>;
+
+export interface ShortcutSettings {
+    ENABLED: boolean;
+    BINDINGS: ShortcutBindings;
+}
+
 export interface UserSettings {
     LAST_REFRESH_TIME: number;
     THEME_MODE: string;
@@ -30,6 +46,7 @@ export interface UserSettings {
     OPENAI_TOKEN: string;
 
     FONT_SETTINGS: FontSettings;
+    SHORTCUTS: ShortcutSettings;
 }
 
 export interface ToastMessage {

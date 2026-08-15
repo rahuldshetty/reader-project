@@ -12,7 +12,36 @@ import {
     DEFAULT_LINE_HEIGHT,
     DEFAULT_LETTER_SPACING,
     DEFAULT_PARAGRAPH_GAP,
+    DEFAULT_SHORTCUTS,
+    SHORTCUT_ACTION,
 } from "$lib/constants";
+
+import type { ShortcutSettings } from "$lib/types";
+
+// Stored settings may predate the SHORTCUTS key or a new action, so merge
+// persisted bindings over the defaults to keep every action bound. Stale
+// entries for removed actions are dropped.
+const merge_shortcut_settings = (stored: unknown): ShortcutSettings => {
+    if (!stored || typeof stored !== "object") {
+        return DEFAULT_SHORTCUTS;
+    }
+    const partial = stored as Partial<ShortcutSettings>;
+    const known_actions = new Set<string>(
+        Object.values(SHORTCUT_ACTION) as string[],
+    );
+    const stored_bindings = Object.fromEntries(
+        Object.entries(partial.BINDINGS ?? {}).filter(([action]) =>
+            known_actions.has(action),
+        ),
+    );
+    return {
+        ENABLED: partial.ENABLED ?? DEFAULT_SHORTCUTS.ENABLED,
+        BINDINGS: {
+            ...DEFAULT_SHORTCUTS.BINDINGS,
+            ...stored_bindings,
+        },
+    };
+};
 
 export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
     const refresh_feed_on_select_enable = await user_settings.get(SETTINGS.REFRESH_FEED_ON_SELECT);
@@ -39,6 +68,7 @@ export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
     const line_height = await user_settings.get(SETTINGS.LINE_HEIGHT);
     const letter_spacing = await user_settings.get(SETTINGS.LETTER_SPACING);
     const paragraph_gap = await user_settings.get(SETTINGS.PARAGRAPH_GAP);
+    const shortcuts = await user_settings.get(SETTINGS.SHORTCUTS);
 
     return {
         "LAST_REFRESH_TIME":  lrt as number ?? LAST_REFRESH_TIME,
@@ -64,5 +94,6 @@ export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
             "LETTER_SPACING": letter_spacing as number ?? DEFAULT_LETTER_SPACING,
             "PARAGRAPH_GAP": paragraph_gap as number ?? DEFAULT_PARAGRAPH_GAP,
         },
+        "SHORTCUTS": merge_shortcut_settings(shortcuts),
     }
 }

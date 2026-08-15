@@ -12,6 +12,7 @@ import {
     fetch_posts,
     fetch_old_post_count,
     delete_old_posts,
+    mark_post_as_read,
 } from "$lib/dao/post_db";
 
 import {
@@ -28,7 +29,10 @@ import {
     feed_count_by_id,
     local_user_setting,
     refreshing_feeds,
-    search_keywords
+    search_keywords,
+    is_mobile,
+    mobile_active_panel,
+    cursor_post_id,
 } from "$lib/stores/app_store";
 
 import {
@@ -36,13 +40,14 @@ import {
     NO_OF_POST_PULLS_PER_TIME,
     SETTINGS,
     TOAST_MESSAGE_TYPE,
+    FEED_TYPE,
 } from "$lib/constants";
 
 import { get } from "svelte/store";
 import { fetchFeedDataFromFeedURL } from "$lib/services/feed_gather";
 import { toastStore } from "$lib/stores/toast_store";
 import { validate_url_secure } from "$lib/utils/html";
-import type { Feed, PostResult } from "$lib/types";
+import type { Feed, FeedResult, PostResult } from "$lib/types";
 
 export const refresh_app_data = async (
     only_feeds: boolean = true,
@@ -82,18 +87,19 @@ export const refresh_posts = async (
     const sort_by = get(posts_sort_by);
     const unread = get(filter_unread_posts);
     const keywords = get(search_keywords);
-    posts_store.set(
-        await fetch_posts(
-            sort_by,
-            last_id,
-            feed_id,
-            limit,
-            unread,
-            lastPubDate,
-            is_fav,
-            keywords
-        )
+    const posts = await fetch_posts(
+        sort_by,
+        last_id,
+        feed_id,
+        limit,
+        unread,
+        lastPubDate,
+        is_fav,
+        keywords
     );
+    posts_store.set(posts);
+    // Keyboard cursor starts at the first post of the refreshed list
+    cursor_post_id.set(posts[0]?.id ?? -1);
     feed_count_by_id.set(await fetch_unread_post_counts());
     refreshing_posts.set(false);
 }
@@ -236,6 +242,72 @@ export const update_post_store_item_by_id = (id: number, new_post: PostResult) =
     }
     posts_store.set(posts);
 }
+
+
+// Shared "open this post" flow used by both mouse clicks and the keyboard
+// cursor. Honors the auto-read setting and mobile panel navigation.
+export const select_post = async (post: PostResult) => {
+    if (get(local_user_setting).AUTO_READ_ON_SELECT) {
+        if (!post.read) {
+            await mark_post_as_read(post.id, true);
+            update_post_feed_counter_value(post.feed_id, -1);
+            update_post_store_item_by_id(post.id, { ...post, read: true });
+        }
+    }
+    active_post_id.set(post.id);
+    cursor_post_id.set(post.id);
+
+    // Navigate to content panel on mobile
+    if (get(is_mobile)) {
+        mobile_active_panel.set("content");
+    }
+};
+
+
+const find_feed_in_tree = (
+    feeds: FeedResult[],
+    id: number,
+): Feed | FeedResult | null => {
+    for (const feed of feeds) {
+        if (feed.id == id) return feed;
+        const child = feed.children?.find((c) => c.id == id);
+        if (child) return child;
+    }
+    return null;
+};
+
+// Shared "select this feed" flow used by mouse clicks and the keyboard
+// (Tab / Shift+Tab). Custom items are All Posts (-1) and Favourites (-2).
+export const select_feed = async (feed_id: number) => {
+    const isSameFeed = get(active_feed_id) == feed_id;
+    const feed = find_feed_in_tree(get(feeds_store), feed_id);
+
+    if (!isSameFeed) {
+        if (feed_id == -2) {
+            // Favourites list ignores the unread filter
+            filter_unread_posts.set(false);
+        }
+
+        active_feed_id.set(feed_id);
+        active_feed_name.set(feed ? feed.title : '');
+
+        if (feed && feed.type == FEED_TYPE.FEED) {
+            // Check and try to pull latest posts from RSS feed
+            await check_and_pull_latest_feed_data(feed_id, feed.url);
+            await refresh_posts(feed_id);
+        } else if (feed_id < 0) {
+            // All Posts / Favourites
+            await refresh_posts(feed_id);
+        }
+        // Folders have no post list of their own; selection mirrors the
+        // previous click behavior and leaves the posts panel as-is.
+    }
+
+    // Navigate to posts panel on mobile (always, even if same feed)
+    if (get(is_mobile)) {
+        mobile_active_panel.set("posts");
+    }
+};
 
 
 // Delete old posts

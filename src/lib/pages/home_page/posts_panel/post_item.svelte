@@ -3,43 +3,35 @@
   import { timeAgo } from "$lib/utils/time";
   import {
     active_post_id,
+    cursor_post_id,
     local_user_setting,
     is_mobile,
     mobile_active_panel,
   } from "$lib/stores/app_store";
-  import { mark_post_as_read } from "$lib/dao/post_db";
-  import {
-    update_post_feed_counter_value,
-    update_post_store_item_by_id,
-  } from "../common";
+  import { select_post } from "../common";
 
   const { post }: { post: PostResult } = $props();
 
-  const handleOnPostClick = async () => {
-    if ($local_user_setting.AUTO_READ_ON_SELECT) {
-      if (!post.read) {
-        await mark_post_as_read(post.id, true);
-        update_post_feed_counter_value(post.feed_id, -1);
-        update_post_store_item_by_id(post.id, { ...post, read: true });
-      }
-    }
-    $active_post_id = post.id;
-
-    // Navigate to content panel on mobile
-    if ($is_mobile) {
-      mobile_active_panel.set("content");
-    }
+  const handleOnPostClick = () => {
+    void select_post(post);
   };
+
+  const is_cursor_target = $derived(
+    $local_user_setting.SHORTCUTS.ENABLED && $cursor_post_id == post.id,
+  );
 </script>
 
-<li class="stagger-item rounded-lg hover-lift smooth-transition">
+<li
+  class="stagger-item rounded-lg hover-lift smooth-transition"
+  data-post-id={post.id}
+>
   <button
     type="button"
     onclick={handleOnPostClick}
     class="w-full text-left cursor-pointer flex gap-2 p-3 rounded-lg transition-colors duration-200 {$active_post_id ==
     post.id
       ? 'menu-active active-glow'
-      : ''}"
+      : ''} {is_cursor_target ? 'ring-2 ring-primary/60' : ''}"
   >
     {#if post.image}
       <img

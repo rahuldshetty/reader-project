@@ -1,4 +1,6 @@
-<script>
+<script lang="ts">
+  import { onMount, onDestroy } from "svelte";
+
   import {
     active_modal,
     user_settings,
@@ -10,12 +12,21 @@
     DAISY_UI_THEMES,
     SETTINGS,
     TOAST_MESSAGE_TYPE,
+    SHORTCUT_ACTION,
+    SHORTCUT_ACTION_META,
+    DEFAULT_SHORTCUT_BINDINGS,
   } from "$lib/constants";
+  import {
+    format_binding,
+    find_conflicts,
+    set_recording_action,
+  } from "$lib/services/keyboard_shortcuts";
   import { toInitCaps, fontFamilies } from "$lib/utils";
   import { save } from "@tauri-apps/plugin-dialog";
   import { writeTextFile } from "@tauri-apps/plugin-fs";
   import { toastStore } from "$lib/stores/toast_store";
   import { convertFeedDataToOPML } from "$lib/services/opml_gather";
+  import type { ShortcutBindings } from "$lib/types";
 
   // Local setting State Variables
   // Why use Local vs Global?
@@ -63,6 +74,72 @@
   // Do not close when save is in progress
   let save_in_progress = $state(false);
 
+  // Keyboard Shortcut State
+  let shortcuts_enabled = $state($local_user_setting.SHORTCUTS.ENABLED);
+  let shortcut_bindings = $state<ShortcutBindings>({
+    ...$local_user_setting.SHORTCUTS.BINDINGS,
+  });
+  let recording_action = $state<SHORTCUT_ACTION | null>(null);
+
+  const shortcut_conflicts = $derived(find_conflicts(shortcut_bindings));
+  const conflicting_actions = $derived(
+    new Set<string>(shortcut_conflicts.flat()),
+  );
+
+  const stopRecording = () => {
+    set_recording_action(null);
+    recording_action = null;
+  };
+
+  const startRecording = (action: SHORTCUT_ACTION) => {
+    set_recording_action(action);
+    recording_action = action;
+  };
+
+  const resetShortcuts = () => {
+    shortcut_bindings = { ...DEFAULT_SHORTCUT_BINDINGS };
+    stopRecording();
+  };
+
+  // Captures the next key press while a shortcut is being remapped. The
+  // global keyboard handler yields to this via is_recording().
+  const handleCaptureKeydown = (event: KeyboardEvent) => {
+    if (recording_action === null) return;
+    event.preventDefault();
+    event.stopPropagation();
+
+    // Ignore modifier-only presses; wait for the actual key.
+    if (
+      event.key === "Control" ||
+      event.key === "Alt" ||
+      event.key === "Shift" ||
+      event.key === "Meta"
+    ) {
+      return;
+    }
+    if (event.key === "Escape") {
+      stopRecording();
+      return;
+    }
+
+    shortcut_bindings[recording_action] = {
+      key: event.key.length === 1 ? event.key.toLowerCase() : event.key,
+      ctrl: event.ctrlKey,
+      alt: event.altKey,
+      shift: event.shiftKey,
+    };
+    stopRecording();
+  };
+
+  onMount(() => {
+    window.addEventListener("keydown", handleCaptureKeydown);
+  });
+
+  onDestroy(() => {
+    window.removeEventListener("keydown", handleCaptureKeydown);
+    set_recording_action(null);
+  });
+
   const closeModal = () => {
     // Reset State
     color_theme = $local_user_setting.THEME_MODE;
@@ -88,6 +165,10 @@
     letter_spacing = $local_user_setting.FONT_SETTINGS.LETTER_SPACING;
     paragraph_gap = $local_user_setting.FONT_SETTINGS.PARAGRAPH_GAP;
 
+    shortcuts_enabled = $local_user_setting.SHORTCUTS.ENABLED;
+    shortcut_bindings = { ...$local_user_setting.SHORTCUTS.BINDINGS };
+    stopRecording();
+
     $active_modal = MODAL_TYPE.NONE;
   };
 
@@ -101,6 +182,15 @@
   };
 
   const saveSettings = async () => {
+    // Refuse to persist conflicting keybindings
+    if (shortcut_conflicts.length > 0) {
+      toastStore.add(
+        TOAST_MESSAGE_TYPE.ERROR,
+        "Conflicting shortcuts. Reassign or reset before saving.",
+      );
+      return;
+    }
+
     save_in_progress = true;
 
     // Persist settings
@@ -136,6 +226,10 @@
     await user_settings.set(SETTINGS.LINE_HEIGHT, line_height);
     await user_settings.set(SETTINGS.LETTER_SPACING, letter_spacing);
     await user_settings.set(SETTINGS.PARAGRAPH_GAP, paragraph_gap);
+    await user_settings.set(SETTINGS.SHORTCUTS, {
+      ENABLED: shortcuts_enabled,
+      BINDINGS: shortcut_bindings,
+    });
 
     // Update local store
     $local_user_setting.THEME_MODE = color_theme;
@@ -158,6 +252,10 @@
     $local_user_setting.FONT_SETTINGS.LINE_HEIGHT = line_height;
     $local_user_setting.FONT_SETTINGS.LETTER_SPACING = letter_spacing;
     $local_user_setting.FONT_SETTINGS.PARAGRAPH_GAP = paragraph_gap;
+    $local_user_setting.SHORTCUTS = {
+      ENABLED: shortcuts_enabled,
+      BINDINGS: shortcut_bindings,
+    };
 
     // Close Modal
     save_in_progress = false;
@@ -626,6 +724,92 @@
               <span class="text-sm font-mono w-12 text-right">{paragraph_gap}px</span>
             </div>
           </fieldset>
+        </div>
+      </div>
+
+      <!-- Shortcuts Settings -->
+      <input
+        type="radio"
+        name="setting_tabs"
+        class="tab"
+        aria-label="Shortcuts"
+      />
+      <div class="tab-content bg-base-100 p-4">
+        <div class="flex flex-col gap-3">
+          <fieldset
+            class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+          >
+            <div>
+              <legend class="fieldset-legend">Enable Shortcuts</legend>
+              <p class="label">
+                Navigate the app with your keyboard. Disabled by default.
+              </p>
+            </div>
+            <div class="flex justify-end">
+              <input
+                type="checkbox"
+                checked={shortcuts_enabled}
+                onchange={() => (shortcuts_enabled = !shortcuts_enabled)}
+                class="toggle toggle-success"
+              />
+            </div>
+          </fieldset>
+
+          {#if shortcut_conflicts.length > 0}
+            <div class="alert alert-error text-sm">
+              <span>
+                Conflicting shortcuts:
+                {shortcut_conflicts
+                  .map(
+                    ([a, b]) =>
+                      `${SHORTCUT_ACTION_META[a as SHORTCUT_ACTION]?.label ?? a} / ${SHORTCUT_ACTION_META[b as SHORTCUT_ACTION]?.label ?? b}`,
+                  )
+                  .join(", ")}
+                . Reassign or reset before saving.
+              </span>
+            </div>
+          {/if}
+
+          <div class="flex justify-end">
+            <button
+              class="btn btn-sm btn-ghost"
+              onclick={resetShortcuts}>Reset to Defaults</button
+            >
+          </div>
+
+          <ul class="flex flex-col gap-2">
+            {#each Object.entries(SHORTCUT_ACTION_META) as [action, meta]}
+              {@const is_conflicting = conflicting_actions.has(action)}
+              <li
+                class="flex items-center justify-between gap-3 p-3 rounded-lg bg-base-200 {is_conflicting ? 'ring-1 ring-error' : ''}"
+              >
+                <div class="min-w-0">
+                  <p class="text-sm font-medium">{meta.label}</p>
+                  <p class="text-xs opacity-70">{meta.description}</p>
+                </div>
+                <button
+                  class="btn btn-sm btn-ghost min-w-36 shrink-0"
+                  class:btn-primary={recording_action === action}
+                  onclick={() => startRecording(action as SHORTCUT_ACTION)}
+                >
+                  {#if recording_action === action}
+                    <span class="text-xs"
+                      >Press keys… (Esc to cancel)</span
+                    >
+                  {:else}
+                    <span class="flex items-center gap-1">
+                      {#each format_binding(
+                        shortcut_bindings[action] ??
+                          DEFAULT_SHORTCUT_BINDINGS[action as SHORTCUT_ACTION],
+                      ).split("+") as part}
+                        <kbd class="kbd kbd-xs">{part}</kbd>
+                      {/each}
+                    </span>
+                  {/if}
+                </button>
+              </li>
+            {/each}
+          </ul>
         </div>
       </div>
     </div>

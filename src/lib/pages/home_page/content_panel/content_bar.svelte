@@ -6,6 +6,8 @@
     import { timeToRead } from "$lib/utils/time";
 
     import { toastStore } from "$lib/stores/toast_store";
+    import { posts_store } from "$lib/stores/app_store";
+    import { get_binding_label } from "$lib/services/keyboard_shortcuts";
 
     import Fa from "svelte-fa";
     import {
@@ -15,13 +17,25 @@
         faGlobe,
     } from "@fortawesome/free-solid-svg-icons";
     import { mark_post_as_fav, mark_post_as_read } from "$lib/dao/post_db";
-    import { TOAST_MESSAGE_TYPE } from "$lib/constants";
-    import { update_post_feed_counter_value } from "../common";
+    import { TOAST_MESSAGE_TYPE, SHORTCUT_ACTION } from "$lib/constants";
+    import {
+        update_post_feed_counter_value,
+        update_post_store_item_by_id,
+    } from "../common";
 
     const { data, post }: { data: ContentResult; post: PostResult } = $props();
 
-    let read_status = $state(post.read);
-    let is_fav = $state(post.is_fav);
+    // Authoritative read/fav state lives in the posts store so keyboard
+    // toggles and list updates stay in sync with these buttons.
+    const current_post = $derived(
+        $posts_store.find((p) => p.id === post.id) ?? post,
+    );
+    let read_status = $derived(current_post.read);
+    let is_fav = $derived(current_post.is_fav);
+
+    const read_hint = $derived(get_binding_label(SHORTCUT_ACTION.MARK_READ));
+    const fav_hint = $derived(get_binding_label(SHORTCUT_ACTION.MARK_FAV));
+    const open_hint = $derived(get_binding_label(SHORTCUT_ACTION.OPEN_ORIGINAL));
 
     const handleShareButton = async () => {
         await writeText(post.link);
@@ -33,15 +47,16 @@
     };
 
     const handleReadButton = async () => {
-        await mark_post_as_read(post.id, !read_status);
-        read_status = !read_status;
-
-        update_post_feed_counter_value(post.feed_id, read_status ? -1 : 1);
+        const new_status = !read_status;
+        await mark_post_as_read(post.id, new_status);
+        update_post_feed_counter_value(post.feed_id, new_status ? -1 : 1);
+        update_post_store_item_by_id(post.id, { ...current_post, read: new_status });
     };
 
     const handleFavouriteButton = async () => {
-        await mark_post_as_fav(post.id, !is_fav);
-        is_fav = !is_fav;
+        const new_status = !is_fav;
+        await mark_post_as_fav(post.id, new_status);
+        update_post_store_item_by_id(post.id, { ...current_post, is_fav: new_status });
     };
 
     const handleOpenURL = async () => {
@@ -82,7 +97,7 @@
             <Fa
                 icon={faCircleCheck}
                 size="lg"
-                title="Mark as Read"
+                title={read_hint ? `Mark as Read (${read_hint})` : "Mark as Read"}
                 color={read_status ? "var(--color-success)" : ""}
             />
         </button>
@@ -95,7 +110,7 @@
             <Fa
                 icon={faStar}
                 size="lg"
-                title="Mark Favorite"
+                title={fav_hint ? `Mark Favorite (${fav_hint})` : "Mark Favorite"}
                 color={is_fav ? "var(--color-accent)" : ""}
             />
         </button>
@@ -105,7 +120,11 @@
             class="btn btn-circle btn-ghost btn-sm md:btn-md btn-press smooth-transition"
             onclick={handleOpenURL}
         >
-            <Fa icon={faGlobe} size="lg" title="Open in browser" />
+            <Fa
+                icon={faGlobe}
+                size="lg"
+                title={open_hint ? `Open in browser (${open_hint})` : "Open in browser"}
+            />
         </button>
     </div>
 </div>
