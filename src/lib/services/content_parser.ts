@@ -1,5 +1,5 @@
 import { fetch } from '@tauri-apps/plugin-http';
-import { Command } from '@tauri-apps/plugin-shell';
+import { invoke } from '@tauri-apps/api/core';
 import { Readability, isProbablyReaderable } from "@mozilla/readability";
 import { parseHTML } from 'linkedom';
 import { runWithTimeout } from '$lib/utils/time';
@@ -7,24 +7,28 @@ import { CONTENT_TYPES } from '$lib/constants';
 import type { ContentResult } from '$lib/types';
 import { add_post_cache, fetch_post_cache } from '$lib/dao/post_db';
 
-const runSideCar = async (url: string) => {
-    const command = Command.sidecar('binaries/app', ["parse", url]);
-    const output = await command.execute();
-    const response = JSON.parse(output.stdout);
-    return response;
+interface PostlightResult {
+    title: string | null;
+    content: string | null;
+    word_count: number | null;
+    lead_image_url: string | null;
+}
+
+const runPostlightParser = (url: string): Promise<PostlightResult> => {
+    return invoke('postlight_parse', { url });
 }
 
 export const mercury_parser = async (url: string): Promise<ContentResult> => {
     console.log(`Parsing with mercury: ${url}`);
     if (url) {
         try {
-            const document = await runWithTimeout(runSideCar(url));
+            const document = await runWithTimeout(runPostlightParser(url));
             return {
-                title: document.title,
-                content: document.content,
-                word_count: document.word_count,
+                title: document.title ?? '',
+                content: document.content ?? '',
+                word_count: document.word_count ?? 0,
                 url: url,
-                image: document.lead_image_url,
+                image: document.lead_image_url ?? '',
                 content_type: CONTENT_TYPES.html,
             };
         } catch (error) {

@@ -35,14 +35,6 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Build side-car
-        run: |
-          cd sidecar-app
-          bun install
-          bun x esbuild index.js --bundle --outfile=out.js --platform=node
-          bun x pkg --output app out.js
-          bun move-app-bundle.js
-
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable # Set this to dtolnay/rust-toolchain@nightly
         with:

@@ -1,3 +1,4 @@
+use postlight_parser::{Article, ParseOptions, Parser};
 use tauri::{AppHandle, Manager, State};
 
 mod db;
@@ -6,6 +7,24 @@ mod db;
 #[tauri::command]
 fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
+}
+
+/// Extract article content from a URL using the Mercury (postlight) parser.
+///
+/// The parser's internal DOM (tendril) is not `Send`, so the future runs to
+/// completion on a dedicated current-thread runtime inside a blocking task.
+#[tauri::command]
+async fn postlight_parse(url: String) -> Result<Article, String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        let rt = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .map_err(|e| e.to_string())?;
+        rt.block_on(Parser::parse(&url, &ParseOptions::default()))
+            .map_err(|e| e.to_string())
+    })
+    .await
+    .map_err(|e| e.to_string())?
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -22,7 +41,6 @@ pub fn run() {
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
-        .plugin(tauri_plugin_shell::init())
         .plugin(
             tauri_plugin_log::Builder::new()
                 .target(tauri_plugin_log::Target::new(
@@ -44,7 +62,7 @@ pub fn run() {
                 .build(),
         )
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet])
+        .invoke_handler(tauri::generate_handler![greet, postlight_parse])
         .on_window_event(|window, event| match event {
             tauri::WindowEvent::CloseRequested { api, .. } => {
                 #[cfg(not(any(target_os = "macos", target_os = "android")))]

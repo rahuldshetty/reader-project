@@ -35,25 +35,6 @@
       ]
     },
     "log:default",
-    "shell:default",
-    "shell:allow-open",
-    {
-      "identifier": "shell:allow-execute",
-      "allow": [
-        {
-          "name": "binaries/app",
-          "sidecar": true,
-          "args": [
-            {
-              "validator": ".+"
-            },
-            {
-              "validator": ".+"
-            }
-          ]
-        }
-      ]
-    },
     "dialog:default",
     "fs:default",
     "fs:allow-write-text-file",
