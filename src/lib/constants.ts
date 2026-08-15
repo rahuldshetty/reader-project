@@ -79,6 +79,9 @@ export enum FEED_TYPE {
 
 export const NO_OF_POST_PULLS_PER_TIME = 20;
 
+// Browse view only surfaces articles published within this many weeks.
+export const BROWSE_WINDOW_WEEKS = 3;
+
 // Measured in Hours
 export const LAST_REFRESH_TIME = 4;
 

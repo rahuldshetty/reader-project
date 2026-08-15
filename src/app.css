@@ -160,3 +160,14 @@ article p {
 .modal-open {
   backdrop-filter: blur(3px);
 }
+
+/* ---------------------------------------------------------------------------
+   Global radius: square off daisyUI's default rounding for a crisper look.
+   selector = buttons/selects/checkboxes, field = inputs, box = cards/modals.
+   --------------------------------------------------------------------------- */
+:root,
+[data-theme] {
+    --radius-selector: 0.25rem;
+    --radius-field: 0.25rem;
+    --radius-box: 0.5rem;
+}
