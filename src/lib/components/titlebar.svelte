@@ -1,5 +1,12 @@
 <script>
     import { getCurrentWindow } from "@tauri-apps/api/window";
+    import Fa, { FaLayers } from "svelte-fa";
+    import {
+        faCircle,
+        faMinus,
+        faPlus,
+        faXmark,
+    } from "@fortawesome/free-solid-svg-icons";
 
     import { local_user_setting } from "$lib/stores/app_store";
     import { exit } from "@tauri-apps/plugin-process";
@@ -17,75 +24,44 @@
         }
     };
 </script>
+
 <div
     data-tauri-drag-region
     class="titlebar fixed top-0 left-0 right-0 z-50 h-[var(--titlebar-height)] hidden md:flex items-center justify-end px-3 bg-base-100 border-b border-base-300"
 >
-    <div class="group flex items-center gap-2">
+    <div class="flex items-center gap-1.5">
         <button
-            class="traffic traffic-min"
+            class="p-0 cursor-pointer leading-none"
             onclick={appWindow.minimize}
             title="Minimize"
             aria-label="Minimize"
         >
-            <span class="traffic-symbol">−</span>
+            <FaLayers size="sm">
+                <Fa icon={faCircle} color="#febc2e" />
+                <Fa icon={faMinus} scale={0.6} />
+            </FaLayers>
         </button>
         <button
-            class="traffic traffic-max"
+            class="p-0 cursor-pointer leading-none"
             onclick={appWindow.toggleMaximize}
             title="Maximize"
             aria-label="Maximize"
         >
-            <span class="traffic-symbol">+</span>
+            <FaLayers size="sm">
+                <Fa icon={faCircle} color="#28c840" />
+                <Fa icon={faPlus} scale={0.6} />
+            </FaLayers>
         </button>
         <button
-            class="traffic traffic-close"
+            class="p-0 cursor-pointer leading-none"
             onclick={closeWindow}
             title="Close"
             aria-label="Close"
         >
-            <span class="traffic-symbol">×</span>
+            <FaLayers size="sm">
+                <Fa icon={faCircle} color="#ff5f57" />
+                <Fa icon={faXmark} scale={0.6} />
+            </FaLayers>
         </button>
     </div>
 </div>
-
-<style>
-    .traffic {
-        width: 13px;
-        height: 13px;
-        border-radius: 9999px;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid rgba(0, 0, 0, 0.12);
-        cursor: pointer;
-        line-height: 1;
-        transition: filter 0.12s ease;
-    }
-    .traffic:hover {
-        filter: brightness(0.92);
-    }
-    .traffic-close {
-        background: #ff5f57;
-    }
-    .traffic-min {
-        background: #febc2e;
-    }
-    .traffic-max {
-        background: #28c840;
-    }
-
-    .traffic-symbol {
-        font-size: 10px;
-        line-height: 1;
-        color: rgba(0, 0, 0, 0.5);
-        opacity: 0;
-        transition: opacity 0.12s ease;
-        user-select: none;
-        pointer-events: none;
-    }
-    .group:hover .traffic-symbol {
-        opacity: 1;
-    }
-</style>
