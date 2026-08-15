@@ -32,7 +32,7 @@
 >
     <FeedSearch />
 
-    <div class="tooltip" data-tip="Create a new folder">
+    <div class="tooltip tooltip-bottom" data-tip="Create a new folder">
         <button
             onclick={handleNewFolder}
             class="btn btn-ghost btn-sm btn-circle p-4 btn-press smooth-transition"
@@ -41,7 +41,7 @@
         </button>
     </div>
 
-    <div class="tooltip" data-tip="Refresh Feed">
+    <div class="tooltip tooltip-bottom" data-tip="Refresh Feed">
         <button
             onclick={handleRefresh}
             class="btn btn-ghost btn-sm btn-circle p-4 btn-press smooth-transition"

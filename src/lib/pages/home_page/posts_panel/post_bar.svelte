@@ -35,7 +35,7 @@
 <div
     class="sticky top-0 z-10 justify-end bg-base-100 p-2 flex space-x-1 border-b border-base-300"
 >
-    <div class="m-1 tooltip" data-tip="Filter unread">
+    <div class="m-1 tooltip tooltip-bottom" data-tip="Filter unread">
         <input
             type="checkbox"
             bind:checked={$filter_unread_posts}
@@ -45,7 +45,7 @@
         />
     </div>
 
-    <div class="tooltip" data-tip="Sort By">
+    <div class="tooltip tooltip-bottom" data-tip="Sort By">
         <button
             onclick={handleSortDate}
             class="btn btn-ghost btn-sm btn-circle p-4 btn-press smooth-transition"
