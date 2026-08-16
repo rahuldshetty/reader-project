@@ -4,6 +4,7 @@
 
     import { active_modal } from "$lib/stores/app_store";
     import { MODAL_TYPE } from "$lib/constants";
+    import { t } from "$lib/i18n";
 
     const openSettingsModal = () => {
         $active_modal = MODAL_TYPE.ABOUT;
@@ -16,6 +17,6 @@
         onclick={openSettingsModal}
     >
         <Fa icon={faInfoCircle} size="lg" />
-        <span class="text-xs">About</span>
+        <span class="text-xs">{$t("nav.about")}</span>
     </a>
 </li>

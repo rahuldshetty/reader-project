@@ -11,6 +11,7 @@
     feed_view,
   } from "$lib/stores/app_store";
   import { select_post } from "../common";
+  import { t } from "$lib/i18n";
 
   const { post }: { post: PostResult } = $props();
 
@@ -74,7 +75,7 @@
           <span class="truncate">{source.title}</span>
           <span class="opacity-40">·</span>
         {/if}
-        <span class="whitespace-nowrap">{timeAgo(post.pubDate)}</span>
+        <span class="whitespace-nowrap">{timeAgo(post.pubDate, $t)}</span>
       </span>
     </div>
   </button>

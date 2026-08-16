@@ -4,6 +4,7 @@
 
     import { active_modal } from "$lib/stores/app_store";
     import { MODAL_TYPE } from "$lib/constants";
+    import { t } from "$lib/i18n";
 
     const openAddModal = () => {
         $active_modal = MODAL_TYPE.ADD;
@@ -16,8 +17,8 @@
         onclick={openAddModal}
     >
         <div class="flex flex-col">
-            <Fa icon={faAdd} title="Minimize" />
-            <span class="text-xs">Add</span>
+            <Fa icon={faAdd} title={$t("nav.add")} />
+            <span class="text-xs">{$t("nav.add")}</span>
         </div>
     </button>
 </li>

@@ -1,0 +1,223 @@
+import type { TranslationKey } from "./en";
+
+const ar: Record<TranslationKey, string> = {
+    "app.name": "Reader-Project",
+    "app.version": "v{version}",
+
+    "common.cancel": "إلغاء",
+    "common.save": "حفظ",
+    "common.close": "إغلاق",
+    "common.minimize": "تصغير",
+    "common.maximize": "تكبير",
+    "common.search": "بحث",
+    "common.update": "تحديث",
+    "common.create": "إنشاء",
+    "common.delete": "حذف",
+    "common.edit": "تعديل",
+    "common.import": "استيراد",
+    "common.refresh": "تحديث",
+    "common.mark_read": "تحديد كمقروء",
+    "common.not_found": "غير موجود",
+
+    "nav.feeds": "الخلاصات",
+    "nav.browse": "تصفح",
+    "nav.settings": "الإعدادات",
+    "nav.add": "إضافة",
+    "nav.about": "حول",
+    "nav.collapse": "طي",
+    "nav.posts": "المقالات",
+    "nav.all_posts": "كل المقالات",
+    "nav.my_favourites": "المفضلة",
+
+    "feed.new_folder": "إنشاء مجلد جديد",
+    "feed.refresh": "تحديث الخلاصة",
+    "feed.refreshing": "جارٍ تحديث الخلاصة...",
+
+    "posts.refreshing": "جارٍ تحديث المقالات...",
+    "posts.filter_unread": "تصفية غير المقروء",
+    "posts.comfortable_view": "عرض مريح",
+    "posts.compact_view": "عرض مضغوط",
+    "posts.sort_by": "فرز حسب",
+    "posts.latest_first": "الأحدث أولاً",
+    "posts.oldest_first": "الأقدم أولاً",
+
+    "content.select_article": "حدد مقالاً للقراءة",
+    "content.unable_to_parse":
+        "تعذّر تحليل الصفحة. يرجى الوصول إلى الموقع مباشرة.",
+    "content.ai_summary": "ملخص مُنشأ بالذكاء الاصطناعي",
+    "content.min_read": "{n} دقائق قراءة",
+    "content.previous_article": "المقال السابق",
+    "content.next_article": "المقال التالي",
+    "content.copy_link": "نسخ الرابط إلى الحافظة",
+    "content.mark_as_read": "تحديد كمقروء",
+    "content.mark_favorite": "تحديد كمفضل",
+    "content.open_in_browser": "فتح في المتصفح",
+
+    "browse.title": "تصفح",
+    "browse.last_weeks": "آخر {n} أسابيع",
+    "browse.everything": "هذا كل شيء من آخر {n} أسابيع",
+    "browse.no_articles": "لا توجد مقالات في آخر {n} أسابيع",
+    "browse.read": "قراءة",
+    "browse.article": "مقال",
+
+    "settings.title": "الإعدادات",
+    "settings.tab.general": "عام",
+    "settings.tab.feeds": "الخلاصات",
+    "settings.tab.storage": "التخزين",
+    "settings.tab.llm": "LLM",
+    "settings.tab.fonts": "الخطوط",
+    "settings.tab.shortcuts": "الاختصارات",
+
+    "settings.language": "اللغة",
+    "settings.language.hint": "اختر لغة واجهة التطبيق.",
+    "settings.theme": "المظهر",
+    "settings.theme.hint": "اختر المظهر المفضل لديك.",
+    "settings.choose_theme": "اختيار المظهر",
+    "settings.close_button": "زر الإغلاق",
+    "settings.close_button.hint":
+        "تصغير التطبيق إلى منطقة الإشعارات عند النقر على زر الإغلاق.",
+    "settings.auto_refresh": "تحديث تلقائي",
+    "settings.auto_refresh.hint":
+        "تحديث جميع الخلاصات عند التشغيل (يزيد وقت الانتظار عند الإطلاق)",
+    "settings.export_opml": "تصدير OPML",
+    "settings.export_opml.hint": "تصدير وحفظ بيانات الخلاصات بتنسيق OPML.",
+
+    "settings.refresh_feed": "تحديث الخلاصة",
+    "settings.refresh_feed.hint":
+        "جلب أحدث المقالات تلقائياً عند تحديد خلاصة منتهية الصلاحية.",
+    "settings.last_refresh_time": "آخر وقت تحديث (ساعات)",
+    "settings.last_refresh_time.hint":
+        "وقت الانتهاء قبل تحديث المقالات الجديدة.",
+    "settings.auto_read": "قراءة تلقائية",
+    "settings.auto_read.hint": "تحديد مقال يجعله مقروءاً تلقائياً.",
+    "settings.insecure_mode": "الوضع غير الآمن",
+    "settings.insecure_mode.hint":
+        "فعّل هذا الوضع لجلب الخلاصات من روابط HTTP غير آمنة.",
+
+    "settings.auto_purge": "حذف تلقائي",
+    "settings.auto_purge.hint":
+        "حذف المقالات القديمة تلقائياً (غير المفضلة والخلاصات التي تتجاوز 100 مقال).",
+    "settings.post_duration": "مدة المقال",
+    "settings.post_duration.hint": "عدد الأيام للاحتفاظ بالمقال.",
+
+    "settings.enable_llm": "تفعيل LLM",
+    "settings.enable_llm.hint":
+        "تشغيل تلخيص المحتوى باستخدام خدمة LLM (متوافقة مع OpenAI).",
+    "settings.base_url": "الرابط الأساسي",
+    "settings.base_url.hint": "رابط OpenAI الأساسي",
+    "settings.model": "النموذج",
+    "settings.model.hint": "اسم نموذج OpenAI",
+    "settings.token": "الرمز",
+    "settings.token.hint": "مفتاح وصول OpenAI",
+
+    "settings.font_family": "عائلة الخط",
+    "settings.font_family.hint": "اختر الخط لكل النصوص في التطبيق.",
+    "settings.font_size": "حجم الخط",
+    "settings.font_size.hint": "حجم الخط الأساسي لكل النصوص (بالبكسل).",
+    "settings.line_height": "ارتفاع السطر",
+    "settings.line_height.hint": "المسافة بين أسطر النص.",
+    "settings.letter_spacing": "تباعد الأحرف",
+    "settings.letter_spacing.hint": "المسافة بين الأحرف (بالبكسل).",
+    "settings.paragraph_gap": "تباعد الفقرات",
+    "settings.paragraph_gap.hint": "المسافة بين الفقرات (بالبكسل).",
+
+    "settings.enable_shortcuts": "تفعيل الاختصارات",
+    "settings.enable_shortcuts.hint":
+        "تنقّل في التطبيق باستخدام لوحة المفاتيح. معطلة افتراضياً.",
+    "settings.reset_defaults": "إعادة الضبط إلى الافتراضي",
+    "settings.press_keys": "اضغط المفاتيح… (Esc للإلغاء)",
+    "settings.conflicting_shortcuts": "اختصارات متعارضة:",
+    "settings.reassign_or_reset": "أعد التعيين أو أعد الضبط قبل الحفظ.",
+
+    "shortcut.next_post": "المقال التالي",
+    "shortcut.next_post.desc":
+        "الانتقال إلى المقال التالي في القائمة. يفتح المقال التالي أثناء القراءة.",
+    "shortcut.prev_post": "المقال السابق",
+    "shortcut.prev_post.desc":
+        "الانتقال إلى المقال السابق في القائمة. يفتح المقال السابق أثناء القراءة.",
+    "shortcut.open_post": "فتح المقال",
+    "shortcut.open_post.desc": "فتح المقال المميز.",
+    "shortcut.mark_read": "تحديد مقروء / غير مقروء",
+    "shortcut.mark_read.desc": "تبديل حالة القراءة للمقال المميز أو المفتوح.",
+    "shortcut.mark_fav": "تحديد كمفضل",
+    "shortcut.mark_fav.desc": "تبديل حالة المفضلة للمقال المميز أو المفتوح.",
+    "shortcut.open_original": "فتح الأصل",
+    "shortcut.open_original.desc": "فتح رابط المقال في المتصفح الافتراضي.",
+    "shortcut.focus_search": "التركيز على البحث",
+    "shortcut.focus_search.desc": "الانتقال إلى مربع بحث الخلاصات.",
+    "shortcut.next_feed": "الخلاصة التالية",
+    "shortcut.next_feed.desc": "الانتقال إلى الخلاصة التالية في القائمة وتحديدها.",
+    "shortcut.prev_feed": "الخلاصة السابقة",
+    "shortcut.prev_feed.desc": "الانتقال إلى الخلاصة السابقة في القائمة وتحديدها.",
+
+    "modal.add_feed": "إضافة خلاصة",
+    "modal.url": "الرابط",
+    "modal.enter_feed_url": "أدخل رابط خلاصة RSS أو Atom",
+    "modal.skip_data_fetch": "تخطي جلب البيانات",
+    "modal.skip_data_fetch.hint": "تفعيل هذا الخيار سيتخطى تحميل الخلاصة.",
+    "modal.upload_opml": "رفع OPML",
+    "modal.scan_url": "فحص الرابط",
+    "modal.select_feeds": "حدد الخلاصات للاستيراد.",
+    "modal.select_all": "تحديد الكل",
+
+    "modal.edit_feed": "تعديل الخلاصة",
+    "modal.edit_folder": "تعديل المجلد",
+    "modal.title": "العنوان",
+    "modal.folder": "المجلد",
+    "modal.pick_folder": "اختر مجلداً",
+    "modal.load_refresh": "تحديث عند التحميل",
+    "modal.load_refresh.hint":
+        "فعّل هذا الخيار لتحديث الخلاصة عند تشغيل التطبيق.",
+    "modal.total": "الإجمالي",
+    "modal.posts": "مقالات",
+    "modal.posts_rate": "معدل المقالات",
+    "modal.posts_per_day": "مقالات/يوم",
+    "modal.last_refreshed": "آخر تحديث",
+
+    "modal.mark_read": "تحديد كمقروء",
+    "modal.mark_all_read": "تحديد جميع المقالات في \"{name}\" كمقروءة؟",
+    "modal.delete_feed": "حذف الخلاصة",
+    "modal.delete_confirm": "أنت على وشك حذف {name}. هل تريد المتابعة؟",
+    "modal.create_folder": "إنشاء مجلد",
+    "modal.enter_folder_name": "أدخل اسم المجلد",
+
+    "modal.about.title": "حول Reader-Project",
+    "modal.about.app_logo": "شعار التطبيق",
+    "modal.about.description":
+        "Reader-Project هو مجمّع RSS يركز على الخصوصية، مبني باستخدام Tauri وSvelteKit وTailwind CSS. يدعم التخزين دون اتصال، والتحديث التلقائي للخلاصات، واستخراج المحتوى، وترجمة المقالات، والمزيد — كل ذلك في واجهة عصرية وأنيقة.",
+    "modal.about.source_code": "الكود المصدري",
+    "modal.about.license": "الترخيص (MIT)",
+
+    "toast.feed_url_insecure":
+        "رابط الخلاصة غير آمن. فعّل الوضع غير الآمن لجلب البيانات من روابط غير آمنة.",
+    "toast.unable_to_fetch": "تعذّر جلب الخلاصة :(",
+    "toast.folder_created": "تم إنشاء المجلد",
+    "toast.folder_create_failed": "تعذّر إنشاء المجلد. تأكد من عدم وجود المجلد.",
+    "toast.edit_saved": "تم حفظ التعديل.",
+    "toast.edit_failed": "فشلت عملية التعديل.",
+    "toast.feed_saved": "تم حفظ الخلاصة بنجاح.",
+    "toast.invalid_file_path": "يرجى تقديم مسار ملف صالح.",
+    "toast.conflicting_shortcuts":
+        "اختصارات متعارضة. أعد التعيين أو أعد الضبط قبل الحفظ.",
+    "toast.copied_link": "تم نسخ الرابط إلى الحافظة",
+    "toast.copied_text": "تم نسخ النص إلى الحافظة",
+
+    "time.seconds_ago": "منذ {n} ثانية",
+    "time.minutes_ago": "منذ {n} دقيقة",
+    "time.hours_ago": "منذ {n} ساعة",
+    "time.days_ago": "منذ {n} يوم",
+    "time.weeks_ago": "منذ {n} أسبوع",
+    "time.months_ago": "منذ {n} شهر",
+    "time.years_ago": "منذ {n} سنة",
+    "time.today": "اليوم",
+    "time.yesterday": "أمس",
+    "time.this_week": "هذا الأسبوع",
+    "time.older": "أقدم",
+
+    "loading.logo_alt": "Reader Project",
+    "loading.quote":
+        "«القارئ يعيش ألف حياة قبل أن يموت. أما من لا يقرأ أبداً فيعيش حياة واحدة فقط.»",
+    "loading.quote_author": "- جورج ر. ر. مارتن",
+};
+
+export default ar;

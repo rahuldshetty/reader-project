@@ -2,7 +2,7 @@
     import { onMount, onDestroy } from "svelte";
     import type { Snippet } from "svelte";
     import { is_recording } from "$lib/services/keyboard_shortcuts";
-
+    import { t } from "$lib/i18n";
     let {
         open = false,
         title = "",
@@ -50,7 +50,7 @@
             <button
                 class="btn btn-sm btn-circle btn-ghost"
                 onclick={onClose}
-                aria-label="Close"
+                aria-label={$t("common.close")}
                 >✕</button
             >
         </header>

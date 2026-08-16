@@ -5,6 +5,7 @@ import {
 } from "$lib/stores/app_store";
 
 import { fetch_latest_user_settings } from "$lib/utils/setting";
+import { apply_document_language } from "$lib/i18n";
 import { FEED_VIEW } from "$lib/constants";
 
 import { 
@@ -21,6 +22,7 @@ export const init_app = async () => {
     const loadedSettings = await fetch_latest_user_settings();
     local_user_setting.set(loadedSettings);
     feed_view.set(loadedSettings.CURRENT_FEED_VIEW as FEED_VIEW);
+    apply_document_language(loadedSettings.LANGUAGE);
 
     // Apply font settings to CSS custom properties
     const root = document.documentElement;

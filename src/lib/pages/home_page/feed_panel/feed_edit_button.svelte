@@ -6,9 +6,10 @@
     import { FEED_TYPE, MODAL_TYPE } from "$lib/constants";
     import { active_modal, refreshing_posts } from "$lib/stores/app_store";
     import { refresh_post_data } from "$lib/pages/home_page/common";
+    import { t } from "$lib/i18n";
 
     const { feed }: { feed: FeedResult | Feed } = $props();
-    
+
     const closeEditDialog = () => {
         if(document && document.activeElement && document.activeElement instanceof HTMLElement)
             document.activeElement.blur();
@@ -49,10 +50,10 @@
         class="dropdown-content overflow-auto text-base-content menu bg-base-200 rounded-box z-10 p-2 w-28 shadow-sm overflow-visible"
     >
         {#if feed.type == FEED_TYPE.FEED}
-            <li><button onclick={handleRefresh}>Refresh</button></li>
-            <li><button onclick={handleFeedAsRead}>Mark Read</button></li>
+            <li><button onclick={handleRefresh}>{$t("common.refresh")}</button></li>
+            <li><button onclick={handleFeedAsRead}>{$t("common.mark_read")}</button></li>
         {/if}
-        <li><button onclick={handleEditFeed}>Edit</button></li>
-        <li><button onclick={handleDeleteFeed}>Delete</button></li>
+        <li><button onclick={handleEditFeed}>{$t("common.edit")}</button></li>
+        <li><button onclick={handleDeleteFeed}>{$t("common.delete")}</button></li>
     </ul>
 </div>

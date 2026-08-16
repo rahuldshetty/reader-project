@@ -6,11 +6,12 @@
   import ImportPage from "./pages/import_page.svelte";
   import InputPage from "./pages/input_page.svelte";
   import ModalShell from "$lib/components/modals/ModalShell.svelte";
+  import { t } from "$lib/i18n";
 </script>
 
 <ModalShell
   open={$active_modal == MODAL_TYPE.ADD}
-  title="Add Feed"
+  title={$t("modal.add_feed")}
   widthClass="max-w-xl"
   onClose={closeAddModal}
 >

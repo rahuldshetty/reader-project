@@ -23,6 +23,7 @@
   import { toastStore } from "$lib/stores/toast_store";
   import { extractTime, extractFormattedDate } from "$lib/utils/time";
   import ModalShell from "$lib/components/modals/ModalShell.svelte";
+  import { t, translate, SUPPORTED_LANGUAGES } from "$lib/i18n";
 
   let save_in_progress = $state(false);
   let feed: Feed = $state({
@@ -43,9 +44,12 @@
     posts_per_day: 0,
     last_refreshed: "",
   });
-  const timePart = $derived(extractTime(feed_info.last_refreshed, false));
+  const locale_tag = $derived(
+    SUPPORTED_LANGUAGES.find((l) => l.code === $local_user_setting.LANGUAGE)?.tag ?? "en-US",
+  );
+  const timePart = $derived(extractTime(feed_info.last_refreshed, false, locale_tag));
   const formattedDate = $derived(
-    extractFormattedDate(feed_info.last_refreshed, false),
+    extractFormattedDate(feed_info.last_refreshed, false, locale_tag),
   );
 
   // Update feed id on change
@@ -68,9 +72,9 @@
 
     try {
       update_feed(feed.id, feed.title, feed.parent, feed.refresh_on_load);
-      toastStore.add(TOAST_MESSAGE_TYPE.SUCCESS, "Edit Saved.");
+      toastStore.add(TOAST_MESSAGE_TYPE.SUCCESS, translate("toast.edit_saved"));
     } catch {
-      toastStore.add(TOAST_MESSAGE_TYPE.ERROR, "Edit operation failed.");
+      toastStore.add(TOAST_MESSAGE_TYPE.ERROR, translate("toast.edit_failed"));
     }
 
     // Refresh App Data
@@ -85,7 +89,7 @@
 
 <ModalShell
   open={$active_modal == MODAL_TYPE.UPDATE}
-  title={`Edit ${feed.type == FEED_TYPE.FEED ? "Feed" : "Folder"}`}
+  title={feed.type == FEED_TYPE.FEED ? $t("modal.edit_feed") : $t("modal.edit_folder")}
   widthClass="max-w-xl"
   onClose={closeModal}
   footer={footer}
@@ -105,7 +109,7 @@
       <!-- URL -->
       <div>
         <!-- <legend class="fieldset-legend">Folder</legend> -->
-        <p class="label">Title</p>
+        <p class="label">{$t("modal.title")}</p>
       </div>
       <div>
         <input
@@ -122,7 +126,7 @@
         <!-- URL -->
         <div>
           <!-- <legend class="fieldset-legend">Folder</legend> -->
-          <p class="label">URL</p>
+          <p class="label">{$t("modal.url")}</p>
         </div>
         <div>
           <input
@@ -138,11 +142,11 @@
         <!-- URL -->
         <div>
           <!-- <legend class="fieldset-legend">Folder</legend> -->
-          <p class="label">Folder</p>
+          <p class="label">{$t("modal.folder")}</p>
         </div>
         <div>
           <select class="select w-full" bind:value={feed.parent}>
-            <option selected value={-1}>Pick a folder</option>
+            <option selected value={-1}>{$t("modal.pick_folder")}</option>
             {#await fetch_folders() then folders}
               {#each folders as folder}
                 <option value={folder.id}>{folder.title}</option>
@@ -158,9 +162,9 @@
         >
           <!-- Enable on refresh -->
           <div>
-            <legend class="fieldset-legend">Load Refresh</legend>
+            <legend class="fieldset-legend">{$t("modal.load_refresh")}</legend>
             <p class="label">
-              Enable this option to refresh feed when app is launched.
+              {$t("modal.load_refresh.hint")}
             </p>
           </div>
           <div class="flex justify-end">
@@ -176,19 +180,19 @@
       <fieldset class="fieldset items-center gap-2">
         <div class="stats stats-vertical lg:stats-horizontal">
           <div class="stat">
-            <div class="stat-title">Total</div>
+            <div class="stat-title">{$t("modal.total")}</div>
             <div class="stat-value">{feed_info.total}</div>
-            <div class="stat-desc">Posts</div>
+            <div class="stat-desc">{$t("modal.posts")}</div>
           </div>
 
           <div class="stat">
-            <div class="stat-title">Posts Rate</div>
+            <div class="stat-title">{$t("modal.posts_rate")}</div>
             <div class="stat-value">{feed_info.posts_per_day.toFixed(2)}</div>
-            <div class="stat-desc">posts/day</div>
+            <div class="stat-desc">{$t("modal.posts_per_day")}</div>
           </div>
 
           <div class="stat">
-            <div class="stat-title">Last Refreshed</div>
+            <div class="stat-title">{$t("modal.last_refreshed")}</div>
             <div class="stat-value">{timePart}</div>
             <div class="stat-desc">{formattedDate}</div>
           </div>
@@ -202,7 +206,7 @@
   <button
     class="btn btn-ghost"
     onclick={closeModal}
-    disabled={save_in_progress}>Cancel</button
+    disabled={save_in_progress}>{$t("common.cancel")}</button
   >
   <button
     class="btn btn-primary"
@@ -212,6 +216,6 @@
     {#if save_in_progress}
       <span class="loading loading-spinner"></span>
     {/if}
-    Update
+    {$t("common.update")}
   </button>
 {/snippet}

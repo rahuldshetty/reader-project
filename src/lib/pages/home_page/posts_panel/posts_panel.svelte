@@ -17,6 +17,7 @@
     import PostItem from "./post_item.svelte";
     import LoadingSpinner from "$lib/components/loading_spinner.svelte";
     import PostBar from "./post_bar.svelte";
+    import { t } from "$lib/i18n";
 
     let listElement: HTMLDivElement;
 
@@ -26,11 +27,11 @@
         }
     });
 
-    const grouped_posts = derived([posts_store], ([$posts_store]) => {
+    const grouped_posts = derived([posts_store, t], ([$posts_store, $t]) => {
         const groups: { label: string; posts: PostResult[] }[] = [];
         let currentLabel = "";
         for (const post of $posts_store) {
-            const label = dateGroupLabel(post.pubDate);
+            const label = dateGroupLabel(post.pubDate, $t);
             if (label !== currentLabel) {
                 currentLabel = label;
                 groups.push({ label, posts: [post] });
@@ -74,14 +75,14 @@
                 onclick={() => mobile_active_panel.set("feeds")}
             >
                 <Fa icon={faArrowLeft} />
-                <span>Feeds</span>
+                <span>{$t("nav.feeds")}</span>
             </button>
         </div>
     {/if}
     <PostBar />
     {#if $refreshing_posts}
         <div class="fade-transition">
-            <LoadingSpinner messaage="Refreshing posts..." />
+            <LoadingSpinner messaage={$t("posts.refreshing")} />
         </div>
     {:else}
         <div

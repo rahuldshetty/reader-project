@@ -10,6 +10,7 @@
 
     import { local_user_setting } from "$lib/stores/app_store";
     import { exit } from "@tauri-apps/plugin-process";
+    import { t } from "$lib/i18n";
 
     const appWindow = getCurrentWindow();
 
@@ -33,8 +34,8 @@
         <button
             class="p-0 cursor-pointer leading-none"
             onclick={appWindow.minimize}
-            title="Minimize"
-            aria-label="Minimize"
+            title={$t("common.minimize")}
+            aria-label={$t("common.minimize")}
         >
             <FaLayers size="sm">
                 <Fa icon={faCircle} color="#febc2e" />
@@ -44,8 +45,8 @@
         <button
             class="p-0 cursor-pointer leading-none"
             onclick={appWindow.toggleMaximize}
-            title="Maximize"
-            aria-label="Maximize"
+            title={$t("common.maximize")}
+            aria-label={$t("common.maximize")}
         >
             <FaLayers size="sm">
                 <Fa icon={faCircle} color="#28c840" />
@@ -55,8 +56,8 @@
         <button
             class="p-0 cursor-pointer leading-none"
             onclick={closeWindow}
-            title="Close"
-            aria-label="Close"
+            title={$t("common.close")}
+            aria-label={$t("common.close")}
         >
             <FaLayers size="sm">
                 <Fa icon={faCircle} color="#ff5f57" />

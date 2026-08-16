@@ -5,6 +5,7 @@
   import { feed_by_id } from "$lib/stores/app_store";
   import Fa from "svelte-fa";
   import { faNewspaper } from "@fortawesome/free-solid-svg-icons";
+  import { t } from "$lib/i18n";
 
   type Variant = "lead" | "featured" | "standard";
 
@@ -31,7 +32,7 @@
       <span class="truncate">{source.title}</span>
       <span class="opacity-40">·</span>
     {/if}
-    <span class="whitespace-nowrap">{timeAgo(post.pubDate)}</span>
+    <span class="whitespace-nowrap">{timeAgo(post.pubDate, $t)}</span>
   </div>
 {/snippet}
 
@@ -74,7 +75,7 @@
 
     <div class="p-6 md:p-8 flex flex-col gap-3 md:w-2/5">
       <div class="text-xs uppercase tracking-wide text-primary font-semibold">
-        {source?.title ?? "Article"}
+        {source?.title ?? $t("browse.article")}
       </div>
       <h2
         class="text-2xl md:text-3xl font-bold leading-tight line-clamp-4 {post.read
@@ -89,8 +90,8 @@
       <div
         class="mt-auto pt-2 flex items-center justify-between text-sm opacity-60"
       >
-        <span>{timeAgo(post.pubDate)}</span>
-        <span class="font-medium text-primary">Read</span>
+        <span>{timeAgo(post.pubDate, $t)}</span>
+        <span class="font-medium text-primary">{$t("browse.read")}</span>
       </div>
     </div>
   </button>

@@ -8,6 +8,7 @@
     import { fetchFeedDataFromURL, flattenFeedData } from "$lib/services/feed_gather";
     import { add_feed, fetch_folders } from "$lib/dao/feed_db";
     import { closeAddModal } from "../add_modal_methods";
+    import { t } from "$lib/i18n";
     import { FEED_TYPE } from "$lib/constants";
     import { onDestroy } from "svelte";
     import type { FeedMetadata, FeedMetadataFolder } from "$lib/types";
@@ -129,7 +130,7 @@
 
 <div>
     <div>
-        <p class="prose prose-sm">Select feeds to import.</p>
+        <p class="prose prose-sm">{$t("modal.select_feeds")}</p>
     </div>
 
     <div class="flex flex-col gap-2 mt-4 max-h-[400px] overflow-y-auto pr-2">
@@ -139,7 +140,7 @@
                 class="checkbox"
                 onchange={(e: Event) => handleSelectAll(e)}
             />
-            <span>Select All</span>
+            <span>{$t("modal.select_all")}</span>
         </div>
         {#each feed_metadata_imports as import_data}
             <div class="rounded max-h-xl">
@@ -191,7 +192,7 @@
         <button
             class="btn btn-ghost"
             onclick={closeAddModal}
-            disabled={$btn_in_progress}>Cancel</button
+            disabled={$btn_in_progress}>{$t("common.cancel")}</button
         >
         <button
             class="btn btn-primary"
@@ -201,7 +202,7 @@
             {#if $btn_in_progress}
                 <span class="loading loading-spinner"></span>
             {/if}
-            Import
+            {$t("common.import")}
         </button>
     </div>
 </div>

@@ -8,6 +8,7 @@
   } from "$lib/stores/app_store";
   import { get_binding_label } from "$lib/services/keyboard_shortcuts";
   import { refresh_posts } from "../common";
+  import { t } from "$lib/i18n";
 
   const onSearchValueChange = async (e: Event) => {
     const text = (e.target as HTMLInputElement).value;
@@ -45,7 +46,7 @@
     <input
       id="feed-search-input"
       type="search"
-      placeholder="Search"
+      placeholder={$t("common.search")}
       onchange={onSearchValueChange}
       class="pr-6"
     />

@@ -28,11 +28,18 @@
   import { convertFeedDataToOPML } from "$lib/services/opml_gather";
   import ModalShell from "$lib/components/modals/ModalShell.svelte";
   import type { ShortcutBindings } from "$lib/types";
+  import {
+    t,
+    translate,
+    SUPPORTED_LANGUAGES,
+    apply_document_language,
+  } from "$lib/i18n";
 
   // Local setting State Variables
   // Why use Local vs Global?
   // Answer: Only when user submit to save in modal, we need to save
   let color_theme = $state($local_user_setting.THEME_MODE);
+  let language = $state($local_user_setting.LANGUAGE);
   let refresh_time = $state($local_user_setting.LAST_REFRESH_TIME);
   let enable_insecure_feeds = $state($local_user_setting.ENABLE_INSECURE_LINK);
   let pull_posts_on_feed_select = $state(
@@ -144,6 +151,7 @@
   const closeModal = () => {
     // Reset State
     color_theme = $local_user_setting.THEME_MODE;
+    language = $local_user_setting.LANGUAGE;
     pull_posts_on_feed_select = $local_user_setting.REFRESH_FEED_ON_SELECT;
     refresh_time = $local_user_setting.LAST_REFRESH_TIME;
     enable_insecure_feeds = $local_user_setting.ENABLE_INSECURE_LINK;
@@ -187,7 +195,7 @@
     if (shortcut_conflicts.length > 0) {
       toastStore.add(
         TOAST_MESSAGE_TYPE.ERROR,
-        "Conflicting shortcuts. Reassign or reset before saving.",
+        translate("toast.conflicting_shortcuts"),
       );
       return;
     }
@@ -197,6 +205,7 @@
     // Persist settings
     await user_settings.set(SETTINGS.LAST_REFRESH_TIME, refresh_time);
     await user_settings.set(SETTINGS.THEME_MODE, color_theme);
+    await user_settings.set(SETTINGS.LANGUAGE, language);
     await user_settings.set(
       SETTINGS.ENABLE_INSECURE_LINK,
       enable_insecure_feeds,
@@ -234,6 +243,7 @@
 
     // Update local store
     $local_user_setting.THEME_MODE = color_theme;
+    $local_user_setting.LANGUAGE = language;
     $local_user_setting.REFRESH_FEED_ON_SELECT = pull_posts_on_feed_select;
     $local_user_setting.LAST_REFRESH_TIME = refresh_time;
     $local_user_setting.ENABLE_INSECURE_LINK = enable_insecure_feeds;
@@ -257,6 +267,7 @@
       ENABLED: shortcuts_enabled,
       BINDINGS: shortcut_bindings,
     };
+    apply_document_language(language);
 
     // Close Modal
     save_in_progress = false;
@@ -278,11 +289,11 @@
     if (path) {
       const opml_result = convertFeedDataToOPML($feeds_store);
       await writeTextFile(path, opml_result);
-      toastStore.add(TOAST_MESSAGE_TYPE.SUCCESS, "Feed saved successfully.");
+      toastStore.add(TOAST_MESSAGE_TYPE.SUCCESS, translate("toast.feed_saved"));
     } else {
       toastStore.add(
         TOAST_MESSAGE_TYPE.WARNING,
-        "Please provide valid file path.",
+        translate("toast.invalid_file_path"),
       );
     }
   };
@@ -290,7 +301,7 @@
 
 <ModalShell
   open={$active_modal == MODAL_TYPE.SETTINGS}
-  title="Settings"
+  title={$t("settings.title")}
   widthClass="max-w-xl"
   onClose={closeModal}
   footer={settingsFooter}
@@ -302,21 +313,38 @@
         type="radio"
         name="setting_tabs"
         class="tab"
-        aria-label="General"
+        aria-label={$t("settings.tab.general")}
         checked
       />
       <div class="tab-content bg-base-100 p-4">
         <div class="grid grid-cols-1 gap-2">
+          <!-- Language -->
+          <fieldset
+            class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+          >
+            <div>
+              <legend class="fieldset-legend">{$t("settings.language")}</legend>
+              <p class="label">{$t("settings.language.hint")}</p>
+            </div>
+            <div class="flex justify-end">
+              <select class="select select-bordered" bind:value={language}>
+                {#each SUPPORTED_LANGUAGES as lang}
+                  <option value={lang.code}>{lang.label}</option>
+                {/each}
+              </select>
+            </div>
+          </fieldset>
+
           <!-- Color Theme -->
           <fieldset
             class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
           >
             <div>
-              <legend class="fieldset-legend">Theme</legend>
-              <p class="label">Pick your favorite theme.</p>
+              <legend class="fieldset-legend">{$t("settings.theme")}</legend>
+              <p class="label">{$t("settings.theme.hint")}</p>
             </div>
             <div class="dropdown flex justify-end">
-              <div tabindex="0" role="button" class="btn m-1">Choose Theme</div>
+              <div tabindex="0" role="button" class="btn m-1">{$t("settings.choose_theme")}</div>
               <ul
                 tabindex="0"
                 class="dropdown-content max-h-60 overflow-auto bg-base-300 rounded-box z-[1] w-52 p-2 shadow-2xl"
@@ -345,9 +373,9 @@
             class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
           >
             <div>
-              <legend class="fieldset-legend">Close Button</legend>
+              <legend class="fieldset-legend">{$t("settings.close_button")}</legend>
               <p class="label">
-                Minimize app to tray when clicking close button.
+                {$t("settings.close_button.hint")}
               </p>
             </div>
             <div class="flex justify-end">
@@ -365,9 +393,9 @@
           >
             <!-- Enable auto-refresh-all-feed -->
             <div>
-              <legend class="fieldset-legend">Auto-Refresh</legend>
+              <legend class="fieldset-legend">{$t("settings.auto_refresh")}</legend>
               <p class="label">
-                Refresh all feeds on launch (increases waiting time on launch)
+                {$t("settings.auto_refresh.hint")}
               </p>
             </div>
             <div class="flex justify-end">
@@ -386,71 +414,29 @@
           >
             <!-- Export OPML -->
             <div>
-              <legend class="fieldset-legend">Export OPML</legend>
-              <p class="label">Export and save your feed data as OPML.</p>
+              <legend class="fieldset-legend">{$t("settings.export_opml")}</legend>
+              <p class="label">{$t("settings.export_opml.hint")}</p>
             </div>
             <div class="flex justify-end">
               <button class="btn btn-neutral" onclick={handleOPMLSave}
-                >Export OPML</button
+                >{$t("settings.export_opml")}</button
               >
             </div>
           </fieldset>
         </div>
       </div>
 
-      <!-- Home Settings -->
-      <!-- <input type="radio" name="setting_tabs" class="tab" aria-label="Home" />
-      <div class="tab-content bg-base-100 p-4">
-        <fieldset
-          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
-        >
-          <div>
-            <legend class="fieldset-legend">Latitude</legend>
-            <p class="label">Value of Latitude</p>
-          </div>
-          <div class="flex justify-end">
-            <input
-              type="number"
-              class="input"
-              min="-90"
-              max="90"
-              step="any"
-              bind:value={latitude}
-            />
-          </div>
-        </fieldset>
-
-        <fieldset
-          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
-        >
-          <div>
-            <legend class="fieldset-legend">Longitude</legend>
-            <p class="label">Value of Longitude</p>
-          </div>
-          <div class="flex justify-end">
-            <input
-              type="number"
-              class="input"
-              min="-180"
-              max="180"
-              step="any"
-              bind:value={longitude}
-            />
-          </div>
-        </fieldset>
-      </div> -->
-
       <!-- Feed Setting -->
-      <input type="radio" name="setting_tabs" class="tab" aria-label="Feeds" />
+      <input type="radio" name="setting_tabs" class="tab" aria-label={$t("settings.tab.feeds")} />
       <div class="tab-content bg-base-100 p-4">
         <fieldset
           class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
         >
           <!-- Pull latest feed on select -->
           <div>
-            <legend class="fieldset-legend">Refresh Feed</legend>
+            <legend class="fieldset-legend">{$t("settings.refresh_feed")}</legend>
             <p class="label">
-              Automatically pull latest posts when selecting an expired feed.
+              {$t("settings.refresh_feed.hint")}
             </p>
           </div>
           <div class="flex justify-end">
@@ -467,8 +453,8 @@
         >
           <!-- Last Refresh Time -->
           <div>
-            <legend class="fieldset-legend">Last Refresh Time (hours)</legend>
-            <p class="label">Expiry time before refreshing new posts.</p>
+            <legend class="fieldset-legend">{$t("settings.last_refresh_time")}</legend>
+            <p class="label">{$t("settings.last_refresh_time.hint")}</p>
           </div>
           <div class="flex justify-end">
             <input
@@ -485,9 +471,9 @@
         >
           <!-- Enable auto-read -->
           <div>
-            <legend class="fieldset-legend">Auto-Read</legend>
+            <legend class="fieldset-legend">{$t("settings.auto_read")}</legend>
             <p class="label">
-              Selecting a post automatically marks the post as read.
+              {$t("settings.auto_read.hint")}
             </p>
           </div>
           <div class="flex justify-end">
@@ -505,9 +491,9 @@
         >
           <!-- Pull unsecure links -->
           <div>
-            <legend class="fieldset-legend">Insecure Mode</legend>
+            <legend class="fieldset-legend">{$t("settings.insecure_mode")}</legend>
             <p class="label">
-              Enable this mode to pull feeds from unsecured HTTP urls.
+              {$t("settings.insecure_mode.hint")}
             </p>
           </div>
           <div class="flex justify-end">
@@ -526,7 +512,7 @@
         type="radio"
         name="setting_tabs"
         class="tab"
-        aria-label="Storage"
+        aria-label={$t("settings.tab.storage")}
       />
       <div class="tab-content bg-base-100 p-4">
         <fieldset
@@ -534,10 +520,9 @@
         >
           <!-- Auto Delete -->
           <div>
-            <legend class="fieldset-legend">Auto Purge</legend>
+            <legend class="fieldset-legend">{$t("settings.auto_purge")}</legend>
             <p class="label">
-              Automatically delete older posts (non-favorites & feeds > 100
-              posts).
+              {$t("settings.auto_purge.hint")}
             </p>
           </div>
           <div class="flex justify-end">
@@ -554,8 +539,8 @@
         >
           <!-- Post Duration -->
           <div>
-            <legend class="fieldset-legend">Post Duration</legend>
-            <p class="label">Number of days to persist a post.</p>
+            <legend class="fieldset-legend">{$t("settings.post_duration")}</legend>
+            <p class="label">{$t("settings.post_duration.hint")}</p>
           </div>
           <div class="flex justify-end">
             <input
@@ -569,16 +554,16 @@
       </div>
 
       <!-- AI Settings -->
-      <input type="radio" name="setting_tabs" class="tab" aria-label="LLM" />
+      <input type="radio" name="setting_tabs" class="tab" aria-label={$t("settings.tab.llm")} />
       <div class="tab-content bg-base-100 p-4">
         <!-- Enable LLM -->
         <fieldset
           class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
         >
           <div>
-            <legend class="fieldset-legend">Enable LLM</legend>
+            <legend class="fieldset-legend">{$t("settings.enable_llm")}</legend>
             <p class="label">
-              Run content summarization using LLM service (OpenAI-compatible).
+              {$t("settings.enable_llm.hint")}
             </p>
           </div>
           <div class="flex justify-end">
@@ -596,8 +581,8 @@
           class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
         >
           <div>
-            <legend class="fieldset-legend">Base URL</legend>
-            <p class="label">Open-AI Base URL</p>
+            <legend class="fieldset-legend">{$t("settings.base_url")}</legend>
+            <p class="label">{$t("settings.base_url.hint")}</p>
           </div>
           <div class="flex justify-end">
             <input
@@ -614,8 +599,8 @@
           class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
         >
           <div>
-            <legend class="fieldset-legend">Model</legend>
-            <p class="label">Open-AI Model Name</p>
+            <legend class="fieldset-legend">{$t("settings.model")}</legend>
+            <p class="label">{$t("settings.model.hint")}</p>
           </div>
           <div class="flex justify-end">
             <input
@@ -632,8 +617,8 @@
           class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
         >
           <div>
-            <legend class="fieldset-legend">Token</legend>
-            <p class="label">Open-AI Access Key</p>
+            <legend class="fieldset-legend">{$t("settings.token")}</legend>
+            <p class="label">{$t("settings.token.hint")}</p>
           </div>
           <div class="flex justify-end">
             <input
@@ -647,13 +632,13 @@
       </div>
 
       <!-- Fonts Settings -->
-      <input type="radio" name="setting_tabs" class="tab" aria-label="Fonts" />
+      <input type="radio" name="setting_tabs" class="tab" aria-label={$t("settings.tab.fonts")} />
       <div class="tab-content bg-base-100 p-4">
         <div class="grid grid-cols-1 gap-4">
           <!-- Font Family -->
           <fieldset class="fieldset w-full">
-            <legend class="fieldset-legend">Font Family</legend>
-            <p class="label">Choose the font for all text across the app.</p>
+            <legend class="fieldset-legend">{$t("settings.font_family")}</legend>
+            <p class="label">{$t("settings.font_family.hint")}</p>
             <select class="select select-bordered w-full" bind:value={font_family}>
               {#each fontFamilies as family}
                 <option value={family} style="font-family: {family}">{family}</option>
@@ -663,8 +648,8 @@
 
           <!-- Font Size -->
           <fieldset class="fieldset w-full">
-            <legend class="fieldset-legend">Font Size</legend>
-            <p class="label">Base font size for all text (in pixels).</p>
+            <legend class="fieldset-legend">{$t("settings.font_size")}</legend>
+            <p class="label">{$t("settings.font_size.hint")}</p>
             <div class="flex items-center gap-3">
               <input
                 type="range"
@@ -680,8 +665,8 @@
 
           <!-- Line Height -->
           <fieldset class="fieldset w-full">
-            <legend class="fieldset-legend">Line Height</legend>
-            <p class="label">Spacing between lines of text.</p>
+            <legend class="fieldset-legend">{$t("settings.line_height")}</legend>
+            <p class="label">{$t("settings.line_height.hint")}</p>
             <div class="flex items-center gap-3">
               <input
                 type="range"
@@ -697,8 +682,8 @@
 
           <!-- Letter Spacing -->
           <fieldset class="fieldset w-full">
-            <legend class="fieldset-legend">Letter Spacing</legend>
-            <p class="label">Spacing between characters (in pixels).</p>
+            <legend class="fieldset-legend">{$t("settings.letter_spacing")}</legend>
+            <p class="label">{$t("settings.letter_spacing.hint")}</p>
             <div class="flex items-center gap-3">
               <input
                 type="range"
@@ -714,8 +699,8 @@
 
           <!-- Paragraph Gap -->
           <fieldset class="fieldset w-full">
-            <legend class="fieldset-legend">Paragraph Gap</legend>
-            <p class="label">Space between paragraphs (in pixels).</p>
+            <legend class="fieldset-legend">{$t("settings.paragraph_gap")}</legend>
+            <p class="label">{$t("settings.paragraph_gap.hint")}</p>
             <div class="flex items-center gap-3">
               <input
                 type="range"
@@ -736,7 +721,7 @@
         type="radio"
         name="setting_tabs"
         class="tab"
-        aria-label="Shortcuts"
+        aria-label={$t("settings.tab.shortcuts")}
       />
       <div class="tab-content bg-base-100 p-4">
         <div class="flex flex-col gap-3">
@@ -744,9 +729,9 @@
             class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
           >
             <div>
-              <legend class="fieldset-legend">Enable Shortcuts</legend>
+              <legend class="fieldset-legend">{$t("settings.enable_shortcuts")}</legend>
               <p class="label">
-                Navigate the app with your keyboard. Disabled by default.
+                {$t("settings.enable_shortcuts.hint")}
               </p>
             </div>
             <div class="flex justify-end">
@@ -762,14 +747,14 @@
           {#if shortcut_conflicts.length > 0}
             <div class="alert alert-error text-sm">
               <span>
-                Conflicting shortcuts:
+                {$t("settings.conflicting_shortcuts")}
                 {shortcut_conflicts
                   .map(
                     ([a, b]) =>
-                      `${SHORTCUT_ACTION_META[a as SHORTCUT_ACTION]?.label ?? a} / ${SHORTCUT_ACTION_META[b as SHORTCUT_ACTION]?.label ?? b}`,
+                      `${$t(SHORTCUT_ACTION_META[a as SHORTCUT_ACTION].labelKey)} / ${$t(SHORTCUT_ACTION_META[b as SHORTCUT_ACTION].labelKey)}`,
                   )
-                  .join(", ")}
-                . Reassign or reset before saving.
+                  .join(", ")}.
+                {$t("settings.reassign_or_reset")}
               </span>
             </div>
           {/if}
@@ -777,7 +762,7 @@
           <div class="flex justify-end">
             <button
               class="btn btn-sm btn-ghost"
-              onclick={resetShortcuts}>Reset to Defaults</button
+              onclick={resetShortcuts}>{$t("settings.reset_defaults")}</button
             >
           </div>
 
@@ -788,8 +773,8 @@
                 class="flex items-center justify-between gap-3 p-3 rounded-lg bg-base-200 {is_conflicting ? 'ring-1 ring-error' : ''}"
               >
                 <div class="min-w-0">
-                  <p class="text-sm font-medium">{meta.label}</p>
-                  <p class="text-xs opacity-70">{meta.description}</p>
+                  <p class="text-sm font-medium">{$t(meta.labelKey)}</p>
+                  <p class="text-xs opacity-70">{$t(meta.descriptionKey)}</p>
                 </div>
                 <button
                   class="btn btn-sm btn-ghost min-w-36 shrink-0"
@@ -798,7 +783,7 @@
                 >
                   {#if recording_action === action}
                     <span class="text-xs"
-                      >Press keys… (Esc to cancel)</span
+                      >{$t("settings.press_keys")}</span
                     >
                   {:else}
                     <span class="flex items-center gap-1">
@@ -823,7 +808,7 @@
   <button
     class="btn btn-ghost"
     onclick={closeModal}
-    disabled={save_in_progress}>Cancel</button
+    disabled={save_in_progress}>{$t("common.cancel")}</button
   >
   <button
     class="btn btn-primary"
@@ -833,6 +818,6 @@
     {#if save_in_progress}
       <span class="loading loading-spinner"></span>
     {/if}
-    Save
+    {$t("common.save")}
   </button>
 {/snippet}

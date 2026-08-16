@@ -8,6 +8,7 @@
   import { MODAL_TYPE } from "$lib/constants";
   import { mark_feed_as_read } from "$lib/dao/feed_db";
   import ModalShell from "$lib/components/modals/ModalShell.svelte";
+  import { t } from "$lib/i18n";
 
   let save_in_progress = $state(false);
 
@@ -32,13 +33,12 @@
 
 <ModalShell
   open={$active_modal == MODAL_TYPE.MARK_READ}
-  title="Mark Read"
+  title={$t("modal.mark_read")}
   onClose={closeModal}
   footer={footer}
 >
   <p class="py-2">
-    Mark all posts in <span class="font-bold">"{$active_feed_name}"</span> as
-    read?
+    {$t("modal.mark_all_read", { name: $active_feed_name })}
   </p>
 </ModalShell>
 
@@ -46,7 +46,7 @@
   <button
     class="btn btn-ghost"
     onclick={closeModal}
-    disabled={save_in_progress}>Cancel</button
+    disabled={save_in_progress}>{$t("common.cancel")}</button
   >
   <button
     class="btn btn-soft btn-primary"
@@ -56,6 +56,6 @@
     {#if save_in_progress}
       <span class="loading loading-spinner"></span>
     {/if}
-    Mark Read
+    {$t("modal.mark_read")}
   </button>
 {/snippet}

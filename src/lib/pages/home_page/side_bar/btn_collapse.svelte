@@ -7,6 +7,7 @@
 
     import { active_screen, collapse_sidebar } from "$lib/stores/app_store";
     import { SCREEN } from "$lib/constants";
+    import { t } from "$lib/i18n";
 
     const handleCollapse = () => {
         $collapse_sidebar = !$collapse_sidebar;
@@ -24,7 +25,7 @@
                     onclick={handleCollapse}
                 >
                     <Fa icon={$collapse_sidebar ? faAngleRight : faAngleLeft} />
-                    <span class="text-xs">Collapse</span>
+                    <span class="text-xs">{$t("nav.collapse")}</span>
                 </a>
             </div>
         {:else}
@@ -35,7 +36,7 @@
                     onclick={handleCollapse}
                 >
                     <Fa icon={$collapse_sidebar ? faAngleRight : faAngleLeft} />
-                    <span class="text-xs">Collapse</span>
+                    <span class="text-xs">{$t("nav.collapse")}</span>
                 </a>
             </div>
         {/if}

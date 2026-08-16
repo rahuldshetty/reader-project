@@ -1,6 +1,9 @@
 import dayjs from 'dayjs'
+import { translate, type TranslationKey } from "$lib/i18n";
 
-export const timeAgo = (dateString: string) => {
+type Translate = (key: TranslationKey, params?: Record<string, string | number>) => string;
+
+export const timeAgo = (dateString: string, t: Translate = translate) => {
     const date = new Date(dateString);
     const now = new Date();
 
@@ -12,30 +15,30 @@ export const timeAgo = (dateString: string) => {
     const years = Math.floor(days / 365);
 
     if (seconds < 60) {
-        return `${seconds} seconds ago`;
+        return t("time.seconds_ago", { n: seconds });
     } else if (minutes < 60) {
-        return `${minutes} minutes ago`;
+        return t("time.minutes_ago", { n: minutes });
     } else if (hours < 24) {
-        return `${hours} hours ago`;
+        return t("time.hours_ago", { n: hours });
     } else if (days < 7) {
-        return `${days} days ago`;
+        return t("time.days_ago", { n: days });
     } else if (days < 30) {
-        return `${Math.floor(days / 7)} weeks ago`;
+        return t("time.weeks_ago", { n: Math.floor(days / 7) });
     } else if (months < 12) {
-        return `${months} months ago`;
+        return t("time.months_ago", { n: months });
     } else {
-        return `${years} years ago`;
+        return t("time.years_ago", { n: years });
     }
 }
 
 // Bucket a post's publish date for list grouping (posts arrive DESC-sorted).
-export const dateGroupLabel = (dateString: string): string => {
+export const dateGroupLabel = (dateString: string, t: Translate = translate): string => {
     const d = dayjs(dateString);
     const now = dayjs();
-    if (d.isSame(now, 'day')) return 'Today';
-    if (d.isSame(now.subtract(1, 'day'), 'day')) return 'Yesterday';
-    if (d.isAfter(now.subtract(7, 'day'))) return 'This week';
-    return 'Older';
+    if (d.isSame(now, 'day')) return t("time.today");
+    if (d.isSame(now.subtract(1, 'day'), 'day')) return t("time.yesterday");
+    if (d.isAfter(now.subtract(7, 'day'))) return t("time.this_week");
+    return t("time.older");
 };
 
 export const convertToTimeStringForDB = (dateString: string) => {
@@ -116,7 +119,7 @@ export function parseSQLiteTimestamp(ts: string, assumeUTC = true): Date | null 
  * @param assumeUTC - whether to interpret as UTC when parsing
  * @returns e.g. "15:30:00", or empty string if invalid
  */
-export function extractTime(ts: string, assumeUTC = true): string {
+export function extractTime(ts: string, assumeUTC = true, locale = "en-US"): string {
     const d = parseSQLiteTimestamp(ts, assumeUTC);
     if (!d) return '';
         // Use Intl.DateTimeFormat for consistent zero-padding
@@ -127,7 +130,7 @@ export function extractTime(ts: string, assumeUTC = true): string {
         hour12: false,
         timeZone: assumeUTC ? 'UTC' : undefined,
     };
-    return new Intl.DateTimeFormat('en-US', opts).format(d);
+    return new Intl.DateTimeFormat(locale, opts).format(d);
 }
 
 /**
@@ -136,7 +139,7 @@ export function extractTime(ts: string, assumeUTC = true): string {
  * @param assumeUTC - whether to interpret as UTC when parsing
  * @returns e.g. "June 22, 2025", or empty string if invalid
 */
-export function extractFormattedDate(ts: string, assumeUTC = true): string {
+export function extractFormattedDate(ts: string, assumeUTC = true, locale = "en-US"): string {
   const d = parseSQLiteTimestamp(ts, assumeUTC);
   if (!d) return '';
   const opts: Intl.DateTimeFormatOptions = {
@@ -145,6 +148,6 @@ export function extractFormattedDate(ts: string, assumeUTC = true): string {
     year: 'numeric',
     timeZone: assumeUTC ? 'UTC' : undefined,
   };
-  return new Intl.DateTimeFormat('en-US', opts).format(d);
+  return new Intl.DateTimeFormat(locale, opts).format(d);
 }
 

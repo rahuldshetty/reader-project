@@ -5,6 +5,7 @@
   import { add_feed } from "$lib/dao/feed_db";
   import { toastStore } from "$lib/stores/toast_store";
   import ModalShell from "$lib/components/modals/ModalShell.svelte";
+  import { t, translate } from "$lib/i18n";
 
   let save_in_progress = $state(false);
   let folder_name = $state("");
@@ -18,11 +19,11 @@
 
     try {
       await add_feed(folder_name, folder_name, "", FEED_TYPE.FOLDER);
-      toastStore.add(TOAST_MESSAGE_TYPE.SUCCESS, "Folder created");
+      toastStore.add(TOAST_MESSAGE_TYPE.SUCCESS, translate("toast.folder_created"));
     } catch {
       toastStore.add(
         TOAST_MESSAGE_TYPE.ERROR,
-        "Unable to create folder. Please make sure folder doesn't exist.",
+        translate("toast.folder_create_failed"),
       );
     }
 
@@ -38,15 +39,14 @@
 
 <ModalShell
   open={$active_modal == MODAL_TYPE.ADD_FOLDER}
-  title="Create Folder"
+  title={$t("modal.create_folder")}
   onClose={closeModal}
   footer={modalFooter}
 >
   <fieldset class="fieldset items-center gap-2">
     <!-- URL -->
     <div>
-      <!-- <legend class="fieldset-legend">Folder</legend> -->
-      <p class="label">Enter folder name</p>
+      <p class="label">{$t("modal.enter_folder_name")}</p>
     </div>
     <div>
       <input
@@ -63,7 +63,7 @@
   <button
     class="btn btn-ghost"
     onclick={closeModal}
-    disabled={save_in_progress}>Cancel</button
+    disabled={save_in_progress}>{$t("common.cancel")}</button
   >
   <button
     class="btn btn-primary"
@@ -73,6 +73,6 @@
     {#if save_in_progress}
       <span class="loading loading-spinner"></span>
     {/if}
-    Create
+    {$t("common.create")}
   </button>
 {/snippet}

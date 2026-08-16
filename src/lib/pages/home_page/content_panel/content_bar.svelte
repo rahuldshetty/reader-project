@@ -25,6 +25,7 @@
         update_post_store_item_by_id,
     } from "../common";
     import { select_post } from "../common";
+    import { t, translate } from "$lib/i18n";
 
     const { data, post }: { data: ContentResult; post: PostResult } = $props();
 
@@ -44,7 +45,7 @@
         await writeText(post.link);
         toastStore.add(
             TOAST_MESSAGE_TYPE.INFO,
-            "Copied link to Clipboard",
+            translate("toast.copied_link"),
             4000,
         );
     };
@@ -92,7 +93,7 @@
         </span>
         <span class="text-sm">
             🕒 <span class="text-base-content/70"
-                >{`${timeToRead(data.word_count)} min read`}</span
+                >{$t("content.min_read", { n: timeToRead(data.word_count) })}</span
             >
         </span>
     </div>
@@ -105,7 +106,7 @@
             disabled={!prev_post}
             onclick={handlePrev}
         >
-            <Fa icon={faChevronUp} size="lg" title="Previous article" />
+            <Fa icon={faChevronUp} size="lg" title={$t("content.previous_article")} />
         </button>
         <!-- Next article -->
         <button
@@ -113,14 +114,14 @@
             disabled={!next_post}
             onclick={handleNext}
         >
-            <Fa icon={faChevronDown} size="lg" title="Next article" />
+            <Fa icon={faChevronDown} size="lg" title={$t("content.next_article")} />
         </button>
         <!-- Share Button -->
         <button
             class="btn btn-circle btn-ghost btn-sm md:btn-md btn-press smooth-transition"
             onclick={handleShareButton}
         >
-            <Fa icon={faShareNodes} size="lg" title="Copy link to Clipboard" />
+            <Fa icon={faShareNodes} size="lg" title={$t("content.copy_link")} />
         </button>
 
         <!-- Mark Read -->
@@ -131,7 +132,7 @@
             <Fa
                 icon={faCircleCheck}
                 size="lg"
-                title={read_hint ? `Mark as Read (${read_hint})` : "Mark as Read"}
+                title={read_hint ? `${$t("content.mark_as_read")} (${read_hint})` : $t("content.mark_as_read")}
                 color={read_status ? "var(--color-success)" : ""}
             />
         </button>
@@ -144,7 +145,7 @@
             <Fa
                 icon={faStar}
                 size="lg"
-                title={fav_hint ? `Mark Favorite (${fav_hint})` : "Mark Favorite"}
+                title={fav_hint ? `${$t("content.mark_favorite")} (${fav_hint})` : $t("content.mark_favorite")}
                 color={is_fav ? "var(--color-accent)" : ""}
             />
         </button>
@@ -157,7 +158,7 @@
             <Fa
                 icon={faGlobe}
                 size="lg"
-                title={open_hint ? `Open in browser (${open_hint})` : "Open in browser"}
+                title={open_hint ? `${$t("content.open_in_browser")} (${open_hint})` : $t("content.open_in_browser")}
             />
         </button>
     </div>

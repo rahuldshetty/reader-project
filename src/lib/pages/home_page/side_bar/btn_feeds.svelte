@@ -5,6 +5,7 @@
     import { SCREEN } from "$lib/constants";
     import { active_screen } from "$lib/stores/app_store";
     import { refresh_app_data, select_feed } from "../common";
+    import { t } from "$lib/i18n";
 
     const handleFeedClick = async () => {
         await refresh_app_data();
@@ -22,7 +23,7 @@
             : ''}"
         onclick={handleFeedClick}
     >
-        <Fa icon={faNewspaper} title="Feeds" />
-        <span class="text-xs">Feeds</span>
+        <Fa icon={faNewspaper} title={$t("nav.feeds")} />
+        <span class="text-xs">{$t("nav.feeds")}</span>
     </a>
 </li>

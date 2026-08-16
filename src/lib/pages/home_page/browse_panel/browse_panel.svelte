@@ -15,6 +15,7 @@
     import BrowseCard from "./browse_card.svelte";
     import Fa from "svelte-fa";
     import { faArrowLeft, faCompass } from "@fortawesome/free-solid-svg-icons";
+    import { t } from "$lib/i18n";
 
     // Hard limit: only surface articles published within the recent window.
     const since = dayjs().subtract(BROWSE_WINDOW_WEEKS, "week").toISOString();
@@ -77,9 +78,9 @@
         class="shrink-0 px-5 py-4 border-b border-base-300 flex items-center gap-2"
     >
         <Fa icon={faCompass} class="text-primary" />
-        <h1 class="text-lg font-semibold">Browse</h1>
+        <h1 class="text-lg font-semibold">{$t("browse.title")}</h1>
         <span class="text-sm opacity-50"
-            >Last {BROWSE_WINDOW_WEEKS} weeks</span
+            >{$t("browse.last_weeks", { n: BROWSE_WINDOW_WEEKS })}</span
         >
     </div>
 
@@ -140,8 +141,7 @@
 
                 {#if loaded_all && posts.length > 0}
                     <p class="text-center text-sm opacity-50 py-6">
-                        That's everything from the last {BROWSE_WINDOW_WEEKS}
-                        weeks
+                        {$t("browse.everything", { n: BROWSE_WINDOW_WEEKS })}
                     </p>
                 {/if}
 
@@ -151,7 +151,7 @@
                     >
                         <Fa icon={faCompass} size="4x" class="mb-4" />
                         <p class="text-lg font-medium">
-                            No articles in the last {BROWSE_WINDOW_WEEKS} weeks
+                            {$t("browse.no_articles", { n: BROWSE_WINDOW_WEEKS })}
                         </p>
                     </div>
                 {/if}
@@ -166,7 +166,7 @@
             >
                 <button class="btn btn-ghost btn-sm" onclick={backToBrowse}>
                     <Fa icon={faArrowLeft} />
-                    <span>Browse</span>
+                    <span>{$t("browse.title")}</span>
                 </button>
             </div>
             <ContentPanel />

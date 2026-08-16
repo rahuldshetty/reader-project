@@ -4,6 +4,7 @@
 
     import { active_modal } from "$lib/stores/app_store";
     import { MODAL_TYPE } from "$lib/constants";
+    import { t } from "$lib/i18n";
 
     const openSettingsModal = () => {
         $active_modal = MODAL_TYPE.SETTINGS;
@@ -16,6 +17,6 @@
         onclick={openSettingsModal}
     >
         <Fa icon={faGear} size="lg" />
-        <span class="text-xs">Settings</span>
+        <span class="text-xs">{$t("nav.settings")}</span>
     </a>
 </li>

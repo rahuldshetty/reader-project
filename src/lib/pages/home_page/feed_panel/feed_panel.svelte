@@ -11,6 +11,7 @@
     import FeedParent from "./feed_parent.svelte";
     import CustomFeedItems from "./custom_feed_items.svelte";
     import LoadingSpinner from "$lib/components/loading_spinner.svelte";
+    import { t } from "$lib/i18n";
 
     const filtered_feeds = derived([feeds_store], ([$feeds_store]) => {
         return $feeds_store;
@@ -25,7 +26,7 @@
 
         {#if $refreshing_feeds}
             <div class="fade-transition">
-                <LoadingSpinner messaage="Refreshing feed..." />
+                <LoadingSpinner messaage={$t("feed.refreshing")} />
             </div>
         {:else}
             <!-- Feed List -->

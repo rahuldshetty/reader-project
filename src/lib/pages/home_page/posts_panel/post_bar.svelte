@@ -21,6 +21,7 @@
         faThLarge,
     } from "@fortawesome/free-solid-svg-icons";
     import { refresh_posts } from "../common";
+    import { t } from "$lib/i18n";
 
     let sort_by_asending = $state($posts_sort_by == DB_ORDER_ENUM.OLDEST);
 
@@ -50,7 +51,7 @@
 <div
     class="sticky top-0 z-10 justify-end bg-base-100 p-2 flex space-x-1 border-b border-base-300"
 >
-    <div class="m-1 tooltip tooltip-bottom" data-tip="Filter unread">
+    <div class="m-1 tooltip tooltip-bottom" data-tip={$t("posts.filter_unread")}>
         <input
             type="checkbox"
             bind:checked={$filter_unread_posts}
@@ -63,8 +64,8 @@
     <div
         class="tooltip tooltip-bottom"
         data-tip={$feed_view == FEED_VIEW.LIST
-            ? "Comfortable view"
-            : "Compact view"}
+            ? $t("posts.comfortable_view")
+            : $t("posts.compact_view")}
     >
         <button
             onclick={handleToggleView}
@@ -77,13 +78,13 @@
         </button>
     </div>
 
-    <div class="tooltip tooltip-bottom" data-tip="Sort By">
+    <div class="tooltip tooltip-bottom" data-tip={$t("posts.sort_by")}>
         <button
             onclick={handleSortDate}
             class="btn btn-ghost btn-sm btn-circle p-4 btn-press smooth-transition"
         >
             <Fa
-                title={sort_by_asending ? "Latest First" : "Oldest First"}
+                title={sort_by_asending ? $t("posts.latest_first") : $t("posts.oldest_first")}
                 icon={sort_by_asending ? faSortAlphaAsc : faSortAlphaDesc}
                 size="lg"
             />

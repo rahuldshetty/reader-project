@@ -49,6 +49,7 @@ import { fetchFeedDataFromFeedURL } from "$lib/services/feed_gather";
 import { toastStore } from "$lib/stores/toast_store";
 import { validate_url_secure } from "$lib/utils/html";
 import type { Feed, FeedResult, PostResult } from "$lib/types";
+import { translate } from "$lib/i18n";
 
 export const refresh_app_data = async (
     only_feeds: boolean = true,
@@ -169,7 +170,7 @@ export const refresh_post_data = async (
     // URL Validation
     const is_insecure_mode_enabled = get(local_user_setting).ENABLE_INSECURE_LINK;
     if (!is_insecure_mode_enabled && !validate_url_secure(url)) {
-        toastStore.add(TOAST_MESSAGE_TYPE.ERROR, "Feed URL insecure. Enable insecure mode to fetch data from insecure urls.");
+        toastStore.add(TOAST_MESSAGE_TYPE.ERROR, translate("toast.feed_url_insecure"));
         return;
     }
 
@@ -189,7 +190,7 @@ export const refresh_post_data = async (
         // update new post data in store
         await refresh_posts(feed_id);
     } catch {
-        toastStore.add(TOAST_MESSAGE_TYPE.ERROR, "Unable to fetch feed :(");
+        toastStore.add(TOAST_MESSAGE_TYPE.ERROR, translate("toast.unable_to_fetch"));
     } finally {
         refreshing_posts.set(false);
     }

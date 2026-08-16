@@ -27,6 +27,7 @@ export interface ShortcutSettings {
 export interface UserSettings {
     LAST_REFRESH_TIME: number;
     THEME_MODE: string;
+    LANGUAGE: string;
     MINIMIZE_APP: boolean;
     CURRENT_FEED_VIEW: string;
     REFRESH_FEED_ON_SELECT: boolean;

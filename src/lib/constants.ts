@@ -1,4 +1,5 @@
 import type { ShortcutBinding } from "./types";
+import type { TranslationKey } from "./i18n/dictionaries/en";
 
 export const FEED_URL2ICON_MAP = {
     "www.nytimes.com": ""
@@ -30,6 +31,7 @@ export enum SCREEN {
 export enum SETTINGS {
     LAST_REFRESH_TIME = "LAST_REFRESH_TIME",
     THEME_MODE = "THEME_MODE",
+    LANGUAGE = "LANGUAGE",
 
     // Posts to clear from DB if they have passed this time
     ENABLE_AUTO_PURGE = "ENABLE_AUTO_PURGE",
@@ -184,46 +186,46 @@ export enum SHORTCUT_ACTION {
 }
 
 export interface ShortcutActionMeta {
-    label: string;
-    description: string;
+    labelKey: TranslationKey;
+    descriptionKey: TranslationKey;
 }
 
 export const SHORTCUT_ACTION_META: Record<SHORTCUT_ACTION, ShortcutActionMeta> = {
     [SHORTCUT_ACTION.NEXT_POST]: {
-        label: "Next Post",
-        description: "Move to the next post in the list. Opens the next post while reading.",
+        labelKey: "shortcut.next_post",
+        descriptionKey: "shortcut.next_post.desc",
     },
     [SHORTCUT_ACTION.PREV_POST]: {
-        label: "Previous Post",
-        description: "Move to the previous post in the list. Opens the previous post while reading.",
+        labelKey: "shortcut.prev_post",
+        descriptionKey: "shortcut.prev_post.desc",
     },
     [SHORTCUT_ACTION.OPEN_POST]: {
-        label: "Open Post",
-        description: "Open the highlighted post.",
+        labelKey: "shortcut.open_post",
+        descriptionKey: "shortcut.open_post.desc",
     },
     [SHORTCUT_ACTION.MARK_READ]: {
-        label: "Mark Read / Unread",
-        description: "Toggle read status of the highlighted or open post.",
+        labelKey: "shortcut.mark_read",
+        descriptionKey: "shortcut.mark_read.desc",
     },
     [SHORTCUT_ACTION.MARK_FAV]: {
-        label: "Mark Favourite",
-        description: "Toggle favourite status of the highlighted or open post.",
+        labelKey: "shortcut.mark_fav",
+        descriptionKey: "shortcut.mark_fav.desc",
     },
     [SHORTCUT_ACTION.OPEN_ORIGINAL]: {
-        label: "Open Original",
-        description: "Open the post link in the default browser.",
+        labelKey: "shortcut.open_original",
+        descriptionKey: "shortcut.open_original.desc",
     },
     [SHORTCUT_ACTION.FOCUS_SEARCH]: {
-        label: "Focus Search",
-        description: "Jump to the feed search box.",
+        labelKey: "shortcut.focus_search",
+        descriptionKey: "shortcut.focus_search.desc",
     },
     [SHORTCUT_ACTION.NEXT_FEED]: {
-        label: "Next Feed",
-        description: "Move to and select the next feed in the list.",
+        labelKey: "shortcut.next_feed",
+        descriptionKey: "shortcut.next_feed.desc",
     },
     [SHORTCUT_ACTION.PREV_FEED]: {
-        label: "Previous Feed",
-        description: "Move to and select the previous feed in the list.",
+        labelKey: "shortcut.prev_feed",
+        descriptionKey: "shortcut.prev_feed.desc",
     },
 };
 

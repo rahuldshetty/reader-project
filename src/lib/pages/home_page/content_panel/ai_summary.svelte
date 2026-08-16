@@ -6,6 +6,7 @@
         faRobot,
     } from "@fortawesome/free-solid-svg-icons";
     import { local_user_setting } from "$lib/stores/app_store";
+    import { t } from "$lib/i18n";
 
     const { text, title }: { title: string, text: string } = $props();
 </script>
@@ -17,7 +18,7 @@
                     <li class="pl-4 pr-4 pt-4 text-xs opacity-80 tracking-wide">
                         <div class="flex flex-row items-center gap-2">
                             <Fa icon={faRobot} size="sm" />
-                            <div>AI Generated Summary</div>
+                            <div>{$t("content.ai_summary")}</div>
                         </div>
                     </li>
                     <div class="flex w-full justify-center p-4">
@@ -32,7 +33,7 @@
                     <li class="p-4 text-xs opacity-100 tracking-wide">
                         <div class="flex flex-row items-center gap-2">
                             <Fa icon={faRobot} size="sm" />
-                            <div>AI Generated Summary</div>
+                            <div>{$t("content.ai_summary")}</div>
                         </div>
                     </li>
                     {#each keyPoints as keyPoint}

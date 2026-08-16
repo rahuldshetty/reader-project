@@ -5,6 +5,7 @@
     import { SCREEN } from "$lib/constants";
     import { active_screen } from "$lib/stores/app_store";
     import { refresh_app_data } from "../common";
+    import { t } from "$lib/i18n";
 
     const changeBrowseScreen = async () => {
         $active_screen = SCREEN.BROWSE;
@@ -20,7 +21,7 @@
             : ''}"
         onclick={changeBrowseScreen}
     >
-        <Fa icon={faCompass} title="Browse" />
-        <span class="text-xs">Browse</span>
+        <Fa icon={faCompass} title={$t("nav.browse")} />
+        <span class="text-xs">{$t("nav.browse")}</span>
     </a>
 </li>

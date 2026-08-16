@@ -13,6 +13,7 @@
         refresh_app_data,
     } from "../common";
     import FeedSearch from "./feed_search.svelte";
+    import { t } from "$lib/i18n";
 
     const handleNewFolder = () => {
         $active_modal = MODAL_TYPE.ADD_FOLDER;
@@ -32,7 +33,7 @@
 >
     <FeedSearch />
 
-    <div class="tooltip tooltip-bottom" data-tip="Create a new folder">
+    <div class="tooltip tooltip-bottom" data-tip={$t("feed.new_folder")}>
         <button
             onclick={handleNewFolder}
             class="btn btn-ghost btn-sm btn-circle p-4 btn-press smooth-transition"
@@ -41,7 +42,7 @@
         </button>
     </div>
 
-    <div class="tooltip tooltip-bottom" data-tip="Refresh Feed">
+    <div class="tooltip tooltip-bottom" data-tip={$t("feed.refresh")}>
         <button
             onclick={handleRefresh}
             class="btn btn-ghost btn-sm btn-circle p-4 btn-press smooth-transition"

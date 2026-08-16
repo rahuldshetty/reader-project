@@ -1,6 +1,7 @@
 <script lang="ts">
     import { btn_in_progress, url, skip_data_load_on_import } from "$lib/stores/add_modal_store";
     import { closeAddModal, addFeedFromURL, addOPMLfromUpload } from "../add_modal_methods";
+    import { t } from "$lib/i18n";
 
 </script>
 
@@ -8,8 +9,8 @@
     <fieldset class="fieldset grid grid-cols-1 items-center gap-2">
         <!-- URL -->
         <div>
-            <legend class="fieldset-legend">URL</legend>
-            <p class="label">Enter RSS or Atom feed URL</p>
+            <legend class="fieldset-legend">{$t("modal.url")}</legend>
+            <p class="label">{$t("modal.enter_feed_url")}</p>
         </div>
         <div>
             <input
@@ -27,9 +28,9 @@
         >
       <!-- Pull latest feed on select -->
       <div>
-        <legend class="fieldset-legend">Skip data fetch</legend>
+        <legend class="fieldset-legend">{$t("modal.skip_data_fetch")}</legend>
         <p class="label">
-          Enabling this option will skip the feed load.
+          {$t("modal.skip_data_fetch.hint")}
         </p>
       </div>
       <div class="flex justify-end">
@@ -47,12 +48,12 @@
     <button
       class="btn btn-ghost"
       onclick={closeAddModal}
-      disabled={$btn_in_progress}>Cancel</button
+      disabled={$btn_in_progress}>{$t("common.cancel")}</button
     >
     <button
       class="btn btn-secondary"
       onclick={addOPMLfromUpload}
-      disabled={$btn_in_progress}>Upload OPML</button
+      disabled={$btn_in_progress}>{$t("modal.upload_opml")}</button
     >
     <button
       class="btn btn-primary"
@@ -62,6 +63,6 @@
       {#if $btn_in_progress}
         <span class="loading loading-spinner"></span>
       {/if}
-      Scan URL
+      {$t("modal.scan_url")}
     </button>
 </div>

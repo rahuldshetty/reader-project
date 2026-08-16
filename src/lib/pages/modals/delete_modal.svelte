@@ -8,6 +8,7 @@
   import { MODAL_TYPE } from "$lib/constants";
   import { delete_feed } from "$lib/dao/feed_db";
   import ModalShell from "$lib/components/modals/ModalShell.svelte";
+  import { t } from "$lib/i18n";
 
   let save_in_progress = $state(false);
 
@@ -31,13 +32,12 @@
 
 <ModalShell
   open={$active_modal == MODAL_TYPE.DELETE_FEED}
-  title="Delete Feed"
+  title={$t("modal.delete_feed")}
   onClose={closeModal}
   footer={footer}
 >
   <p class="py-2">
-    You are about to delete <span class="font-bold">{$active_feed_name}</span
-    >. Are you sure you want to continue?
+    {$t("modal.delete_confirm", { name: $active_feed_name })}
   </p>
 </ModalShell>
 
@@ -45,7 +45,7 @@
   <button
     class="btn btn-ghost"
     onclick={closeModal}
-    disabled={save_in_progress}>Cancel</button
+    disabled={save_in_progress}>{$t("common.cancel")}</button
   >
   <button
     class="btn btn-soft btn-error"
@@ -55,6 +55,6 @@
     {#if save_in_progress}
       <span class="loading loading-spinner"></span>
     {/if}
-    Delete
+    {$t("common.delete")}
   </button>
 {/snippet}

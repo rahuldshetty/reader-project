@@ -8,6 +8,7 @@
     import { mobile_active_panel, is_mobile } from "$lib/stores/app_store";
     import { MODAL_TYPE } from "$lib/constants";
     import { active_modal } from "$lib/stores/app_store";
+    import { t } from "$lib/i18n";
 
     const goToFeeds = () => {
         mobile_active_panel.set("feeds");
@@ -34,7 +35,7 @@
             onclick={goToFeeds}
         >
             <Fa icon={faNewspaper} size="lg" />
-            <span class="text-xs">Feeds</span>
+            <span class="text-xs">{$t("nav.feeds")}</span>
         </button>
 
         <!-- Add -->
@@ -43,7 +44,7 @@
             onclick={openAdd}
         >
             <Fa icon={faPlus} size="lg" />
-            <span class="text-xs">Add</span>
+            <span class="text-xs">{$t("nav.add")}</span>
         </button>
 
         <!-- Settings -->
@@ -52,7 +53,7 @@
             onclick={openSettings}
         >
             <Fa icon={faGear} size="lg" />
-            <span class="text-xs">Settings</span>
+            <span class="text-xs">{$t("nav.settings")}</span>
         </button>
     </nav>
 {/if}

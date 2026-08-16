@@ -14,6 +14,7 @@
     import YoutubeRender from "./renderers/youtube_render.svelte";
     import AiSummary from "./ai_summary.svelte";
     import { reading_progress } from "$lib/stores/app_store";
+    import { translate } from "$lib/i18n";
     // import { Menu } from "@tauri-apps/api/menu";
 
     const {
@@ -33,7 +34,7 @@
                 await writeText(selection);
                 toastStore.add(
                     TOAST_MESSAGE_TYPE.INFO,
-                    "Copied text to Clipboard",
+                    translate("toast.copied_text"),
                     4000,
                 );
                 selection_data.removeAllRanges();

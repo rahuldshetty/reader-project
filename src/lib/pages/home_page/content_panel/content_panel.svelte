@@ -15,12 +15,13 @@
     import type { PostResult } from "$lib/types";
     import Fa from "svelte-fa";
     import { faBookOpen, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+    import { t, translate } from "$lib/i18n";
 
     const prepareDefaultContent = (post: PostResult) => {
         // Called to render a default page when unable to load
         return {
             title: post.title,
-            content: `<p>Unable to parse page. Please access the site directly.</p>`,
+            content: `<p>${translate("content.unable_to_parse")}</p>`,
             // TODO: Handle 0 word count here
             word_count: 0,
             url: post.link,
@@ -51,7 +52,7 @@
                 onclick={() => mobile_active_panel.set("posts")}
             >
                 <Fa icon={faArrowLeft} />
-                <span>Posts</span>
+                <span>{$t("nav.posts")}</span>
             </button>
         </div>
     {/if}
@@ -77,7 +78,7 @@
             class="flex flex-col items-center justify-center h-full text-base-content/30 select-none"
         >
             <Fa icon={faBookOpen} size="4x" class="mb-4" />
-            <p class="text-lg font-medium">Select an article to read</p>
+            <p class="text-lg font-medium">{$t("content.select_article")}</p>
         </div>
     {/if}
 </div>
