@@ -98,21 +98,13 @@ export enum CONTENT_TYPES {
     pdf
 }
 
-// Based on data from https://daisyui.com/docs/themes/
-export const FONT_FAMILIES = [
-    "Roboto",
-    "PT Serif",
-    "Source Sans 3",
-    "Nunito Sans",
-    "Georgia",
-];
-
 export const DEFAULT_FONT_FAMILY = "Roboto";
 export const DEFAULT_FONT_SIZE = 16;
 export const DEFAULT_LINE_HEIGHT = 1.6;
 export const DEFAULT_LETTER_SPACING = 0;
 export const DEFAULT_PARAGRAPH_GAP = 16;
 
+// Based on data from https://daisyui.com/docs/themes/
 export const DAISY_UI_THEMES = [
     "default",
     "light",

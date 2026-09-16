@@ -313,8 +313,24 @@ export const toInitCaps = (str: string) => {
 
 export const fontFamilies = [
     "Roboto",
-    "PT Serif",
     "Source Sans 3",
     "Nunito Sans",
-    "Georgia",
+    "Literata",
+    "Source Serif 4",
+    "Merriweather",
 ];
+
+// Fonts are bundled under static/fonts (see src/fonts.css) — three UI sans and
+// three reading serifs. The generic fallback matters: without it an unresolved
+// family or missing weight silently renders in the browser's default standard
+// font (Times New Roman) instead of a matching typeface.
+const GENERIC_FALLBACK: Record<string, string> = {
+    Literata: "serif",
+    "Source Serif 4": "serif",
+    Merriweather: "serif",
+};
+
+export const font_stack = (family: string): string => {
+    const name = family.includes(" ") ? `'${family}'` : family;
+    return `${name}, ${GENERIC_FALLBACK[family] ?? "sans-serif"}`;
+};

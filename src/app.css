@@ -1,6 +1,9 @@
 @import "tailwindcss";
+/* Bundled UI fonts. Must stay a relative @import — Tailwind drops remote
+   @import rules, which left the app with no @font-face at all. */
+@import "./fonts.css";
+
 @plugin "@tailwindcss/typography";
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=PT+Serif:wght@400;700&family=Source+Sans+3:wght@300;400;600;700&family=Nunito+Sans:wght@300;400;600;700&family=Georgia&display=swap');
 
 :root {
     --titlebar-height: 0px;

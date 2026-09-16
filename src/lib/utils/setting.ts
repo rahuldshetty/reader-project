@@ -17,6 +17,7 @@ import {
 } from "$lib/constants";
 
 import type { ShortcutSettings } from "$lib/types";
+import { fontFamilies } from "$lib/utils";
 
 // Stored settings may predate the SHORTCUTS key or a new action, so merge
 // persisted bindings over the defaults to keep every action bound. Stale
@@ -41,6 +42,15 @@ const merge_shortcut_settings = (stored: unknown): ShortcutSettings => {
             ...stored_bindings,
         },
     };
+};
+
+// The picker's family list changes over time (families get added or dropped).
+// A stored value that is no longer offered would render in the browser's
+// default font instead of a bundled one, so fall back to the default family.
+const normalize_font_family = (stored: unknown): string => {
+    return typeof stored === "string" && fontFamilies.includes(stored)
+        ? stored
+        : DEFAULT_FONT_FAMILY;
 };
 
 export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
@@ -90,7 +100,7 @@ export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
         "OPENAI_MODEL": openai_model as string ?? '',
         "OPENAI_TOKEN": openai_token as string ?? '',
         "FONT_SETTINGS": {
-            "FONT_FAMILY": font_family as string ?? DEFAULT_FONT_FAMILY,
+            "FONT_FAMILY": normalize_font_family(font_family),
             "FONT_SIZE": font_size as number ?? DEFAULT_FONT_SIZE,
             "LINE_HEIGHT": line_height as number ?? DEFAULT_LINE_HEIGHT,
             "LETTER_SPACING": letter_spacing as number ?? DEFAULT_LETTER_SPACING,

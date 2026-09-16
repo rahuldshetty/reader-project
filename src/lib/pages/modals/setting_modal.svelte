@@ -21,7 +21,7 @@
     find_conflicts,
     set_recording_action,
   } from "$lib/services/keyboard_shortcuts";
-  import { toInitCaps, fontFamilies } from "$lib/utils";
+  import { toInitCaps, fontFamilies, font_stack } from "$lib/utils";
   import { save } from "@tauri-apps/plugin-dialog";
   import { writeTextFile } from "@tauri-apps/plugin-fs";
   import { toastStore } from "$lib/stores/toast_store";
@@ -72,7 +72,7 @@
   // Apply font settings to CSS custom properties for live preview
   $effect(() => {
     const root = document.documentElement;
-    root.style.setProperty('--app-font-family', font_family);
+    root.style.setProperty('--app-font-family', font_stack(font_family));
     root.style.setProperty('--app-font-size', font_size + 'px');
     root.style.setProperty('--app-line-height', String(line_height));
     root.style.setProperty('--app-letter-spacing', letter_spacing + 'px');
@@ -641,7 +641,7 @@
             <p class="label">{$t("settings.font_family.hint")}</p>
             <select class="select select-bordered w-full" bind:value={font_family}>
               {#each fontFamilies as family}
-                <option value={family} style="font-family: {family}">{family}</option>
+                <option value={family} style="font-family: {font_stack(family)}">{family}</option>
               {/each}
             </select>
           </fieldset>

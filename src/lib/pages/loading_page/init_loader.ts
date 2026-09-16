@@ -5,6 +5,7 @@ import {
 } from "$lib/stores/app_store";
 
 import { fetch_latest_user_settings } from "$lib/utils/setting";
+import { font_stack } from "$lib/utils";
 import { apply_document_language } from "$lib/i18n";
 import { FEED_VIEW } from "$lib/constants";
 
@@ -26,7 +27,7 @@ export const init_app = async () => {
 
     // Apply font settings to CSS custom properties
     const root = document.documentElement;
-    root.style.setProperty('--app-font-family', loadedSettings.FONT_SETTINGS.FONT_FAMILY);
+    root.style.setProperty('--app-font-family', font_stack(loadedSettings.FONT_SETTINGS.FONT_FAMILY));
     root.style.setProperty('--app-font-size', loadedSettings.FONT_SETTINGS.FONT_SIZE + 'px');
     root.style.setProperty('--app-line-height', String(loadedSettings.FONT_SETTINGS.LINE_HEIGHT));
     root.style.setProperty('--app-letter-spacing', loadedSettings.FONT_SETTINGS.LETTER_SPACING + 'px');
