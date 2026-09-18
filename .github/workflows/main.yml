@@ -1,7 +1,15 @@
 name: 'Release Version'
 
 on:
+  push:
+    tags:
+      - 'v*' # release by pushing a tag, e.g. `git tag v0.2.7 && git push origin v0.2.7`
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release, without the leading v (e.g. 0.2.7)'
+        required: true
+        type: string
 
 jobs:
   publish-tauri:
@@ -23,6 +31,23 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
+
+      # The tag (or the dispatch input) is the only source of truth for the version.
+      # It is written into the checkout for this build only and never committed.
+      # package.json holds the single stored copy; src-tauri/tauri.conf.json points at it.
+      - name: resolve version
+        shell: bash
+        env:
+          DISPATCH_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          version="${DISPATCH_VERSION:-${GITHUB_REF_NAME#v}}"
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::'$version' is not a plain x.y.z version (Windows installers reject pre-release suffixes)."
+            exit 1
+          fi
+          npm version "$version" --no-git-tag-version --allow-same-version --force
+          echo "VERSION=$version" >> "$GITHUB_ENV"
 
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
@@ -50,13 +75,16 @@ jobs:
         # If you don't have `beforeBuildCommand` configured you may want to build your frontend here too.
         run: bun install # change this to npm or pnpm depending on which one you use.
 
-      - uses: tauri-apps/tauri-action@v0
+      - uses: tauri-apps/tauri-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
-          releaseName: 'App v__VERSION__'
+          tagName: v${{ env.VERSION }} # the tag drives the release, not a hardcoded config value
+          releaseName: 'App v${{ env.VERSION }}'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
           prerelease: false
+          # Version-free asset names so docs/index.html can link to
+          # releases/latest/download/<name> and never need editing again.
+          releaseAssetNamePattern: '[name]_[platform]_[arch][setup][ext]'
           args: ${{ matrix.args }}

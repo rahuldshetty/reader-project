@@ -1,5 +1,7 @@
 [package]
 name = "reader-project"
+# Not the shipped app version: the bundle version is read from package.json via
+# tauri.conf.json ("version": "../package.json"). This value is only a Cargo fallback.
 version = "0.1.1"
 description = "A Tauri App"
 authors = ["you"]

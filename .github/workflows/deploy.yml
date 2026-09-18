@@ -1,9 +1,9 @@
-name: Deploy GitHub Pages on Release Tag
+name: Deploy GitHub Pages on Release
 
 on:
-  push:
-    tags:
-      - 'v*'       # only run when tag starts with v (e.g., v1.0.0)
+  release:
+    types: [published] # after the release exists, so releases/latest/download/* resolves
+  workflow_dispatch: # deploy docs edits without cutting a release
 
 permissions:
   contents: read
@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Pages
-        uses: actions/configure-pages@v3
+        uses: actions/configure-pages@v6
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
