@@ -12,7 +12,32 @@ on:
         type: string
 
 jobs:
+  # A release can reach this workflow two ways: a tag you push, or the tag GitHub
+  # creates when a draft (built through the workflow_dispatch path) gets published.
+  # The second one is a rebuild of a finished release, so skip it.
+  # A draft release cannot be fetched by tag, so a pre-made draft still falls
+  # through to the build below, where the action attaches assets to it.
+  guard:
+    runs-on: ubuntu-latest
+    outputs:
+      skip: ${{ steps.check.outputs.skip }}
+    steps:
+      - name: check for an already-published tag
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          skip=false
+          if [ "$GITHUB_EVENT_NAME" = "push" ] &&
+             gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --json assets --jq '(.assets | length) > 0' 2>/dev/null | grep -q true; then
+            echo "::notice::$GITHUB_REF_NAME already has a published release with assets, nothing to build."
+            skip=true
+          fi
+          echo "skip=$skip" >> "$GITHUB_OUTPUT"
+
   publish-tauri:
+    needs: guard
+    if: needs.guard.outputs.skip != 'true'
     permissions:
       contents: write
     strategy:
@@ -30,7 +55,7 @@ jobs:
 
     runs-on: ${{ matrix.platform }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # The tag (or the dispatch input) is the only source of truth for the version.
       # It is written into the checkout for this build only and never committed.
@@ -56,7 +81,7 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
       - name: setup bun
-        uses: oven-sh/setup-bun@v1
+        uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
