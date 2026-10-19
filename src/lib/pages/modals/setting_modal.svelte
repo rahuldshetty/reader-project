@@ -497,6 +497,25 @@
               >
             </div>
           </fieldset>
+
+          <fieldset
+            class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+          >
+            <!-- Share feeds with a phone -->
+            <div class="min-w-0">
+              <legend class="fieldset-legend">{$t("settings.share_qr")}</legend>
+              <p class="label whitespace-normal">
+                {$t("settings.share_qr.hint")}
+              </p>
+            </div>
+            <div class="flex justify-end">
+              <button
+                class="btn btn-neutral"
+                onclick={() => ($active_modal = MODAL_TYPE.SHARE_FEEDS)}
+                >{$t("settings.share_qr")}</button
+              >
+            </div>
+          </fieldset>
         </div>
       </div>
 

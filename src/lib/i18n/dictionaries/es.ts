@@ -244,6 +244,41 @@ const es: Record<TranslationKey, string> = {
     "loading.quote":
         "“Un lector vive mil vidas antes de morir. El hombre que nunca lee vive solo una.”",
     "loading.quote_author": "- George R.R. Martin",
+
+    // Feed sharing
+    "settings.share_qr": "Compartir por QR",
+    "settings.share_qr.hint":
+        "Muestra temporalmente un código QR que un dispositivo móvil puede escanear para recibir tus fuentes.",
+    "share.title": "Compartir fuentes",
+    "share.hint":
+        "Este código contiene la clave de cifrado. Cualquiera que pueda verlo puede recibir estas fuentes. Caduca automáticamente y la conexión se cierra al terminar la transferencia.",
+    "share.starting": "Preparando un código seguro…",
+    "share.waiting": "Escanea este código desde la app móvil",
+    "share.expires_in": "Caduca en {seconds} s",
+    "share.connected": "{client} conectado",
+    "share.sending": "Enviando {count} fuentes…",
+    "share.done": "Transferencia completada. La conexión está cerrada.",
+    "share.expired": "El código caducó. Genera uno nuevo.",
+    "share.cancelled": "Compartir detenido.",
+    "share.error": "Error al compartir: {message}",
+    "share.new_code": "Código nuevo",
+    "share.no_feeds": "No hay fuentes para compartir.",
+    "share.client.desktop": "Dispositivo",
+    "share.scan_qr": "Escanear QR",
+    "share.scan_hint":
+        "Escanea el código QR que muestra el dispositivo emisor o elige una captura de pantalla.",
+    "share.scan_camera": "Usar cámara",
+    "share.choose_image": "Elegir imagen",
+    "share.scanning": "Buscando un código QR…",
+    "share.connecting": "Conectando…",
+    "share.receiving": "Recibiendo fuentes…",
+    "share.invalid_qr": "Este no es un código de fuentes válido.",
+    "share.code_expired":
+        "El código caducó o el dispositivo emisor se detuvo. Pide un código nuevo.",
+    "share.connect_failed": "No se pudo conectar con el dispositivo emisor.",
+    "share.camera_unavailable": "Cámara no disponible. Elige una imagen.",
+    "share.already_added": "Ya añadido",
+    "toast.import_partial": "Algunas fuentes no se pudieron importar.",
 };
 
 export default es;

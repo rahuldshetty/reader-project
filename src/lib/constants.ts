@@ -21,6 +21,7 @@ export enum MODAL_TYPE {
     MARK_READ,
     DELETE_FEED,
     ADD_FOLDER,
+    SHARE_FEEDS,
 }
 
 export enum SCREEN {

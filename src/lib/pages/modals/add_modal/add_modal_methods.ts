@@ -2,7 +2,7 @@ import {get} from "svelte/store";
 import { open } from '@tauri-apps/plugin-dialog';
 import { readTextFile } from '@tauri-apps/plugin-fs';
 import { active_modal } from "$lib/stores/app_store";
-import { feeds_import_data, active_page, url, btn_in_progress } from "$lib/stores/add_modal_store";
+import { feeds_import_data, feeds_import_items, active_page, url, btn_in_progress } from "$lib/stores/add_modal_store";
 import { MODAL_TYPE } from "$lib/constants";
 
 import {
@@ -12,6 +12,7 @@ import { parseFeedDatafromOPML } from "$lib/services/opml_gather";
 
 export const closeAddModal = () => {
     feeds_import_data.set('');
+    feeds_import_items.set(null);
     active_modal.set(MODAL_TYPE.NONE);
     active_page.set(0);
     url.set('');

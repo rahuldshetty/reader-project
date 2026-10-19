@@ -235,6 +235,41 @@ const ar: Record<TranslationKey, string> = {
     "loading.quote":
         "«القارئ يعيش ألف حياة قبل أن يموت. أما من لا يقرأ أبداً فيعيش حياة واحدة فقط.»",
     "loading.quote_author": "- جورج ر. ر. مارتن",
+
+    // Feed sharing
+    "settings.share_qr": "المشاركة عبر QR",
+    "settings.share_qr.hint":
+        "اعرض مؤقتًا رمز QR يمكن لجهاز محمول مسحه لاستلام خلاصاتك.",
+    "share.title": "مشاركة الخلاصات",
+    "share.hint":
+        "يحتوي هذا الرمز على مفتاح التشفير. يمكن لأي شخص يراه استلام هذه الخلاصات. تنتهي صلاحيته تلقائيًا ويُغلق الاتصال بعد اكتمال النقل.",
+    "share.starting": "جارٍ تجهيز رمز آمن…",
+    "share.waiting": "امسح هذا الرمز من تطبيق الهاتف",
+    "share.expires_in": "تنتهي الصلاحية خلال {seconds} ثانية",
+    "share.connected": "تم اتصال {client}",
+    "share.sending": "جارٍ إرسال {count} خلاصة…",
+    "share.done": "اكتمل النقل. تم إغلاق الاتصال.",
+    "share.expired": "انتهت صلاحية الرمز. أنشئ رمزًا جديدًا.",
+    "share.cancelled": "تم إيقاف المشاركة.",
+    "share.error": "فشلت المشاركة: {message}",
+    "share.new_code": "رمز جديد",
+    "share.no_feeds": "لا توجد خلاصات للمشاركة.",
+    "share.client.desktop": "الجهاز",
+    "share.scan_qr": "مسح QR",
+    "share.scan_hint":
+        "امسح رمز QR الظاهر على الجهاز المشارك أو اختر لقطة شاشة له.",
+    "share.scan_camera": "استخدام الكاميرا",
+    "share.choose_image": "اختيار صورة",
+    "share.scanning": "جارٍ البحث عن رمز QR…",
+    "share.connecting": "جارٍ الاتصال…",
+    "share.receiving": "جارٍ استلام الخلاصات…",
+    "share.invalid_qr": "هذا ليس رمز مشاركة صالحًا.",
+    "share.code_expired":
+        "انتهت صلاحية الرمز أو توقف الجهاز المشارك. اطلب رمزًا جديدًا.",
+    "share.connect_failed": "تعذر الاتصال بالجهاز المشارك.",
+    "share.camera_unavailable": "الكاميرا غير متاحة. اختر صورة بدلًا منها.",
+    "share.already_added": "تمت الإضافة مسبقًا",
+    "toast.import_partial": "تعذر استيراد بعض الخلاصات.",
 };
 
 export default ar;

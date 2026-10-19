@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { btn_in_progress, url, skip_data_load_on_import } from "$lib/stores/add_modal_store";
+    import { active_page, btn_in_progress, url, skip_data_load_on_import } from "$lib/stores/add_modal_store";
     import { closeAddModal, addFeedFromURL, addOPMLfromUpload } from "../add_modal_methods";
     import { t } from "$lib/i18n";
 
@@ -44,7 +44,7 @@
     </fieldset>
 </div>
 
-<div class="modal-action">
+<div class="modal-action flex-wrap gap-2">
     <button
       class="btn btn-ghost"
       onclick={closeAddModal}
@@ -54,6 +54,11 @@
       class="btn btn-secondary"
       onclick={addOPMLfromUpload}
       disabled={$btn_in_progress}>{$t("modal.upload_opml")}</button
+    >
+    <button
+      class="btn btn-outline"
+      onclick={() => active_page.set(2)}
+      disabled={$btn_in_progress}>{$t("share.scan_qr")}</button
     >
     <button
       class="btn btn-primary"

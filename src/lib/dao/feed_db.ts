@@ -27,6 +27,15 @@ export const fetch_folders = async (): Promise<Feed[]> => {
     return folders;
 }
 
+export const fetch_feed_urls = async (): Promise<Set<string>> => {
+    const rows = (await db.select(
+        "SELECT url from feeds where type = $1",
+        [ FEED_TYPE.FEED ]
+    )) as { url: string }[];
+
+    return new Set(rows.map((row) => row.url));
+}
+
 export const fetch_feeds = async (): Promise<FeedResult[]> => {
     // Fetch data from DB
     const feeds = (await db.select(

@@ -6,6 +6,7 @@
     import EditModal from "./edit_modal.svelte";
     import MarkReadModal from "./mark_read_modal.svelte";
     import SettingModal from "./setting_modal.svelte";
+    import ShareFeedsModal from "./share_feeds_modal.svelte";
 </script>
 
 <AboutModal/>
@@ -13,5 +14,6 @@
 <EditModal/>
 <DeleteModal/>
 <SettingModal/>
+<ShareFeedsModal/>
 <AddFolderModal/>
 <MarkReadModal/>

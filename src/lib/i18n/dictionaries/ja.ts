@@ -243,6 +243,42 @@ const ja: Record<TranslationKey, string> = {
     "loading.quote":
         "「読む人は死ぬ前に千の人生を生きる。決して読まない人はひとつの人生しか生きない。」",
     "loading.quote_author": "- ジョージ・R・R・マーティン",
+
+    // Feed sharing
+    "settings.share_qr": "QRで共有",
+    "settings.share_qr.hint":
+        "モバイル端末がスキャンしてフィードを受け取れるQRコードを一時的に表示します。",
+    "share.title": "フィードを共有",
+    "share.hint":
+        "このコードには暗号化キーが含まれます。コードを見られる人は誰でもこれらのフィードを受け取れます。有効期限は自動で切れ、転送完了後に接続は閉じられます。",
+    "share.starting": "安全なコードを準備中…",
+    "share.waiting": "モバイルアプリからこのコードをスキャンしてください",
+    "share.expires_in": "残り {seconds} 秒",
+    "share.connected": "{client} が接続しました",
+    "share.sending": "{count} 件のフィードを送信中…",
+    "share.done": "転送が完了しました。接続は閉じられています。",
+    "share.expired": "コードの有効期限が切れました。新しいコードを生成してください。",
+    "share.cancelled": "共有を停止しました。",
+    "share.error": "共有に失敗しました: {message}",
+    "share.new_code": "新しいコード",
+    "share.no_feeds": "共有するフィードがありません。",
+    "share.client.desktop": "デバイス",
+    "share.scan_qr": "QRをスキャン",
+    "share.scan_hint":
+        "共有元のデバイスに表示されたQRコードをスキャンするか、そのスクリーンショットを選択してください。",
+    "share.scan_camera": "カメラを使う",
+    "share.choose_image": "画像を選択",
+    "share.scanning": "QRコードを探しています…",
+    "share.connecting": "接続中…",
+    "share.receiving": "フィードを受信中…",
+    "share.invalid_qr": "有効な共有コードではありません。",
+    "share.code_expired":
+        "コードの有効期限が切れたか、共有元のデバイスが停止しました。新しいコードを依頼してください。",
+    "share.connect_failed": "共有元のデバイスに接続できませんでした。",
+    "share.camera_unavailable":
+        "カメラを利用できません。代わりに画像を選択してください。",
+    "share.already_added": "追加済み",
+    "toast.import_partial": "一部のフィードをインポートできませんでした。",
 };
 
 export default ja;

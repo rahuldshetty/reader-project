@@ -246,6 +246,42 @@ const hi: Record<TranslationKey, string> = {
     "loading.quote":
         "“पाठक मरने से पहले हज़ार जीवन जीता है। जो कभी नहीं पढ़ता वह केवल एक जीवन जीता है।”",
     "loading.quote_author": "- जॉर्ज आर.आर. मार्टिन",
+
+    // Feed sharing
+    "settings.share_qr": "QR से साझा करें",
+    "settings.share_qr.hint":
+        "अस्थायी रूप से एक QR कोड दिखाएँ जिसे मोबाइल डिवाइस स्कैन करके आपकी फ़ीड प्राप्त कर सकता है।",
+    "share.title": "फ़ीड साझा करें",
+    "share.hint":
+        "इस कोड में एन्क्रिप्शन कुंजी है। जो इसे देख सकता है वह इन फ़ीड को प्राप्त कर सकता है। यह अपने आप समाप्त हो जाता है और स्थानांतरण पूरा होने पर कनेक्शन बंद हो जाता है।",
+    "share.starting": "सुरक्षित कोड तैयार किया जा रहा है…",
+    "share.waiting": "मोबाइल ऐप से यह कोड स्कैन करें",
+    "share.expires_in": "{seconds} सेकंड में समाप्त",
+    "share.connected": "{client} जुड़ा",
+    "share.sending": "{count} फ़ीड भेजी जा रही हैं…",
+    "share.done": "स्थानांतरण पूरा हुआ। कनेक्शन बंद है।",
+    "share.expired": "कोड समाप्त हो गया। नया कोड बनाएँ।",
+    "share.cancelled": "साझा करना बंद हुआ।",
+    "share.error": "साझा करना विफल: {message}",
+    "share.new_code": "नया कोड",
+    "share.no_feeds": "साझा करने के लिए कोई फ़ीड नहीं है।",
+    "share.client.desktop": "डिवाइस",
+    "share.scan_qr": "QR स्कैन करें",
+    "share.scan_hint":
+        "साझा करने वाले डिवाइस पर दिखाया गया QR कोड स्कैन करें या उसका स्क्रीनशॉट चुनें।",
+    "share.scan_camera": "कैमरा उपयोग करें",
+    "share.choose_image": "छवि चुनें",
+    "share.scanning": "QR कोड खोजा जा रहा है…",
+    "share.connecting": "कनेक्ट हो रहा है…",
+    "share.receiving": "फ़ीड प्राप्त हो रही हैं…",
+    "share.invalid_qr": "यह मान्य फ़ीड शेयर कोड नहीं है।",
+    "share.code_expired":
+        "कोड समाप्त हो गया या साझा करने वाला डिवाइस रुक गया। नया कोड माँगें।",
+    "share.connect_failed": "साझा करने वाले डिवाइस से कनेक्ट नहीं हो सका।",
+    "share.camera_unavailable":
+        "कैमरा उपलब्ध नहीं है। इसके बजाय छवि चुनें।",
+    "share.already_added": "पहले से जोड़ा गया",
+    "toast.import_partial": "कुछ फ़ीड आयात नहीं हो सकीं।",
 };
 
 export default hi;

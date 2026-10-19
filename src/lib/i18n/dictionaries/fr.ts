@@ -249,6 +249,43 @@ const fr: Record<TranslationKey, string> = {
     "loading.quote":
         "« Un lecteur vit mille vies avant de mourir. L'homme qui ne lit jamais n'en vit qu'une. »",
     "loading.quote_author": "- George R.R. Martin",
+
+    // Feed sharing
+    "settings.share_qr": "Partager via QR",
+    "settings.share_qr.hint":
+        "Affiche temporairement un QR code qu'un appareil mobile peut scanner pour recevoir vos flux.",
+    "share.title": "Partager les flux",
+    "share.hint":
+        "Ce code contient la clé de chiffrement. Toute personne qui peut le voir peut recevoir ces flux. Il expire automatiquement et la connexion se ferme à la fin du transfert.",
+    "share.starting": "Préparation d'un code sécurisé…",
+    "share.waiting": "Scannez ce code depuis l'application mobile",
+    "share.expires_in": "Expire dans {seconds} s",
+    "share.connected": "{client} connecté",
+    "share.sending": "Envoi de {count} flux…",
+    "share.done": "Transfert terminé. La connexion est fermée.",
+    "share.expired": "Le code a expiré. Générez-en un nouveau.",
+    "share.cancelled": "Partage arrêté.",
+    "share.error": "Échec du partage : {message}",
+    "share.new_code": "Nouveau code",
+    "share.no_feeds": "Aucun flux à partager.",
+    "share.client.desktop": "Appareil",
+    "share.scan_qr": "Scanner le QR",
+    "share.scan_hint":
+        "Scannez le QR code affiché sur l'appareil émetteur ou choisissez une capture d'écran.",
+    "share.scan_camera": "Utiliser la caméra",
+    "share.choose_image": "Choisir une image",
+    "share.scanning": "Recherche d'un QR code…",
+    "share.connecting": "Connexion…",
+    "share.receiving": "Réception des flux…",
+    "share.invalid_qr": "Ce n'est pas un code de partage valide.",
+    "share.code_expired":
+        "Le code a expiré ou l'appareil émetteur s'est arrêté. Demandez un nouveau code.",
+    "share.connect_failed":
+        "Impossible de se connecter à l'appareil émetteur.",
+    "share.camera_unavailable":
+        "Caméra indisponible. Choisissez une image.",
+    "share.already_added": "Déjà ajouté",
+    "toast.import_partial": "Certains flux n'ont pas pu être importés.",
 };
 
 export default fr;

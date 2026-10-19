@@ -250,6 +250,44 @@ const de: Record<TranslationKey, string> = {
     "loading.quote":
         "„Ein Leser lebt tausend Leben, bevor er stirbt. Der Mann, der nie liest, lebt nur eines.“",
     "loading.quote_author": "- George R.R. Martin",
+
+    // Feed sharing
+    "settings.share_qr": "Per QR teilen",
+    "settings.share_qr.hint":
+        "Zeigt vorübergehend einen QR-Code, den ein Mobilgerät scannen kann, um deine Feeds zu erhalten.",
+    "share.title": "Feeds teilen",
+    "share.hint":
+        "Dieser Code enthält den Verschlüsselungsschlüssel. Wer ihn sehen kann, kann diese Feeds empfangen. Er läuft automatisch ab und die Verbindung wird nach der Übertragung geschlossen.",
+    "share.starting": "Sicherer Code wird vorbereitet…",
+    "share.waiting": "Scanne diesen Code in der mobilen App",
+    "share.expires_in": "Läuft in {seconds}s ab",
+    "share.connected": "{client} verbunden",
+    "share.sending": "{count} Feeds werden gesendet…",
+    "share.done": "Übertragung abgeschlossen. Die Verbindung ist geschlossen.",
+    "share.expired": "Der Code ist abgelaufen. Erzeuge einen neuen.",
+    "share.cancelled": "Teilen beendet.",
+    "share.error": "Teilen fehlgeschlagen: {message}",
+    "share.new_code": "Neuer Code",
+    "share.no_feeds": "Es gibt keine Feeds zum Teilen.",
+    "share.client.desktop": "Gerät",
+    "share.scan_qr": "QR scannen",
+    "share.scan_hint":
+        "Scanne den QR-Code des sendenden Geräts oder wähle einen Screenshot.",
+    "share.scan_camera": "Kamera verwenden",
+    "share.choose_image": "Bild wählen",
+    "share.scanning": "Suche nach einem QR-Code…",
+    "share.connecting": "Verbinden…",
+    "share.receiving": "Feeds werden empfangen…",
+    "share.invalid_qr": "Das ist kein gültiger Freigabecode.",
+    "share.code_expired":
+        "Der Code ist abgelaufen oder das sendende Gerät wurde beendet. Fordere einen neuen Code an.",
+    "share.connect_failed":
+        "Verbindung zum sendenden Gerät fehlgeschlagen.",
+    "share.camera_unavailable":
+        "Kamera nicht verfügbar. Wähle stattdessen ein Bild.",
+    "share.already_added": "Bereits hinzugefügt",
+    "toast.import_partial":
+        "Einige Feeds konnten nicht importiert werden.",
 };
 
 export default de;

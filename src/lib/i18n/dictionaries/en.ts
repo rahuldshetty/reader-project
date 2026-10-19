@@ -264,6 +264,41 @@ const en = {
     "loading.quote":
         "“A reader lives a thousand lives before he dies. The man who never reads lives only one.”",
     "loading.quote_author": "- George R.R. Martin",
+
+    // Feed sharing
+    "settings.share_qr": "Share via QR",
+    "settings.share_qr.hint":
+        "Temporarily show a QR code that a mobile device can scan to receive your feeds.",
+    "share.title": "Share feeds",
+    "share.hint":
+        "This code contains the encryption key. Anyone who can see it can receive these feeds. It expires automatically, and the connection closes when the transfer finishes.",
+    "share.starting": "Preparing a secure code…",
+    "share.waiting": "Scan this code from the mobile app",
+    "share.expires_in": "Expires in {seconds}s",
+    "share.connected": "{client} connected",
+    "share.sending": "Sending {count} feeds…",
+    "share.done": "Transfer complete. The connection is closed.",
+    "share.expired": "The code expired. Generate a new one.",
+    "share.cancelled": "Sharing stopped.",
+    "share.error": "Sharing failed: {message}",
+    "share.new_code": "New code",
+    "share.no_feeds": "There are no feeds to share.",
+    "share.client.desktop": "Device",
+    "share.scan_qr": "Scan QR",
+    "share.scan_hint":
+        "Scan the QR code shown on the sharing device, or pick a screenshot of it.",
+    "share.scan_camera": "Use camera",
+    "share.choose_image": "Choose image",
+    "share.scanning": "Looking for a QR code…",
+    "share.connecting": "Connecting…",
+    "share.receiving": "Receiving feeds…",
+    "share.invalid_qr": "This is not a valid feed share code.",
+    "share.code_expired":
+        "The code expired or the sharing device stopped. Ask for a new code.",
+    "share.connect_failed": "Could not connect to the sharing device.",
+    "share.camera_unavailable": "Camera unavailable. Choose an image instead.",
+    "share.already_added": "Already added",
+    "toast.import_partial": "Some feeds could not be imported.",
 } as const;
 
 export default en;
