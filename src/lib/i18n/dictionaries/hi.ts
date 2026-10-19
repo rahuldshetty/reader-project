@@ -226,6 +226,7 @@ const hi: Record<TranslationKey, string> = {
     "time.older": "पुराने",
 
     "loading.logo_alt": "Reader Project",
+    "loading.feeds_progress": "फ़ीड लोड हो रहे हैं · {completed} / {total} ({percent}%)",
     "loading.quote":
         "“पाठक मरने से पहले हज़ार जीवन जीता है। जो कभी नहीं पढ़ता वह केवल एक जीवन जीता है।”",
     "loading.quote_author": "- जॉर्ज आर.आर. मार्टिन",

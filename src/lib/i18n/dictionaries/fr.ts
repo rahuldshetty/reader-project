@@ -229,6 +229,7 @@ const fr: Record<TranslationKey, string> = {
     "time.older": "Plus anciens",
 
     "loading.logo_alt": "Reader Project",
+    "loading.feeds_progress": "Chargement des flux · {completed} / {total} ({percent}%)",
     "loading.quote":
         "« Un lecteur vit mille vies avant de mourir. L'homme qui ne lit jamais n'en vit qu'une. »",
     "loading.quote_author": "- George R.R. Martin",

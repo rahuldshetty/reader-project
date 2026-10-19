@@ -29,6 +29,11 @@ import {
 // UI States
 export const active_screen = writable(SCREEN.FEEDS);
 export const is_loading_splashscreen = writable(true);
+// Startup feed refresh progress, shown on the splash screen.
+export const feed_load_progress = writable<{ completed: number; total: number }>({
+    completed: 0,
+    total: 0,
+});
 export const collapse_sidebar = writable(false);
 export const active_modal = writable(MODAL_TYPE.NONE);
 

@@ -223,6 +223,7 @@ const ja: Record<TranslationKey, string> = {
     "time.older": "以前",
 
     "loading.logo_alt": "Reader Project",
+    "loading.feeds_progress": "フィードを読み込み中 · {completed} / {total} ({percent}%)",
     "loading.quote":
         "「読む人は死ぬ前に千の人生を生きる。決して読まない人はひとつの人生しか生きない。」",
     "loading.quote_author": "- ジョージ・R・R・マーティン",

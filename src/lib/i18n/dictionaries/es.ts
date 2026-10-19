@@ -224,6 +224,7 @@ const es: Record<TranslationKey, string> = {
     "time.older": "Más antiguos",
 
     "loading.logo_alt": "Reader Project",
+    "loading.feeds_progress": "Cargando fuentes · {completed} / {total} ({percent}%)",
     "loading.quote":
         "“Un lector vive mil vidas antes de morir. El hombre que nunca lee vive solo una.”",
     "loading.quote_author": "- George R.R. Martin",

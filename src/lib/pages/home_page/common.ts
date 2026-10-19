@@ -27,6 +27,7 @@ import {
     user_settings,
     refreshing_posts,
     refreshing_feeds,
+    feed_load_progress,
     feed_count_by_id,
     local_user_setting,
     active_folder_feed_ids,
@@ -220,10 +221,22 @@ export const pull_feed_and_refresh_post_data = async () => {
     } else {
         feeds = await fetch_refresheable_feeds();
     }
+    // Resolve the expired feeds first so the startup progress reflects the
+    // feeds that actually need a network refresh.
+    const feeds_to_refresh: Feed[] = [];
     for (const feed of feeds) {
         if (await check_feed_expired(feed.id)) {
-            await refresh_post_data(feed.id, feed.url);
+            feeds_to_refresh.push(feed);
         }
+    }
+
+    feed_load_progress.set({ completed: 0, total: feeds_to_refresh.length });
+    for (const feed of feeds_to_refresh) {
+        await refresh_post_data(feed.id, feed.url);
+        feed_load_progress.update(({ completed, total }) => ({
+            completed: completed + 1,
+            total,
+        }));
     }
 }
 

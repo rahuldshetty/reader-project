@@ -244,6 +244,7 @@ const en = {
 
     // Loading screen
     "loading.logo_alt": "Reader Project",
+    "loading.feeds_progress": "Loading feeds · {completed} / {total} ({percent}%)",
     "loading.quote":
         "“A reader lives a thousand lives before he dies. The man who never reads lives only one.”",
     "loading.quote_author": "- George R.R. Martin",

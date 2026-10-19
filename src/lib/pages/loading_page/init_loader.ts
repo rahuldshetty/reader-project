@@ -2,6 +2,7 @@ import {
     local_user_setting,
     is_loading_splashscreen,
     feed_view,
+    feed_load_progress,
 } from "$lib/stores/app_store";
 
 import { fetch_latest_user_settings } from "$lib/utils/setting";
@@ -18,6 +19,7 @@ import {
 export const init_app = async () => {
 
     is_loading_splashscreen.set(true);
+    feed_load_progress.set({ completed: 0, total: 0 });
 
     // Load User Settings from settings.json
     const loadedSettings = await fetch_latest_user_settings();

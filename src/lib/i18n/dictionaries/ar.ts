@@ -215,6 +215,7 @@ const ar: Record<TranslationKey, string> = {
     "time.older": "أقدم",
 
     "loading.logo_alt": "Reader Project",
+    "loading.feeds_progress": "جارٍ تحميل الخلاصات · {completed} / {total} ({percent}%)",
     "loading.quote":
         "«القارئ يعيش ألف حياة قبل أن يموت. أما من لا يقرأ أبداً فيعيش حياة واحدة فقط.»",
     "loading.quote_author": "- جورج ر. ر. مارتن",

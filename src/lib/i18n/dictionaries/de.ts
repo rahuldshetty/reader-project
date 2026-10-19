@@ -230,6 +230,7 @@ const de: Record<TranslationKey, string> = {
     "time.older": "Älter",
 
     "loading.logo_alt": "Reader Project",
+    "loading.feeds_progress": "Feeds werden geladen · {completed} / {total} ({percent}%)",
     "loading.quote":
         "„Ein Leser lebt tausend Leben, bevor er stirbt. Der Mann, der nie liest, lebt nur eines.“",
     "loading.quote_author": "- George R.R. Martin",
