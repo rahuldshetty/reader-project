@@ -40,9 +40,7 @@
                 class="menu menu-md overflow-y-auto overflow-x-hidden rounded-box w-full h-full fade-transition max-md:px-2 max-md:pb-4"
             >
                 <div>
-                    {#if !$is_mobile}
-                        <CustomFeedItems />
-                    {/if}
+                    <CustomFeedItems />
                     {#each $filtered_feeds as feed}
                         <FeedParent {feed} />
                     {/each}

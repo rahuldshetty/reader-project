@@ -19,38 +19,43 @@ export const fetchFeedName = (rssText: string) => {
     return ""
 }
 
-export const fetchFeedIcon = async (rssUrl: string, rssText: string) :Promise<string> => {
-    // Fetch the HTML page of the RSS feed's origin
-    const baseUrl = new URL(rssUrl).origin;
+export const fetchFeedIcon = async (rssUrl: string) :Promise<string> => {
+    // A missing favicon must never abort importing the feed itself.
+    try {
+        // Fetch the HTML page of the RSS feed's origin
+        const baseUrl = new URL(rssUrl).origin;
 
-    const response = await fetch(baseUrl);
-    if (response.status != 200) {
-        return '';
-    }
+        const response = await fetch(baseUrl);
+        if (!response.ok) {
+            return '';
+        }
 
-    const htmlText = await response.text();
+        const htmlText = await response.text();
 
-    //  Parse the HTML to find favicon links
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlText, "text/html");
+        //  Parse the HTML to find favicon links
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, "text/html");
 
-    const faviconLink = Array.from(
-            doc.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"], link[rel="icon"]')
-        )
-        .map(link => ({
-            href: link.getAttribute("href"),
-            sizes: link.getAttribute("sizes") || "",
-        }))
-        .sort((a, b) => {
-            // Sort by size if possible (e.g., "32x32", "180x180")
-            const aSize = parseInt(a.sizes.split("x")[0]) || 0;
-            const bSize = parseInt(b.sizes.split("x")[0]) || 0;
-            return bSize - aSize;
-        })[0]; // Pick the largest
+        const faviconLink = Array.from(
+                doc.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"], link[rel="icon"]')
+            )
+            .map(link => ({
+                href: link.getAttribute("href"),
+                sizes: link.getAttribute("sizes") || "",
+            }))
+            .sort((a, b) => {
+                // Sort by size if possible (e.g., "32x32", "180x180")
+                const aSize = parseInt(a.sizes.split("x")[0]) || 0;
+                const bSize = parseInt(b.sizes.split("x")[0]) || 0;
+                return bSize - aSize;
+            })[0]; // Pick the largest
 
-    if (faviconLink && faviconLink.href) {
-        const faviconUrl = new URL(faviconLink.href, baseUrl).href; // Resolve relative URLs
-        return faviconUrl;
+        if (faviconLink && faviconLink.href) {
+            const faviconUrl = new URL(faviconLink.href, baseUrl).href; // Resolve relative URLs
+            return faviconUrl;
+        }
+    } catch (error) {
+        console.warn(`Unable to fetch feed icon for ${rssUrl}`, error);
     }
 
     return '';
@@ -113,51 +118,71 @@ export const fetchPosts = async (rssText: string) :Promise<Post[]> => {
     return [];
 }
 
-export const fetchFeedDataFromFeedURL = async (id: number, url: string) : Promise<FeedMetadata> => {
-    // Returns feed metadata from XML URL
-    const response = await fetch(url);
+export const fetchFeedDataFromFeedURL = async (
+    id: number,
+    url: string,
+    rssText?: string,
+) : Promise<FeedMetadata> => {
+    // Returns feed metadata from XML URL. Callers that already have the body
+    // pass `rssText` so the feed is not downloaded twice.
+    let xmlText = rssText;
+    if (xmlText === undefined) {
+        const response = await fetch(url);
 
-    if(response == null || response.status != 200){
-        throw new Error("Failed to fetch Feed metadata.");
+        if(response == null || !response.ok){
+            throw new Error(`Failed to fetch feed (${response?.status ?? "network error"}): ${url}`);
+        }
+
+        xmlText = await response.text();
     }
-
-    const xmlText = await response.text();
 
     return {
         id: id,
         name: fetchFeedName(xmlText),
-        icon: await fetchFeedIcon(url, xmlText),
+        icon: await fetchFeedIcon(url),
         posts: await fetchPosts(xmlText),
         url: url,
         type: FEED_TYPE.FEED
     }
 }
 
-const detectURLContentType = async (url: string) :Promise<FEED_URL_CONTENT_TYPE> => {
+const detectURLContentType = async (
+    url: string,
+) : Promise<{ content_type: FEED_URL_CONTENT_TYPE; text: string }> => {
     // Detect whether URL points to XML feed or a website
     const response = await fetch(url);
+    if (response == null || !response.ok) {
+        throw new Error(`Failed to fetch URL (${response?.status ?? "network error"}): ${url}`);
+    }
+
     const contentType = response.headers.get('content-type') || '';
     const text = await response.text();
     const trimmed = text.trim().toLowerCase();
 
-    const isXMLlike = contentType.includes('xml') || trimmed.startsWith('<?xml');
+    const isXMLlike =
+        contentType.includes('xml') ||
+        trimmed.startsWith('<?xml') ||
+        trimmed.startsWith('<rss') ||
+        trimmed.startsWith('<feed') ||
+        trimmed.startsWith('<rdf:rdf');
 
-    if(isXMLlike){
-        return FEED_URL_CONTENT_TYPE.XML;
-    } else {
-        return FEED_URL_CONTENT_TYPE.WEBSITE;
-    }
+    return {
+        content_type: isXMLlike
+            ? FEED_URL_CONTENT_TYPE.XML
+            : FEED_URL_CONTENT_TYPE.WEBSITE,
+        text,
+    };
 }
 
 export const fetchFeedDataFromURL = async (url: string): Promise<(FeedMetadata | FeedMetadataFolder)[]> => {
     // Returns list of feeds identified from URL 
 
-    // Check type of URL
-    const content_type = await detectURLContentType(url);
+    // Check type of URL. Keep the body so direct feeds only fetch once.
+    const { content_type, text } = await detectURLContentType(url);
 
     if(content_type == FEED_URL_CONTENT_TYPE.XML){
         // Scenario 1: User provides direct URL to feed
-        const feedMetadata = await fetchFeedDataFromFeedURL(0, url);
+        const feedMetadata = await fetchFeedDataFromFeedURL(0, url, text);
         return [ feedMetadata ];
     } else if(content_type == FEED_URL_CONTENT_TYPE.WEBSITE){
         // Scenario 2: User provides URL to website that may contain links to RSS feeds

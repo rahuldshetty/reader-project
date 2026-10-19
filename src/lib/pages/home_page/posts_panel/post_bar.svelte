@@ -22,7 +22,7 @@
         faThLarge,
         faFilter,
     } from "@fortawesome/free-solid-svg-icons";
-    import { refresh_posts } from "../common";
+    import { refresh_active_posts } from "../common";
     import { t } from "$lib/i18n";
 
     let sort_by_asending = $state($posts_sort_by == DB_ORDER_ENUM.OLDEST);
@@ -36,11 +36,11 @@
         sort_by_asending = $posts_sort_by == DB_ORDER_ENUM.OLDEST;
 
         // Pull latest post feeds from DB
-        await refresh_posts($active_feed_id);
+        await refresh_active_posts();
     };
 
     const handleChangeOnReadFilter = async () => {
-        await refresh_posts($active_feed_id);
+        await refresh_active_posts();
     };
 
     const handleToggleUnread = async () => {

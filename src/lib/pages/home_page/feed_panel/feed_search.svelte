@@ -3,38 +3,54 @@
   import { get } from "svelte/store";
   import {
     search_keywords,
+    search_text,
     active_feed_id,
+    active_folder_feed_ids,
     filter_unread_posts,
     is_mobile,
     mobile_active_panel,
   } from "$lib/stores/app_store";
   import { get_binding_label } from "$lib/services/keyboard_shortcuts";
-  import { refresh_posts } from "../common";
+  import { refresh_active_posts, refresh_posts } from "../common";
   import { t } from "$lib/i18n";
 
   let debounce_timer: ReturnType<typeof setTimeout> | undefined;
+  let last_user_input = "";
+
+  // Selecting a source clears search_text programmatically. Drop any pending
+  // debounce so it cannot re-apply the old query to the new source.
+  $effect(() => {
+    if ($search_text !== last_user_input) {
+      clearTimeout(debounce_timer);
+      last_user_input = $search_text;
+    }
+  });
 
   const applySearch = async (raw_text: string) => {
     const text = raw_text.trim();
     if (text.length == 0) {
       $search_keywords = [];
-    } else {
-      $filter_unread_posts = false;
-      $active_feed_id = ROOT_PARENT_FEED_ID;
-      $search_keywords = text.toLowerCase().split(/\s+/);
+      // Emptying the box returns to whatever source is selected now.
+      await refresh_active_posts();
+      return;
     }
-    await refresh_posts($active_feed_id);
-    if (get(is_mobile) && text.length > 0) {
+
+    $filter_unread_posts = false;
+    $active_folder_feed_ids = [];
+    $active_feed_id = ROOT_PARENT_FEED_ID;
+    $search_keywords = text.toLowerCase().split(/\s+/);
+    await refresh_posts(ROOT_PARENT_FEED_ID);
+    if (get(is_mobile)) {
       mobile_active_panel.set("posts");
     }
   };
 
   // Debounced so typing on a phone does not run a query per keystroke.
-  const onSearchValueChange = (e: Event) => {
-    const text = (e.target as HTMLInputElement).value;
+  const onSearchValueChange = (event: Event) => {
+    last_user_input = (event.target as HTMLInputElement).value;
     clearTimeout(debounce_timer);
     debounce_timer = setTimeout(() => {
-      void applySearch(text);
+      void applySearch(last_user_input);
     }, 250);
   };
 
@@ -66,6 +82,7 @@
     id="feed-search-input"
     type="search"
     placeholder={$t("common.search")}
+    bind:value={$search_text}
     oninput={onSearchValueChange}
     class={$is_mobile ? "w-full" : "pr-6"}
   />

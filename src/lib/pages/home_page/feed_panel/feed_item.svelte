@@ -6,7 +6,11 @@
     import { FEED_TYPE } from "$lib/constants";
 
     import Fa from "svelte-fa";
-    import { faFolder, faRss } from "@fortawesome/free-solid-svg-icons";
+    import {
+        faChevronRight,
+        faFolder,
+        faRss,
+    } from "@fortawesome/free-solid-svg-icons";
     import { select_feed } from "$lib/pages/home_page/common";
     import FeedCounterBadge from "./feed_counter_badge.svelte";
 
@@ -15,13 +19,20 @@
     const handleFeedSelect = () => {
         void select_feed(feed.id);
     };
+
+    const handleFolderSelect = () => {
+        // On mobile the folder row is a disclosure control: tapping it opens
+        // the child list so the user can pick a feed. Desktop keeps the
+        // aggregate folder view.
+        if ($is_mobile) return;
+        handleFeedSelect();
+    };
 </script>
 
 {#if feed.type == FEED_TYPE.FOLDER}
-    <!-- TODO: Handle selection of folders  -->
     <summary
-        class="m-0.5 flex max-md:min-h-12 max-md:items-center max-md:gap-3 max-md:rounded-xl max-md:px-3"
-        onclick={handleFeedSelect}
+        class="folder-summary m-0.5 flex max-md:min-h-12 max-md:items-center max-md:gap-3 max-md:rounded-xl max-md:px-3"
+        onclick={handleFolderSelect}
     >
         <Fa icon={faFolder} size="lg" class="max-md:hidden" />
         <span
@@ -34,6 +45,11 @@
                 {feed.title}
             </div>
         </div>
+        <Fa
+            icon={faChevronRight}
+            size="sm"
+            class="folder-chevron shrink-0 text-base-content/45 transition-transform"
+        />
         <FeedEditButton {feed} />
     </summary>
 {:else}

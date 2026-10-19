@@ -255,6 +255,23 @@ article p {
     opacity: 0.4;
 }
 
+/* Folder disclosure marker: the chevron is the only affordance, so suppress
+   Chromium's native marker (which can survive as an ::after flex item). */
+.folder-summary {
+    list-style: none;
+}
+
+.folder-summary::-webkit-details-marker,
+.folder-summary::marker,
+.folder-summary::after {
+    content: none;
+    display: none;
+}
+
+details[open] > .folder-summary .folder-chevron {
+    transform: rotate(90deg);
+}
+
 @media (max-width: 767px), ((max-height: 500px) and (pointer: coarse)) {
     body {
         padding: 0;

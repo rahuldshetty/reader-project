@@ -24,11 +24,12 @@ export default defineConfig(async () => ({
     port: 1420,
     strictPort: true,
     host: host || false,
+    // Reuse the dev server port. Tauri only forwards the devUrl port to the
+    // Android device (adb reverse), so a separate HMR port never connects.
     hmr: host
       ? {
         protocol: "ws",
         host,
-        port: 1421,
       }
       : undefined,
     watch: {

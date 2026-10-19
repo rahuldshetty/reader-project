@@ -108,6 +108,11 @@ export const reading_progress = writable(0);
 // Keyboard-highlighted post in the current list (not necessarily open).
 export const cursor_post_id = writable(-1);
 export const search_keywords = writable<string[]>([]);
+// Raw search box text, so selecting a source can clear a stale query.
+export const search_text = writable('');
+// Folders expanded in the feed tree. Kept outside the component so the tree
+// reopens in the same state when mobile navigation unmounts the feed panel.
+export const open_folder_ids = writable<Set<number>>(new Set());
 
 // Mobile Navigation
 export type MobilePanel = 'feeds' | 'posts' | 'content';

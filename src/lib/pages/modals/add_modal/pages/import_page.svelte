@@ -62,6 +62,12 @@
                 const result = await parseFeedDatafromOPML(data, $skip_data_load_on_import);
                 apply_items(result.items);
             }
+        } catch (error) {
+            console.error("Failed to load feed data", error);
+            toastStore.add(
+                TOAST_MESSAGE_TYPE.ERROR,
+                translate("toast.unable_to_fetch"),
+            );
         } finally {
             btn_in_progress.set(false);
         }
@@ -73,6 +79,12 @@
         try {
             await load_existing();
             apply_items(items);
+        } catch (error) {
+            console.error("Failed to prepare feed data", error);
+            toastStore.add(
+                TOAST_MESSAGE_TYPE.ERROR,
+                translate("toast.unable_to_fetch"),
+            );
         } finally {
             btn_in_progress.set(false);
         }

@@ -32,6 +32,7 @@ import {
     local_user_setting,
     active_folder_feed_ids,
     search_keywords,
+    search_text,
     is_mobile,
     mobile_active_panel,
     cursor_post_id,
@@ -53,6 +54,11 @@ import { validate_url_secure } from "$lib/utils/html";
 import type { Feed, FeedResult, PostResult } from "$lib/types";
 import { translate } from "$lib/i18n";
 
+// Incremented on every explicit source selection. Async refreshes capture the
+// value before awaiting so a slow response for an old feed cannot overwrite
+// the source the user is looking at now.
+let feed_selection_revision = 0;
+
 export const refresh_app_data = async (
     only_feeds: boolean = true,
     only_posts: boolean = true,
@@ -60,12 +66,16 @@ export const refresh_app_data = async (
     // Refresh Feed List
     if (only_feeds) {
         active_feed_id.set(NO_FEED_SELECTED);
+        active_folder_feed_ids.set([]);
         feed_count_by_id.set(await fetch_unread_post_counts());
         feeds_store.set(await fetch_feeds());
         active_feed_name.set('');
+        search_keywords.set([]);
+        search_text.set('');
         refreshing_feeds.set(false);
     }
     if (only_posts) {
+        feed_selection_revision++;
         active_post_id.set(-1);
         posts_store.set([]);
         refreshing_posts.set(false);
@@ -80,6 +90,7 @@ export const refresh_posts = async (
     lastPubDate: string = "",
     is_fav: boolean | null = null,
     feed_ids: number[] = [],
+    revision: number | null = null,
 ) => {
     console.log(`Refreshing Feed: ${feed_id}`);
 
@@ -88,6 +99,7 @@ export const refresh_posts = async (
         return;
     }
 
+    const request_revision = revision ?? feed_selection_revision;
     refreshing_posts.set(true);
     const sort_by = get(posts_sort_by);
     const unread = get(filter_unread_posts);
@@ -103,11 +115,32 @@ export const refresh_posts = async (
         keywords,
         feed_ids
     );
+
+    // A newer source selection owns the post panel now.
+    if (request_revision !== feed_selection_revision) {
+        return;
+    }
+
     posts_store.set(posts);
     // Keyboard cursor starts at the first post of the refreshed list
     cursor_post_id.set(posts[0]?.id ?? -1);
     feed_count_by_id.set(await fetch_unread_post_counts());
-    refreshing_posts.set(false);
+    if (request_revision === feed_selection_revision) {
+        refreshing_posts.set(false);
+    }
+}
+
+// Reload the currently selected source while keeping folder aggregation.
+export const refresh_active_posts = async () => {
+    await refresh_posts(
+        get(active_feed_id),
+        null,
+        NO_OF_POST_PULLS_PER_TIME,
+        "",
+        null,
+        get(active_folder_feed_ids),
+        feed_selection_revision,
+    );
 }
 
 
@@ -165,9 +198,11 @@ export const load_new_posts = async (
 
 export const refresh_post_data = async (
     feed_id: number,
-    url: string
+    url: string,
+    revision: number | null = null,
 ) => {
     // Called when selecting "Refresh" option for a Feed
+    const selection_revision = revision ?? feed_selection_revision;
 
     // URL Validation
     const is_insecure_mode_enabled = get(local_user_setting).ENABLE_INSECURE_LINK;
@@ -183,26 +218,53 @@ export const refresh_post_data = async (
 
         await add_posts(latest_feed_info);
 
-        // Update icon data if its not set
+        // A newer source selection superseded this refresh while the network
+        // request was in flight.
+        if (selection_revision !== feed_selection_revision) {
+            return;
+        }
+
+        // Update icon data if its not set. Refresh only the feed list here:
+        // refresh_app_data() also resets the active feed, which can clobber a
+        // newer selection while this await chain is still running.
         if (await update_icon(feed_id, latest_feed_info.icon)) {
-            await refresh_app_data(true, false);
+            feeds_store.set(await fetch_feeds());
+            if (selection_revision !== feed_selection_revision) {
+                return;
+            }
             active_feed_id.set(feed_id);
+            const refreshed_feed = find_feed_in_tree(
+                get(feeds_store),
+                feed_id,
+            );
+            active_feed_name.set(refreshed_feed?.title ?? '');
         };
 
         // update new post data in store
-        await refresh_posts(feed_id);
+        await refresh_posts(
+            feed_id,
+            null,
+            NO_OF_POST_PULLS_PER_TIME,
+            "",
+            null,
+            [],
+            selection_revision,
+        );
     } catch (error) {
         console.error(`Failed to refresh feed ${feed_id}:`, error);
         toastStore.add(TOAST_MESSAGE_TYPE.ERROR, translate("toast.unable_to_fetch"));
     } finally {
-        refreshing_posts.set(false);
+        if (selection_revision === feed_selection_revision) {
+            refreshing_posts.set(false);
+        }
     }
 }
 
 
 export const check_and_pull_latest_feed_data = async (
     feed_id: number,
-    url: string
+    url: string,
+    revision: number | null = null,
 ) => {
     // Read the loaded settings, not the raw store: on a fresh install the
     // store has no key yet and get() would return undefined, silently
@@ -211,7 +273,7 @@ export const check_and_pull_latest_feed_data = async (
         // Check if given feed is expired
         if (await check_feed_expired(feed_id)) {
             // Pull new data from feed
-            await refresh_post_data(feed_id, url);
+            await refresh_post_data(feed_id, url, revision);
         }
     }
 }
@@ -305,35 +367,96 @@ export const select_feed = async (feed_id: number) => {
     const isSameFeed = get(active_feed_id) == feed_id;
     const feed = find_feed_in_tree(get(feeds_store), feed_id);
 
-    if (!isSameFeed) {
-        if (feed_id == -2) {
-            // Favourites list ignores the unread filter
-            filter_unread_posts.set(false);
+    const open_posts_panel = () => {
+        if (get(is_mobile)) {
+            mobile_active_panel.set("posts");
         }
+    };
 
-        active_feed_id.set(feed_id);
-        active_feed_name.set(feed ? feed.title : '');
-
-        active_folder_feed_ids.set([]);
-
-        if (feed && feed.type == FEED_TYPE.FEED) {
-            // Check and try to pull latest posts from RSS feed
-            await check_and_pull_latest_feed_data(feed_id, feed.url);
-            await refresh_posts(feed_id);
-        } else if (feed && feed.type == FEED_TYPE.FOLDER) {
-            // Aggregate every child feed's posts under the folder.
-            const ids = (feed as FeedResult).children?.map((c) => c.id) ?? [];
-            active_folder_feed_ids.set(ids);
-            await refresh_posts(feed_id, null, NO_OF_POST_PULLS_PER_TIME, "", null, ids);
-        } else if (feed_id < 0) {
-            // All Posts / Favourites
-            await refresh_posts(feed_id);
+    if (isSameFeed) {
+        open_posts_panel();
+        // The list can be empty after a refresh or a failed load; reload it
+        // instead of showing an empty panel for the already-selected source.
+        if (get(posts_store).length === 0) {
+            const revision = ++feed_selection_revision;
+            await refresh_posts(
+                feed_id,
+                null,
+                NO_OF_POST_PULLS_PER_TIME,
+                "",
+                null,
+                get(active_folder_feed_ids),
+                revision,
+            );
         }
+        return;
     }
 
-    // Navigate to posts panel on mobile (always, even if same feed)
-    if (get(is_mobile)) {
-        mobile_active_panel.set("posts");
+    const revision = ++feed_selection_revision;
+
+    if (feed_id == -2) {
+        // Favourites list ignores the unread filter
+        filter_unread_posts.set(false);
+    }
+
+    // Selecting a source explicitly replaces any active search.
+    search_keywords.set([]);
+    search_text.set('');
+
+    active_feed_id.set(feed_id);
+    active_feed_name.set(feed ? feed.title : '');
+    active_post_id.set(-1);
+    cursor_post_id.set(-1);
+
+    const folder_ids =
+        feed && feed.type == FEED_TYPE.FOLDER
+            ? ((feed as FeedResult).children?.map((c) => c.id) ?? [])
+            : [];
+    active_folder_feed_ids.set(folder_ids);
+
+    // Own the panel immediately. Network refreshes can take seconds; without
+    // this the tap looks ignored and the next screen can render stale/empty.
+    posts_store.set([]);
+    refreshing_posts.set(true);
+    open_posts_panel();
+
+    if (feed && feed.type == FEED_TYPE.FEED) {
+        // Check and try to pull latest posts from RSS feed
+        await check_and_pull_latest_feed_data(feed_id, feed.url, revision);
+        if (revision !== feed_selection_revision) return;
+        await refresh_posts(
+            feed_id,
+            null,
+            NO_OF_POST_PULLS_PER_TIME,
+            "",
+            null,
+            [],
+            revision,
+        );
+    } else if (feed && feed.type == FEED_TYPE.FOLDER) {
+        // Aggregate every child feed's posts under the folder.
+        await refresh_posts(
+            feed_id,
+            null,
+            NO_OF_POST_PULLS_PER_TIME,
+            "",
+            null,
+            folder_ids,
+            revision,
+        );
+    } else if (feed_id < 0) {
+        // All Posts / Favourites
+        await refresh_posts(
+            feed_id,
+            null,
+            NO_OF_POST_PULLS_PER_TIME,
+            "",
+            null,
+            [],
+            revision,
+        );
+    } else {
+        refreshing_posts.set(false);
     }
 };
 
