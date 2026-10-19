@@ -151,7 +151,7 @@ export const DAISY_UI_THEMES = [
 export const DEFAULT_DAISY_THEME = "default";
 export const REFRESH_FEED_ON_SELECT = true;
 export const ENABLE_INSECURE_LINK = false;
-export const AUTO_READ_ON_SELECT = false;
+export const AUTO_READ_ON_SELECT = true;
 export const REFRESH_ALL_FEED_ON_LAUNCH = false;
 export const MINIMIZE_APP = false;
 
