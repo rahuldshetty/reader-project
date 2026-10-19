@@ -48,8 +48,6 @@ const ar: Record<TranslationKey, string> = {
     "posts.empty.search": "لا توجد نتائج لهذا البحث.",
     "posts.empty.unread": "لا توجد مقالات غير مقروءة.",
     "posts.empty.filters": "جرّب تعديل عوامل التصفية.",
-    "posts.pull_to_refresh": "اسحب للتحديث",
-    "posts.release_to_refresh": "أفلت للتحديث",
 
     "content.select_article": "حدد مقالاً للقراءة",
     "content.unable_to_parse":

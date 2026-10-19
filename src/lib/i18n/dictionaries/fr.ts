@@ -48,8 +48,6 @@ const fr: Record<TranslationKey, string> = {
     "posts.empty.search": "Aucun résultat pour cette recherche.",
     "posts.empty.unread": "Aucune publication non lue.",
     "posts.empty.filters": "Essayez d’ajuster les filtres.",
-    "posts.pull_to_refresh": "Tirez pour actualiser",
-    "posts.release_to_refresh": "Relâchez pour actualiser",
 
     "content.select_article": "Sélectionnez un article à lire",
     "content.unable_to_parse":

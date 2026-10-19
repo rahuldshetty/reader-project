@@ -12,7 +12,7 @@
     } from "$lib/stores/app_store";
     import type { PostResult } from "$lib/types";
     import Fa from "svelte-fa";
-    import { faInbox } from "@fortawesome/free-solid-svg-icons";
+    import { faInbox, faRefresh } from "@fortawesome/free-solid-svg-icons";
 
     import {
         load_new_posts,
@@ -36,45 +36,9 @@
 
     let listElement: HTMLDivElement;
 
-    const PULL_THRESHOLD = 64;
-    let pull_start_y: number | null = null;
-    let pull_active = false;
-    let pull_distance = $state(0);
-
-    const handle_pull_start = (event: TouchEvent) => {
-        if (!$is_mobile || $refreshing_posts) return;
-        if (!listElement || listElement.scrollTop > 0) return;
-        pull_start_y = event.touches[0]?.clientY ?? null;
-        pull_active = pull_start_y !== null;
-    };
-
-    const handle_pull_move = (event: TouchEvent) => {
-        if (!pull_active || pull_start_y === null) return;
-        if (!listElement || listElement.scrollTop > 0) {
-            pull_active = false;
-            pull_distance = 0;
-            return;
-        }
-        const delta =
-            (event.touches[0]?.clientY ?? pull_start_y) - pull_start_y;
-        pull_distance = delta > 0 ? Math.min(delta, 96) : 0;
-    };
-
-    const handle_pull_end = () => {
-        if (!pull_active) return;
-        const should_refresh = pull_distance >= PULL_THRESHOLD;
-        pull_active = false;
-        pull_start_y = null;
-        pull_distance = 0;
-        if (should_refresh) {
-            void refresh_current_source();
-        }
-    };
-
-    const cancel_pull = () => {
-        pull_active = false;
-        pull_start_y = null;
-        pull_distance = 0;
+    const handle_refresh = () => {
+        if ($refreshing_posts) return;
+        void refresh_current_source();
     };
 
     active_feed_id.subscribe(() => {
@@ -144,6 +108,20 @@
             <h1 class="min-w-0 flex-1 truncate text-xl font-bold tracking-tight">
                 {header_title}
             </h1>
+            <button
+                type="button"
+                class="btn btn-ghost btn-circle h-10 w-10 shrink-0"
+                onclick={handle_refresh}
+                disabled={$refreshing_posts}
+                aria-label={$t("common.refresh")}
+                aria-busy={$refreshing_posts}
+            >
+                <Fa
+                    icon={faRefresh}
+                    size="lg"
+                    class={$refreshing_posts ? "animate-spin" : ""}
+                />
+            </button>
             <PostBar />
         </div>
     {:else}
@@ -157,34 +135,10 @@
         <div
             bind:this={listElement}
             onscroll={(e) => handleScrollEvent(e)}
-            ontouchstart={handle_pull_start}
-            ontouchmove={handle_pull_move}
-            ontouchend={handle_pull_end}
-            ontouchcancel={cancel_pull}
-            class="relative min-h-0 flex-1 {$is_mobile
+            class="min-h-0 flex-1 {$is_mobile
                 ? 'mobile-scroll'
                 : ''} overflow-auto overflow-x-hidden fade-transition"
         >
-            {#if $is_mobile && pull_distance > 0}
-                <div
-                    class="pointer-events-none absolute inset-x-0 top-1 z-20 flex justify-center"
-                    style="opacity: {Math.min(pull_distance / 32, 1)}"
-                >
-                    <span
-                        class="flex h-8 items-center gap-2 rounded-full border border-base-300 bg-base-100 px-3 text-xs text-base-content/60 shadow-sm"
-                    >
-                        <span
-                            class="loading loading-spinner loading-xs {pull_distance >=
-                            PULL_THRESHOLD
-                                ? 'text-primary'
-                                : ''}"
-                        ></span>
-                        {pull_distance >= PULL_THRESHOLD
-                            ? $t("posts.release_to_refresh")
-                            : $t("posts.pull_to_refresh")}
-                    </span>
-                </div>
-            {/if}
             {#if $grouped_posts.length === 0}
                 <div
                     class="flex h-full flex-col items-center justify-center gap-2 px-6 py-20 text-center text-base-content/45"
