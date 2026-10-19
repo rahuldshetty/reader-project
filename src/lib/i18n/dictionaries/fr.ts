@@ -29,6 +29,7 @@ const fr: Record<TranslationKey, string> = {
     "nav.posts": "Publications",
     "nav.all_posts": "Toutes les publications",
     "nav.my_favourites": "Mes favoris",
+    "nav.no_feeds": "Pas encore de flux. Utilisez + pour en ajouter un.",
 
     "feed.new_folder": "Créer un nouveau dossier",
     "feed.refresh": "Actualiser le flux",
@@ -41,6 +42,12 @@ const fr: Record<TranslationKey, string> = {
     "posts.sort_by": "Trier par",
     "posts.latest_first": "Plus récents d'abord",
     "posts.oldest_first": "Plus anciens d'abord",
+    "posts.filters": "Filtres",
+    "posts.empty": "Aucune publication à afficher",
+    "posts.empty.hint": "Ajoutez un flux ou choisissez une autre source.",
+    "posts.empty.search": "Aucun résultat pour cette recherche.",
+    "posts.empty.unread": "Aucune publication non lue.",
+    "posts.empty.filters": "Essayez d’ajuster les filtres.",
 
     "content.select_article": "Sélectionnez un article à lire",
     "content.unable_to_parse":

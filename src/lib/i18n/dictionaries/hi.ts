@@ -29,6 +29,7 @@ const hi: Record<TranslationKey, string> = {
     "nav.posts": "लेख",
     "nav.all_posts": "सभी लेख",
     "nav.my_favourites": "मेरे पसंदीदा",
+    "nav.no_feeds": "अभी कोई फ़ीड नहीं। जोड़ने के लिए + का उपयोग करें।",
 
     "feed.new_folder": "नया फ़ोल्डर बनाएँ",
     "feed.refresh": "फ़ीड रीफ़्रेश करें",
@@ -41,6 +42,12 @@ const hi: Record<TranslationKey, string> = {
     "posts.sort_by": "इसके अनुसार क्रमबद्ध करें",
     "posts.latest_first": "नवीनतम पहले",
     "posts.oldest_first": "सबसे पुराना पहले",
+    "posts.filters": "फ़िल्टर",
+    "posts.empty": "दिखाने के लिए कोई लेख नहीं",
+    "posts.empty.hint": "फ़ीड जोड़ें या दूसरा स्रोत चुनें।",
+    "posts.empty.search": "इस खोज के लिए कोई परिणाम नहीं।",
+    "posts.empty.unread": "कोई अपठित लेख नहीं।",
+    "posts.empty.filters": "फ़िल्टर समायोजित करें।",
 
     "content.select_article": "पढ़ने के लिए एक लेख चुनें",
     "content.unable_to_parse":

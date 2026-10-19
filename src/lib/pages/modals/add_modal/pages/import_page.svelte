@@ -5,9 +5,14 @@
         feeds_import_items,
         skip_data_load_on_import
     } from "$lib/stores/add_modal_store";
-    import { refresh_app_data } from "$lib/pages/home_page/common";
-    import { fetchFeedDataFromURL, flattenFeedData } from "$lib/services/feed_gather";
+    import { refresh_app_data, select_feed } from "$lib/pages/home_page/common";
+    import {
+        fetchFeedDataFromFeedURL,
+        fetchFeedDataFromURL,
+        flattenFeedData,
+    } from "$lib/services/feed_gather";
     import { add_feed, fetch_feed_urls, fetch_folders } from "$lib/dao/feed_db";
+    import { add_posts } from "$lib/dao/post_db";
     import { closeAddModal } from "../add_modal_methods";
     import { t, translate } from "$lib/i18n";
     import { FEED_TYPE, TOAST_MESSAGE_TYPE } from "$lib/constants";
@@ -118,6 +123,7 @@
     const handleAddFeedToDB = async () => {
         $btn_in_progress = true;
         let failures = 0;
+        const imported_feeds: { id: number; url: string }[] = [];
 
         const try_add_feed = async (
             title: string,
@@ -127,7 +133,16 @@
         ) => {
             if (existing_urls.has(url)) return;
             try {
-                await add_feed(title, url, icon, FEED_TYPE.FEED, parent);
+                const id = await add_feed(
+                    title,
+                    url,
+                    icon,
+                    FEED_TYPE.FEED,
+                    parent,
+                );
+                if (id) {
+                    imported_feeds.push({ id: Number(id), url });
+                }
             } catch (error) {
                 failures++;
                 console.log(`|| Failed to import feed ${url}: ${error} ||`);
@@ -189,8 +204,29 @@
             }
         }
 
-        // Refresh App Data
+        // Pull each newly added feed once so the post list is populated
+        // immediately instead of waiting for a later refresh or feed select.
+        for (const feed of imported_feeds) {
+            try {
+                const metadata = await fetchFeedDataFromFeedURL(
+                    feed.id,
+                    feed.url,
+                    undefined,
+                    false,
+                );
+                await add_posts(metadata);
+            } catch (error) {
+                failures++;
+                console.log(
+                    `|| Failed to load posts for ${feed.url}: ${error} ||`,
+                );
+            }
+        }
+
+        // Refresh App Data and open the newly added feed. If every feed
+        // already existed, fall back to All Posts rather than an empty screen.
         await refresh_app_data();
+        await select_feed(imported_feeds[0]?.id ?? -1);
 
         if (failures > 0) {
             toastStore.add(

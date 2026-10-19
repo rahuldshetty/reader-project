@@ -29,6 +29,7 @@ const ja: Record<TranslationKey, string> = {
     "nav.posts": "記事",
     "nav.all_posts": "すべての記事",
     "nav.my_favourites": "お気に入り",
+    "nav.no_feeds": "フィードがまだありません。+ で追加してください。",
 
     "feed.new_folder": "新しいフォルダーを作成",
     "feed.refresh": "フィードを更新",
@@ -41,6 +42,12 @@ const ja: Record<TranslationKey, string> = {
     "posts.sort_by": "並び替え",
     "posts.latest_first": "新しい順",
     "posts.oldest_first": "古い順",
+    "posts.filters": "フィルター",
+    "posts.empty": "表示する記事がありません",
+    "posts.empty.hint": "フィードを追加するか、別のソースを選択してください。",
+    "posts.empty.search": "この検索の結果はありません。",
+    "posts.empty.unread": "未読の記事はありません。",
+    "posts.empty.filters": "フィルターを調整してください。",
 
     "content.select_article": "読む記事を選択してください",
     "content.unable_to_parse":

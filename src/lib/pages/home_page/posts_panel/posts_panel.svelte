@@ -6,9 +6,13 @@
         active_feed_id,
         active_feed_name,
         active_folder_feed_ids,
+        filter_unread_posts,
         is_mobile,
+        search_keywords,
     } from "$lib/stores/app_store";
     import type { PostResult } from "$lib/types";
+    import Fa from "svelte-fa";
+    import { faInbox } from "@fortawesome/free-solid-svg-icons";
 
     import { load_new_posts } from "$lib/pages/home_page/common";
     import { dateGroupLabel } from "$lib/utils/time";
@@ -34,6 +38,19 @@
             listElement.scrollTop = 0;
         }
     });
+
+    const empty_title = $derived(
+        $search_keywords.length > 0
+            ? $t("posts.empty.search")
+            : $filter_unread_posts
+              ? $t("posts.empty.unread")
+              : $t("posts.empty"),
+    );
+    const empty_hint = $derived(
+        $search_keywords.length > 0 || $filter_unread_posts
+            ? $t("posts.empty.filters")
+            : $t("posts.empty.hint"),
+    );
 
     const grouped_posts = derived([posts_store, t], ([$posts_store, $t]) => {
         const groups: { label: string; posts: PostResult[] }[] = [];
@@ -79,13 +96,15 @@
 >
     {#if $is_mobile}
         <MobileTopBar />
-        <div class="shrink-0 px-4 pb-1 pt-2">
-            <h1 class="truncate text-xl font-bold tracking-tight">
+        <div class="flex shrink-0 items-center gap-2 px-4 pb-1 pt-2">
+            <h1 class="min-w-0 flex-1 truncate text-xl font-bold tracking-tight">
                 {header_title}
             </h1>
+            <PostBar />
         </div>
+    {:else}
+        <PostBar />
     {/if}
-    <PostBar />
     {#if $refreshing_posts}
         <div class="fade-transition">
             <LoadingSpinner messaage={$t("posts.refreshing")} />
@@ -94,10 +113,21 @@
         <div
             bind:this={listElement}
             onscroll={(e) => handleScrollEvent(e)}
-            class="{$is_mobile
+            class="min-h-0 flex-1 {$is_mobile
                 ? 'mobile-scroll'
                 : ''} overflow-auto overflow-x-hidden fade-transition"
         >
+            {#if $grouped_posts.length === 0}
+                <div
+                    class="flex h-full flex-col items-center justify-center gap-2 px-6 py-20 text-center text-base-content/45"
+                >
+                    <Fa icon={faInbox} size="3x" />
+                    <p class="text-base font-medium text-base-content/70">
+                        {empty_title}
+                    </p>
+                    <p class="text-sm">{empty_hint}</p>
+                </div>
+            {:else}
             <ul
                 class="list-none rounded-box bg-base-100 {$is_mobile
                     ? 'flex flex-col gap-2 px-3 pb-24 pt-2'
@@ -116,6 +146,7 @@
                     {/each}
                 {/each}
             </ul>
+            {/if}
         </div>
     {/if}
 </div>

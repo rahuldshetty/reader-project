@@ -34,6 +34,7 @@ const en = {
     "nav.posts": "Posts",
     "nav.all_posts": "All Posts",
     "nav.my_favourites": "My Favourites",
+    "nav.no_feeds": "No feeds yet. Use + to add one.",
 
     // Feed panel
     "feed.new_folder": "Create a new folder",
@@ -48,6 +49,12 @@ const en = {
     "posts.sort_by": "Sort By",
     "posts.latest_first": "Latest First",
     "posts.oldest_first": "Oldest First",
+    "posts.filters": "Filters",
+    "posts.empty": "No posts to show",
+    "posts.empty.hint": "Add a feed or choose another source.",
+    "posts.empty.search": "No results for this search.",
+    "posts.empty.unread": "No unread posts.",
+    "posts.empty.filters": "Try adjusting your filters.",
 
     // Content panel
     "content.select_article": "Select an article to read",

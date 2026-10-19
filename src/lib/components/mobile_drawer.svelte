@@ -169,6 +169,16 @@
 
                 <div class="divider my-1"></div>
 
+                {#if ordered_items.length === 0}
+                    <p
+                        class="px-4 py-8 text-center text-sm text-base-content/50"
+                    >
+                        {$feeds_store.length === 0
+                            ? $t("nav.no_feeds")
+                            : $t("settings.side_panel.hint")}
+                    </p>
+                {/if}
+
                 {#each ordered_items as item (item.id)}
                     {@const item_unread =
                         item.type == FEED_TYPE.FOLDER

@@ -25,7 +25,11 @@ export const fetchFeedIcon = async (rssUrl: string) :Promise<string> => {
         // Fetch the HTML page of the RSS feed's origin
         const baseUrl = new URL(rssUrl).origin;
 
-        const response = await fetch(baseUrl);
+        const signal =
+            "timeout" in AbortSignal
+                ? AbortSignal.timeout(3000)
+                : undefined;
+        const response = await fetch(baseUrl, { signal });
         if (!response.ok) {
             return '';
         }
@@ -122,12 +126,17 @@ export const fetchFeedDataFromFeedURL = async (
     id: number,
     url: string,
     rssText?: string,
+    load_icon: boolean = true,
 ) : Promise<FeedMetadata> => {
     // Returns feed metadata from XML URL. Callers that already have the body
     // pass `rssText` so the feed is not downloaded twice.
     let xmlText = rssText;
     if (xmlText === undefined) {
-        const response = await fetch(url);
+        const signal =
+            "timeout" in AbortSignal
+                ? AbortSignal.timeout(20000)
+                : undefined;
+        const response = await fetch(url, { signal });
 
         if(response == null || !response.ok){
             throw new Error(`Failed to fetch feed (${response?.status ?? "network error"}): ${url}`);
@@ -139,7 +148,7 @@ export const fetchFeedDataFromFeedURL = async (
     return {
         id: id,
         name: fetchFeedName(xmlText),
-        icon: await fetchFeedIcon(url),
+        icon: load_icon ? await fetchFeedIcon(url) : '',
         posts: await fetchPosts(xmlText),
         url: url,
         type: FEED_TYPE.FEED
@@ -150,7 +159,9 @@ const detectURLContentType = async (
     url: string,
 ) : Promise<{ content_type: FEED_URL_CONTENT_TYPE; text: string }> => {
     // Detect whether URL points to XML feed or a website
-    const response = await fetch(url);
+    const signal =
+        "timeout" in AbortSignal ? AbortSignal.timeout(20000) : undefined;
+    const response = await fetch(url, { signal });
     if (response == null || !response.ok) {
         throw new Error(`Failed to fetch URL (${response?.status ?? "network error"}): ${url}`);
     }

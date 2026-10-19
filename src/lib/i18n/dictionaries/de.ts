@@ -29,6 +29,7 @@ const de: Record<TranslationKey, string> = {
     "nav.posts": "Beiträge",
     "nav.all_posts": "Alle Beiträge",
     "nav.my_favourites": "Meine Favoriten",
+    "nav.no_feeds": "Noch keine Feeds. Füge mit + einen hinzu.",
 
     "feed.new_folder": "Neuen Ordner erstellen",
     "feed.refresh": "Feed aktualisieren",
@@ -41,6 +42,12 @@ const de: Record<TranslationKey, string> = {
     "posts.sort_by": "Sortieren nach",
     "posts.latest_first": "Neueste zuerst",
     "posts.oldest_first": "Älteste zuerst",
+    "posts.filters": "Filter",
+    "posts.empty": "Keine Beiträge vorhanden",
+    "posts.empty.hint": "Füge einen Feed hinzu oder wähle eine andere Quelle.",
+    "posts.empty.search": "Keine Ergebnisse für diese Suche.",
+    "posts.empty.unread": "Keine ungelesenen Beiträge.",
+    "posts.empty.filters": "Passe die Filter an.",
 
     "content.select_article": "Wählen Sie einen Artikel zum Lesen",
     "content.unable_to_parse":

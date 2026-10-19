@@ -29,6 +29,7 @@ const ar: Record<TranslationKey, string> = {
     "nav.posts": "المقالات",
     "nav.all_posts": "كل المقالات",
     "nav.my_favourites": "المفضلة",
+    "nav.no_feeds": "لا توجد خلاصات بعد. استخدم + لإضافة واحدة.",
 
     "feed.new_folder": "إنشاء مجلد جديد",
     "feed.refresh": "تحديث الخلاصة",
@@ -41,6 +42,12 @@ const ar: Record<TranslationKey, string> = {
     "posts.sort_by": "فرز حسب",
     "posts.latest_first": "الأحدث أولاً",
     "posts.oldest_first": "الأقدم أولاً",
+    "posts.filters": "عوامل التصفية",
+    "posts.empty": "لا توجد مقالات للعرض",
+    "posts.empty.hint": "أضف خلاصة أو اختر مصدرًا آخر.",
+    "posts.empty.search": "لا توجد نتائج لهذا البحث.",
+    "posts.empty.unread": "لا توجد مقالات غير مقروءة.",
+    "posts.empty.filters": "جرّب تعديل عوامل التصفية.",
 
     "content.select_article": "حدد مقالاً للقراءة",
     "content.unable_to_parse":

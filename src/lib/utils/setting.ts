@@ -109,7 +109,7 @@ export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
         "THEME_MODE": theme as string ?? DEFAULT_DAISY_THEME,
         "LANGUAGE": language as string ?? "en",
         "POST_EXPIRY_TIME": post_expiry_time as number ?? POST_EXPIRY_TIME,
-        "CURRENT_FEED_VIEW": feed_view as string ?? (FEED_VIEW.LIST),
+        "CURRENT_FEED_VIEW": feed_view as string ?? (FEED_VIEW.THUMBNAIL),
         "REFRESH_FEED_ON_SELECT": refresh_feed_on_select_enable as boolean ?? REFRESH_FEED_ON_SELECT,
         "ENABLE_INSECURE_LINK": enable_insecure_link as boolean ?? ENABLE_INSECURE_LINK,
         "AUTO_READ_ON_SELECT": auto_read_on_select as boolean ?? AUTO_READ_ON_SELECT,
