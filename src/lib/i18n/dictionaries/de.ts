@@ -46,6 +46,8 @@ const de: Record<TranslationKey, string> = {
         "Seite kann nicht analysiert werden. Bitte greifen Sie direkt auf die Website zu.",
     "content.ai_summary": "KI-generierte Zusammenfassung",
     "content.min_read": "{n} Min. Lesezeit",
+    "content.cached": "Gecacht",
+    "content.cached.hint": "Aus dem lokalen Inhaltscache geladen.",
     "content.previous_article": "Vorheriger Artikel",
     "content.next_article": "Nächster Artikel",
     "content.copy_link": "Link in die Zwischenablage kopieren",
@@ -103,6 +105,19 @@ const de: Record<TranslationKey, string> = {
     "settings.post_duration": "Beitragsdauer",
     "settings.post_duration.hint":
         "Anzahl der Tage, die ein Beitrag gespeichert bleibt.",
+    "settings.content_cache": "Inhaltscache",
+    "settings.content_cache.hint":
+        "Extrahiertes Artikel-HTML lokal speichern, damit das erneute Öffnen sofort erfolgt und offline funktioniert.",
+    "settings.cache_ttl": "Cache-Dauer (Tage)",
+    "settings.cache_ttl.hint":
+        "Inhalte, die älter sind, werden entfernt.",
+    "settings.cache_max_size": "Cache-Größenlimit (MB)",
+    "settings.cache_max_size.hint":
+        "Am längsten nicht gelesene Artikel werden entfernt, wenn der Cache diese Größe überschreitet.",
+    "settings.cache_usage_title": "Zwischengespeicherte Inhalte",
+    "settings.cache_usage": "{count} Artikel, {size} MB",
+    "settings.cache_loading": "Cache wird geprüft…",
+    "settings.clear_cache": "Cache leeren",
 
     "settings.enable_llm": "LLM aktivieren",
     "settings.enable_llm.hint":
@@ -211,6 +226,7 @@ const de: Record<TranslationKey, string> = {
     "toast.edit_saved": "Bearbeitung gespeichert.",
     "toast.edit_failed": "Bearbeitungsvorgang fehlgeschlagen.",
     "toast.feed_saved": "Feed erfolgreich gespeichert.",
+    "toast.cache_cleared": "Inhaltscache geleert.",
     "toast.invalid_file_path": "Bitte geben Sie einen gültigen Dateipfad an.",
     "toast.conflicting_shortcuts":
         "Tastenkürzel im Konflikt. Vor dem Speichern neu zuweisen oder zurücksetzen.",

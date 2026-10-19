@@ -38,6 +38,10 @@ export interface UserSettings {
     ENABLE_AUTO_PURGE: boolean;
     POST_EXPIRY_TIME: number;
 
+    ENABLE_CONTENT_CACHE: boolean;
+    CONTENT_CACHE_TTL_DAYS: number;
+    CONTENT_CACHE_MAX_MB: number;
+
     LONGITUDE: number;
     LATITUDE: number;
 
@@ -136,6 +140,9 @@ export interface ContentResult {
     url: string;
     image: string;
     content_type: CONTENT_TYPES;
+    // Runtime-only marker; set when the body came from the content cache.
+    // It is intentionally not persisted with the cached payload.
+    from_cache?: boolean;
 }
 
 export type FeedUnreadCounter = Record<number, number>;

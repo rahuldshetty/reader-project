@@ -4,6 +4,7 @@ import {
     DEFAULT_DAISY_THEME, LAST_REFRESH_TIME, POST_EXPIRY_TIME, FEED_VIEW,
     SETTINGS, REFRESH_FEED_ON_SELECT, ENABLE_INSECURE_LINK, AUTO_READ_ON_SELECT,
     REFRESH_ALL_FEED_ON_LAUNCH, ENABLE_AUTO_PURGE,
+    ENABLE_CONTENT_CACHE, CONTENT_CACHE_TTL_DAYS, CONTENT_CACHE_MAX_MB,
     MINIMIZE_APP,
     LONGITUDE,
     LATITUDE,
@@ -64,6 +65,9 @@ export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
     const auto_read_on_select = await user_settings.get(SETTINGS.AUTO_READ_ON_SELECT);
     const refresh_all_feed_on_launch = await user_settings.get(SETTINGS.REFRESH_ALL_FEED_ON_LAUNCH);
     const enable_auto_purge = await user_settings.get(SETTINGS.ENABLE_AUTO_PURGE);
+    const enable_content_cache = await user_settings.get(SETTINGS.ENABLE_CONTENT_CACHE);
+    const content_cache_ttl_days = await user_settings.get(SETTINGS.CONTENT_CACHE_TTL_DAYS);
+    const content_cache_max_mb = await user_settings.get(SETTINGS.CONTENT_CACHE_MAX_MB);
     const minimize_app = await user_settings.get(SETTINGS.MINIMIZE_APP);
     
     const longitude = await user_settings.get(SETTINGS.LONGITUDE);
@@ -92,6 +96,9 @@ export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
         "AUTO_READ_ON_SELECT": auto_read_on_select as boolean ?? AUTO_READ_ON_SELECT,
         "REFRESH_ALL_FEED_ON_LAUNCH": refresh_all_feed_on_launch as boolean?? REFRESH_ALL_FEED_ON_LAUNCH,
         "ENABLE_AUTO_PURGE": enable_auto_purge as boolean ?? ENABLE_AUTO_PURGE,
+        "ENABLE_CONTENT_CACHE": enable_content_cache as boolean ?? ENABLE_CONTENT_CACHE,
+        "CONTENT_CACHE_TTL_DAYS": content_cache_ttl_days as number ?? CONTENT_CACHE_TTL_DAYS,
+        "CONTENT_CACHE_MAX_MB": content_cache_max_mb as number ?? CONTENT_CACHE_MAX_MB,
         "MINIMIZE_APP": minimize_app as boolean ?? MINIMIZE_APP,
         "LONGITUDE": longitude as number ?? LONGITUDE,
         "LATITUDE": latitude as number ?? LATITUDE,

@@ -46,6 +46,8 @@ const fr: Record<TranslationKey, string> = {
         "Impossible d'analyser la page. Veuillez accéder directement au site.",
     "content.ai_summary": "Résumé généré par l'IA",
     "content.min_read": "{n} min de lecture",
+    "content.cached": "En cache",
+    "content.cached.hint": "Chargé depuis le cache local du contenu.",
     "content.previous_article": "Article précédent",
     "content.next_article": "Article suivant",
     "content.copy_link": "Copier le lien dans le presse-papiers",
@@ -102,6 +104,19 @@ const fr: Record<TranslationKey, string> = {
         "Supprimer automatiquement les anciens articles (non favoris et flux de plus de 100 articles).",
     "settings.post_duration": "Durée des articles",
     "settings.post_duration.hint": "Nombre de jours de conservation d'un article.",
+    "settings.content_cache": "Caché de contenu",
+    "settings.content_cache.hint":
+        "Stocker le HTML extrait localement pour que la réouverture d'un article soit instantanée et fonctionne hors ligne.",
+    "settings.cache_ttl": "Durée du cache (jours)",
+    "settings.cache_ttl.hint":
+        "Le contenu en cache plus ancien est supprimé.",
+    "settings.cache_max_size": "Limite de taille du cache (Mo)",
+    "settings.cache_max_size.hint":
+        "Les articles en cache les moins récemment lus sont supprimés lorsque le cache dépasse cette taille.",
+    "settings.cache_usage_title": "Contenu en cache",
+    "settings.cache_usage": "{count} articles, {size} Mo",
+    "settings.cache_loading": "Vérification du cache…",
+    "settings.clear_cache": "Vider le cache",
 
     "settings.enable_llm": "Activer le LLM",
     "settings.enable_llm.hint":
@@ -210,6 +225,7 @@ const fr: Record<TranslationKey, string> = {
     "toast.edit_saved": "Modifications enregistrées.",
     "toast.edit_failed": "Échec de l'opération de modification.",
     "toast.feed_saved": "Flux enregistré avec succès.",
+    "toast.cache_cleared": "Cache de contenu vidé.",
     "toast.invalid_file_path": "Veuillez fournir un chemin de fichier valide.",
     "toast.conflicting_shortcuts":
         "Raccourcis en conflit. Réattribuez ou réinitialisez avant d'enregistrer.",

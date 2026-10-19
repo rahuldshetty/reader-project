@@ -46,6 +46,8 @@ const ar: Record<TranslationKey, string> = {
         "تعذّر تحليل الصفحة. يرجى الوصول إلى الموقع مباشرة.",
     "content.ai_summary": "ملخص مُنشأ بالذكاء الاصطناعي",
     "content.min_read": "{n} دقائق قراءة",
+    "content.cached": "مخزّن",
+    "content.cached.hint": "تم التحميل من ذاكرة المحتوى المؤقتة المحلية.",
     "content.previous_article": "المقال السابق",
     "content.next_article": "المقال التالي",
     "content.copy_link": "نسخ الرابط إلى الحافظة",
@@ -99,6 +101,19 @@ const ar: Record<TranslationKey, string> = {
         "حذف المقالات القديمة تلقائياً (غير المفضلة والخلاصات التي تتجاوز 100 مقال).",
     "settings.post_duration": "مدة المقال",
     "settings.post_duration.hint": "عدد الأيام للاحتفاظ بالمقال.",
+    "settings.content_cache": "ذاكرة المحتوى المؤقتة",
+    "settings.content_cache.hint":
+        "حفظ HTML المقال المستخرج محلياً لفتح المقال فوراً والعمل دون اتصال.",
+    "settings.cache_ttl": "مدة الذاكرة المؤقتة (أيام)",
+    "settings.cache_ttl.hint":
+        "تتم إزالة المحتوى المؤقت الأقدم من هذه المدة.",
+    "settings.cache_max_size": "حد حجم الذاكرة المؤقتة (ميغابايت)",
+    "settings.cache_max_size.hint":
+        "تتم إزالة المقالات الأقل قراءة حديثاً عند تجاوز هذا الحجم.",
+    "settings.cache_usage_title": "المحتوى المؤقت",
+    "settings.cache_usage": "{count} مقال، {size} ميغابايت",
+    "settings.cache_loading": "جارٍ فحص الذاكرة المؤقتة…",
+    "settings.clear_cache": "مسح الذاكرة المؤقتة",
 
     "settings.enable_llm": "تفعيل LLM",
     "settings.enable_llm.hint":
@@ -196,6 +211,7 @@ const ar: Record<TranslationKey, string> = {
     "toast.edit_saved": "تم حفظ التعديل.",
     "toast.edit_failed": "فشلت عملية التعديل.",
     "toast.feed_saved": "تم حفظ الخلاصة بنجاح.",
+    "toast.cache_cleared": "تم مسح ذاكرة المحتوى المؤقتة.",
     "toast.invalid_file_path": "يرجى تقديم مسار ملف صالح.",
     "toast.conflicting_shortcuts":
         "اختصارات متعارضة. أعد التعيين أو أعد الضبط قبل الحفظ.",

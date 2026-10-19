@@ -36,6 +36,11 @@ export enum SETTINGS {
     // Posts to clear from DB if they have passed this time
     ENABLE_AUTO_PURGE = "ENABLE_AUTO_PURGE",
     POST_EXPIRY_TIME = "POST_EXPIRY_TIME",
+
+    // Parsed article content cache
+    ENABLE_CONTENT_CACHE = "ENABLE_CONTENT_CACHE",
+    CONTENT_CACHE_TTL_DAYS = "CONTENT_CACHE_TTL_DAYS",
+    CONTENT_CACHE_MAX_MB = "CONTENT_CACHE_MAX_MB",
     CURRENT_FEED_VIEW = "CURRENT_FEED_VIEW",
     REFRESH_FEED_ON_SELECT = "REFRESH_FEED_ON_SELECT",
     ENABLE_INSECURE_LINK = "ENABLE_INSECURE_LINK",
@@ -90,6 +95,11 @@ export const LAST_REFRESH_TIME = 4;
 // Measured in Days
 export const POST_EXPIRY_TIME = 30;
 export const ENABLE_AUTO_PURGE = true;
+
+// Parsed article content cache
+export const ENABLE_CONTENT_CACHE = true;
+export const CONTENT_CACHE_TTL_DAYS = 90;
+export const CONTENT_CACHE_MAX_MB = 256;
 
 // Content Type displayed in parsed view
 export enum CONTENT_TYPES {

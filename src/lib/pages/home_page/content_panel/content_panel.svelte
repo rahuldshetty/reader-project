@@ -4,7 +4,7 @@
         active_post_id,
         reading_progress,
     } from "$lib/stores/app_store";
-    import { hybrid_parser } from "$lib/services/content_parser";
+    import { cached_parser } from "$lib/services/content_parser";
     import { CONTENT_TYPES } from "$lib/constants";
     import HtmlRenderer from "./html_renderer.svelte";
     import PdfRenderer from "./pdf_renderer.svelte";
@@ -42,7 +42,7 @@
     {/if}
     {#if $active_post_id != -1}
         {#await fetch_post_data($active_post_id) then post}
-            {#await hybrid_parser(post.link)}
+            {#await cached_parser(post.id, post.link)}
                 <!-- Content is being fetched from URL -->
                 <div class="fade-transition w-full h-full overflow-y-auto">
                     <SkeletonContent />

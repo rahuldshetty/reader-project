@@ -25,6 +25,7 @@
         faGlobe,
         faChevronUp,
         faChevronDown,
+        faDatabase,
     } from "@fortawesome/free-solid-svg-icons";
     import { mark_post_as_fav, mark_post_as_read } from "$lib/dao/post_db";
     import {
@@ -183,9 +184,18 @@
         </h1>
 
         <div
-            class="mt-1.5 flex items-center gap-1.5 text-xs text-base-content/55"
+            class="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-base-content/55"
         >
             <span>{$t("content.min_read", { n: timeToRead(data.word_count) })}</span>
+            {#if data.from_cache}
+                <span
+                    class="badge badge-ghost badge-sm gap-1 font-normal"
+                    title={$t("content.cached.hint")}
+                >
+                    <Fa icon={faDatabase} size="xs" />
+                    {$t("content.cached")}
+                </span>
+            {/if}
         </div>
 
         <div class="mt-3 flex items-center gap-2">
@@ -228,11 +238,22 @@
         <span class="text-lg font-semibold text-base-content md:max-w-3xl">
             {post.title}
         </span>
-        <span class="text-sm">
-            🕒 <span class="text-base-content/70"
-                >{$t("content.min_read", { n: timeToRead(data.word_count) })}</span
-            >
-        </span>
+        <div class="flex flex-wrap items-center gap-2 text-sm">
+            <span>
+                🕒 <span class="text-base-content/70"
+                    >{$t("content.min_read", { n: timeToRead(data.word_count) })}</span
+                >
+            </span>
+            {#if data.from_cache}
+                <span
+                    class="badge badge-ghost badge-sm gap-1 font-normal"
+                    title={$t("content.cached.hint")}
+                >
+                    <Fa icon={faDatabase} size="xs" />
+                    {$t("content.cached")}
+                </span>
+            {/if}
+        </div>
     </div>
 
     <!-- Action buttons - separate row on mobile -->

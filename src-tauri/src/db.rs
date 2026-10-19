@@ -83,5 +83,33 @@ pub fn fetch_migrations() -> Vec<tauri_plugin_sql::Migration> {
                 );",
             kind: MigrationKind::Up,
         },
+        Migration {
+            version: 8,
+            description: "recreate_articles_cache_table",
+            // Cache rows are disposable. Recreate the table as TEXT so the
+            // extracted HTML round-trips byte-for-byte through the SQL plugin
+            // instead of going through JSON/byte-array conversion.
+            sql: "
+                DROP TABLE IF EXISTS articles_cache;
+                CREATE TABLE articles_cache (
+                    post_id INTEGER PRIMARY KEY,
+                    content TEXT NOT NULL,
+                    content_type INTEGER NOT NULL,
+                    title TEXT,
+                    url TEXT NOT NULL,
+                    image TEXT,
+                    word_count INTEGER NOT NULL DEFAULT 0,
+                    insert_date TEXT NOT NULL,
+                    last_access_date TEXT NOT NULL,
+                    byte_size INTEGER NOT NULL,
+                    FOREIGN KEY(post_id) REFERENCES articles(id) ON DELETE CASCADE
+                );
+                CREATE INDEX idx_articles_cache_insert_date
+                    ON articles_cache(insert_date);
+                CREATE INDEX idx_articles_cache_last_access
+                    ON articles_cache(last_access_date);
+            ",
+            kind: MigrationKind::Up,
+        },
     ];
 }

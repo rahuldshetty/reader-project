@@ -54,6 +54,8 @@ const en = {
         "Unable to parse page. Please access the site directly.",
     "content.ai_summary": "AI Generated Summary",
     "content.min_read": "{n} min read",
+    "content.cached": "Cached",
+    "content.cached.hint": "Loaded from the local content cache.",
     "content.previous_article": "Previous article",
     "content.next_article": "Next article",
     "content.copy_link": "Copy link to Clipboard",
@@ -112,6 +114,19 @@ const en = {
         "Automatically delete older posts (non-favorites & feeds > 100 posts).",
     "settings.post_duration": "Post Duration",
     "settings.post_duration.hint": "Number of days to persist a post.",
+    "settings.content_cache": "Content Cache",
+    "settings.content_cache.hint":
+        "Store the extracted article HTML locally so reopening a post is instant and works offline.",
+    "settings.cache_ttl": "Cache Duration (days)",
+    "settings.cache_ttl.hint":
+        "Cached article content older than this is removed.",
+    "settings.cache_max_size": "Cache Size Limit (MB)",
+    "settings.cache_max_size.hint":
+        "Least-recently-read cached articles are removed when the cache exceeds this size.",
+    "settings.cache_usage_title": "Cached Content",
+    "settings.cache_usage": "{count} articles, {size} MB",
+    "settings.cache_loading": "Checking cache…",
+    "settings.clear_cache": "Clear Cache",
 
     // LLM
     "settings.enable_llm": "Enable LLM",
@@ -223,6 +238,7 @@ const en = {
     "toast.edit_saved": "Edit Saved.",
     "toast.edit_failed": "Edit operation failed.",
     "toast.feed_saved": "Feed saved successfully.",
+    "toast.cache_cleared": "Content cache cleared.",
     "toast.invalid_file_path": "Please provide valid file path.",
     "toast.conflicting_shortcuts":
         "Conflicting shortcuts. Reassign or reset before saving.",

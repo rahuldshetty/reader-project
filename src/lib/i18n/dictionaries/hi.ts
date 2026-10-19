@@ -46,6 +46,8 @@ const hi: Record<TranslationKey, string> = {
         "पृष्ठ को पार्स नहीं किया जा सका। कृपया साइट पर सीधे जाएँ।",
     "content.ai_summary": "AI जनित सारांश",
     "content.min_read": "{n} मिनट का पाठ",
+    "content.cached": "कैश से",
+    "content.cached.hint": "स्थानीय सामग्री कैश से लोड किया गया।",
     "content.previous_article": "पिछला लेख",
     "content.next_article": "अगला लेख",
     "content.copy_link": "क्लिपबोर्ड पर लिंक कॉपी करें",
@@ -101,6 +103,19 @@ const hi: Record<TranslationKey, string> = {
         "पुराने लेख स्वतः हटाएँ (गैर-पसंदीदा और 100 से अधिक लेखों वाले फ़ीड)।",
     "settings.post_duration": "लेख अवधि",
     "settings.post_duration.hint": "लेख को बनाए रखने के दिनों की संख्या।",
+    "settings.content_cache": "सामग्री कैश",
+    "settings.content_cache.hint":
+        "निकाली गई लेख HTML को स्थानीय रूप से सहेजें ताकि लेख दोबारा खोलने पर तुरंत दिखे और ऑफ़लाइन काम करे।",
+    "settings.cache_ttl": "कैश अवधि (दिन)",
+    "settings.cache_ttl.hint":
+        "इस अवधि से पुरानी कैश सामग्री हटा दी जाती है।",
+    "settings.cache_max_size": "कैश आकार सीमा (MB)",
+    "settings.cache_max_size.hint":
+        "कैश इस आकार से बड़ा होने पर सबसे पहले पढ़े गए लेख हटा दिए जाते हैं।",
+    "settings.cache_usage_title": "कैश की गई सामग्री",
+    "settings.cache_usage": "{count} लेख, {size} MB",
+    "settings.cache_loading": "कैश जाँचा जा रहा है…",
+    "settings.clear_cache": "कैश साफ़ करें",
 
     "settings.enable_llm": "LLM सक्षम करें",
     "settings.enable_llm.hint":
@@ -207,6 +222,7 @@ const hi: Record<TranslationKey, string> = {
     "toast.edit_saved": "संपादन सहेजा गया।",
     "toast.edit_failed": "संपादन कार्रवाई विफल रही।",
     "toast.feed_saved": "फ़ीड सफलतापूर्वक सहेजा गया।",
+    "toast.cache_cleared": "सामग्री कैश साफ़ कर दिया गया।",
     "toast.invalid_file_path": "कृपया मान्य फ़ाइल पथ प्रदान करें।",
     "toast.conflicting_shortcuts":
         "विरोधाभासी शॉर्टकट। सहेजने से पहले पुनः असाइन या रीसेट करें।",

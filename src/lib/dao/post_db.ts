@@ -4,7 +4,10 @@ import {
     DB_PATH,
     DB_ORDER_ENUM,
     NO_OF_POST_PULLS_PER_TIME,
-    ROOT_PARENT_FEED_ID
+    ROOT_PARENT_FEED_ID,
+    CONTENT_TYPES,
+    CONTENT_CACHE_TTL_DAYS,
+    CONTENT_CACHE_MAX_MB,
 } from '$lib/constants';
 import { convertToTimeStringForDB } from '$lib/utils/time';
 
@@ -248,6 +251,13 @@ export const delete_old_posts = async (days: number): Promise<boolean> => {
         )
     `
     const result = await db.execute(query);
+
+    // Foreign keys may not be enabled on the SQLite connection, so remove
+    // cache rows whose article no longer exists instead of relying on cascade.
+    await db.execute(
+        `DELETE FROM articles_cache WHERE post_id NOT IN (SELECT id FROM articles)`
+    );
+
     console.log(`|| Deleted ${result.rowsAffected} old posts ||`);
     return result.rowsAffected != 0;
 }
@@ -255,55 +265,217 @@ export const delete_old_posts = async (days: number): Promise<boolean> => {
 
 // Post Cache Layer
 
+export interface ArticleCacheStats {
+    count: number;
+    bytes: number;
+}
+
+interface CachedPostRow {
+    content: string;
+    content_type: number;
+    title: string | null;
+    url: string;
+    image: string | null;
+    word_count: number;
+    age_days: number | null;
+}
+
+interface CacheUsageRow {
+    count: number;
+    bytes: number | null;
+}
+
+const CACHE_STATS_QUERY = `
+    SELECT COUNT(*) AS count, COALESCE(SUM(byte_size), 0) AS bytes
+    FROM articles_cache
+`
+
+// Store the extracted HTML as TEXT. The old BLOB + JSON byte-array round trip
+// was fragile through the SQL plugin; TEXT keeps the markup exactly as parsed.
 export const add_post_cache = async (post_id: number, data: ContentResult) => {
+    if (
+        data.content_type !== CONTENT_TYPES.html ||
+        typeof data.content !== "string" ||
+        data.content.length === 0
+    ) {
+        return;
+    }
+
     try {
-        const bytes = contentResultToBytes(data);
+        const byte_size = new TextEncoder().encode(data.content).length;
+        const word_count = Number.isFinite(data.word_count)
+            ? data.word_count
+            : 0;
 
         const query = `
-            INSERT INTO articles_cache (post_id, data, insert_date) 
-            VALUES ($1, $2, date('now'))
+            INSERT INTO articles_cache (
+                post_id, content, content_type, title, url, image,
+                word_count, insert_date, last_access_date, byte_size
+            )
+            VALUES (
+                $1, $2, $3, $4, $5, $6, $7,
+                datetime('now'), datetime('now'), $8
+            )
+            ON CONFLICT(post_id) DO UPDATE SET
+                content = excluded.content,
+                content_type = excluded.content_type,
+                title = excluded.title,
+                url = excluded.url,
+                image = excluded.image,
+                word_count = excluded.word_count,
+                insert_date = excluded.insert_date,
+                last_access_date = excluded.last_access_date,
+                byte_size = excluded.byte_size
         `
-        await db.execute(query, [post_id, bytes]);
-        console.log("Inserted bytes length:", bytes.length);
+
+        await db.execute(query, [
+            post_id,
+            data.content,
+            data.content_type,
+            data.title,
+            data.url,
+            data.image,
+            word_count,
+            byte_size,
+        ]);
         console.log(`|| Added post cache (${post_id}) ||`);
     } catch (e) {
         console.log(`|| Failed to add post cache (${post_id}): ${e} ||`);
     }
 }
 
-export const fetch_post_cache = async (post_id: number): Promise<ContentResult | null> => {
+export const fetch_post_cache = async (
+    post_id: number,
+    ttl_days: number = CONTENT_CACHE_TTL_DAYS,
+): Promise<ContentResult | null> => {
     try {
         const query = `
-            SELECT data FROM articles_cache WHERE post_id = $1
+            SELECT
+                content,
+                content_type,
+                title,
+                url,
+                image,
+                word_count,
+                (julianday('now') - julianday(insert_date)) AS age_days
+            FROM articles_cache
+            WHERE post_id = $1
         `
-        const result = (await db.select(query, [post_id])) as Record<string, string>[];
-        const content_result = bytesToContentResult(result[0]['data']);
-        console.log(`|| Found record in post cache (${post_id}) ||`);
-        return content_result;
+        const result = (await db.select(query, [post_id])) as CachedPostRow[];
+
+        if (result.length === 0) {
+            return null;
+        }
+
+        const ttl = Number.isFinite(ttl_days)
+            ? ttl_days
+            : CONTENT_CACHE_TTL_DAYS;
+        const row = result[0];
+        const expired =
+            ttl <= 0 ||
+            row.age_days === null ||
+            row.age_days > ttl ||
+            typeof row.content !== "string";
+
+        if (expired) {
+            await db.execute(
+                `DELETE FROM articles_cache WHERE post_id = $1`,
+                [post_id],
+            );
+            return null;
+        }
+
+        // Touching on every open would add a write per article view. One
+        // update per day is enough for LRU ordering.
+        await db.execute(
+            `UPDATE articles_cache
+             SET last_access_date = datetime('now')
+             WHERE post_id = $1
+               AND last_access_date < datetime('now', '-1 day')`,
+            [post_id],
+        );
+
+        return {
+            title: row.title ?? "",
+            content: row.content,
+            word_count: row.word_count ?? 0,
+            url: row.url,
+            image: row.image ?? "",
+            content_type: row.content_type as CONTENT_TYPES,
+        };
     } catch (e) {
         console.log(`|| Failed to fetch post cache (${post_id}): ${e} ||`);
         return null;
     }
 }
 
-const contentResultToBytes = (obj: ContentResult): Uint8Array => {
-    const json = JSON.stringify(obj);
-    return new TextEncoder().encode(json);
-};
+export const delete_post_cache = async (post_id: number) => {
+    try {
+        await db.execute(`DELETE FROM articles_cache WHERE post_id = $1`, [
+            post_id,
+        ]);
+    } catch (e) {
+        console.log(`|| Failed to delete post cache (${post_id}): ${e} ||`);
+    }
+}
 
+export const clear_article_cache = async (): Promise<number> => {
+    const result = await db.execute(`DELETE FROM articles_cache`);
+    return result.rowsAffected;
+}
 
-const bytesToContentResult = (data: string): ContentResult => {
-    // 1. Parse the string into number[]
-    const numbers = JSON.parse(data) as number[];
+export const fetch_article_cache_stats = async (): Promise<ArticleCacheStats> => {
+    const result = (await db.select(CACHE_STATS_QUERY)) as CacheUsageRow[];
+    return {
+        count: Number(result[0]?.count ?? 0),
+        bytes: Number(result[0]?.bytes ?? 0),
+    };
+}
 
-    // 2. Convert to Uint8Array
-    const uint8 = new Uint8Array(numbers);
+export const purge_article_cache = async (
+    ttl_days: number = CONTENT_CACHE_TTL_DAYS,
+    max_mb: number = CONTENT_CACHE_MAX_MB,
+): Promise<void> => {
+    const ttl = Number.isFinite(ttl_days)
+        ? Math.max(0, Math.floor(ttl_days))
+        : CONTENT_CACHE_TTL_DAYS;
+    const max_size_mb = Number.isFinite(max_mb)
+        ? Math.max(0, Math.floor(max_mb))
+        : CONTENT_CACHE_MAX_MB;
 
-    // 3. Decode UTF-8 JSON
-    const json = new TextDecoder("utf-8").decode(uint8);
+    try {
+        await db.execute(
+            `DELETE FROM articles_cache WHERE post_id NOT IN (SELECT id FROM articles)`
+        );
+        await db.execute(
+            `DELETE FROM articles_cache WHERE insert_date <= datetime('now', $1)`,
+            [`-${ttl} days`],
+        );
 
-    // 4. Parse object
-    return JSON.parse(json) as ContentResult;
-};
+        if (max_size_mb === 0) {
+            await db.execute(`DELETE FROM articles_cache`);
+            return;
+        }
+
+        // Keep the most recently accessed rows; delete the oldest overflow.
+        await db.execute(
+            `WITH ordered AS (
+                SELECT
+                    post_id,
+                    SUM(byte_size) OVER (
+                        ORDER BY last_access_date DESC, post_id DESC
+                    ) AS running_bytes
+                FROM articles_cache
+            )
+            DELETE FROM articles_cache
+            WHERE post_id IN (
+                SELECT post_id FROM ordered WHERE running_bytes > $1
+            )`,
+            [max_size_mb * 1024 * 1024],
+        );
+    } catch (e) {
+        console.log(`|| Failed to purge article cache: ${e} ||`);
+    }
+}
 
 

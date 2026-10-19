@@ -15,7 +15,15 @@
     SHORTCUT_ACTION,
     SHORTCUT_ACTION_META,
     DEFAULT_SHORTCUT_BINDINGS,
+    CONTENT_CACHE_TTL_DAYS,
+    CONTENT_CACHE_MAX_MB,
   } from "$lib/constants";
+  import {
+    clear_article_cache,
+    fetch_article_cache_stats,
+    purge_article_cache,
+  } from "$lib/dao/post_db";
+  import { clear_content_memory_cache } from "$lib/services/content_parser";
   import {
     format_binding,
     find_conflicts,
@@ -53,6 +61,13 @@
   let old_posts_save_period_in_days = $state(
     $local_user_setting.POST_EXPIRY_TIME,
   );
+  let enable_content_cache = $state($local_user_setting.ENABLE_CONTENT_CACHE);
+  let content_cache_ttl_days = $state(
+    $local_user_setting.CONTENT_CACHE_TTL_DAYS,
+  );
+  let content_cache_max_mb = $state($local_user_setting.CONTENT_CACHE_MAX_MB);
+  let cache_stats = $state({ count: 0, bytes: 0 });
+  let cache_stats_loading = $state(false);
   let minimize_app = $state($local_user_setting.MINIMIZE_APP);
   let longitude = $state($local_user_setting.LONGITUDE);
   let latitude = $state($local_user_setting.LATITUDE);
@@ -103,6 +118,37 @@
     set_recording_action(action);
     recording_action = action;
   };
+
+  const refresh_cache_stats = async () => {
+    cache_stats_loading = true;
+    try {
+      cache_stats = await fetch_article_cache_stats();
+    } catch (e) {
+      console.log(`|| Failed to read cache stats: ${e} ||`);
+    } finally {
+      cache_stats_loading = false;
+    }
+  };
+
+  const handleClearCache = async () => {
+    try {
+      await clear_article_cache();
+      clear_content_memory_cache();
+      await refresh_cache_stats();
+      toastStore.add(
+        TOAST_MESSAGE_TYPE.SUCCESS,
+        translate("toast.cache_cleared"),
+      );
+    } catch (e) {
+      console.log(`|| Failed to clear content cache: ${e} ||`);
+    }
+  };
+
+  $effect(() => {
+    if ($active_modal === MODAL_TYPE.SETTINGS) {
+      void refresh_cache_stats();
+    }
+  });
 
   const resetShortcuts = () => {
     shortcut_bindings = { ...DEFAULT_SHORTCUT_BINDINGS };
@@ -159,6 +205,9 @@
     refresh_all_feed_on_launch = $local_user_setting.REFRESH_ALL_FEED_ON_LAUNCH;
     enable_auto_purge = $local_user_setting.ENABLE_AUTO_PURGE;
     old_posts_save_period_in_days = $local_user_setting.POST_EXPIRY_TIME;
+    enable_content_cache = $local_user_setting.ENABLE_CONTENT_CACHE;
+    content_cache_ttl_days = $local_user_setting.CONTENT_CACHE_TTL_DAYS;
+    content_cache_max_mb = $local_user_setting.CONTENT_CACHE_MAX_MB;
     minimize_app = $local_user_setting.MINIMIZE_APP;
     longitude = $local_user_setting.LONGITUDE;
     latitude = $local_user_setting.LATITUDE;
@@ -224,6 +273,24 @@
       SETTINGS.POST_EXPIRY_TIME,
       old_posts_save_period_in_days,
     );
+    content_cache_ttl_days = Number.isFinite(content_cache_ttl_days)
+      ? Math.max(1, Math.floor(content_cache_ttl_days))
+      : CONTENT_CACHE_TTL_DAYS;
+    content_cache_max_mb = Number.isFinite(content_cache_max_mb)
+      ? Math.max(1, Math.floor(content_cache_max_mb))
+      : CONTENT_CACHE_MAX_MB;
+    await user_settings.set(
+      SETTINGS.ENABLE_CONTENT_CACHE,
+      enable_content_cache,
+    );
+    await user_settings.set(
+      SETTINGS.CONTENT_CACHE_TTL_DAYS,
+      content_cache_ttl_days,
+    );
+    await user_settings.set(
+      SETTINGS.CONTENT_CACHE_MAX_MB,
+      content_cache_max_mb,
+    );
     await user_settings.set(SETTINGS.MINIMIZE_APP, minimize_app);
     await user_settings.set(SETTINGS.LONGITUDE, longitude);
     await user_settings.set(SETTINGS.LATITUDE, latitude);
@@ -251,6 +318,9 @@
     $local_user_setting.REFRESH_ALL_FEED_ON_LAUNCH = refresh_all_feed_on_launch;
     $local_user_setting.ENABLE_AUTO_PURGE = enable_auto_purge;
     $local_user_setting.POST_EXPIRY_TIME = old_posts_save_period_in_days;
+    $local_user_setting.ENABLE_CONTENT_CACHE = enable_content_cache;
+    $local_user_setting.CONTENT_CACHE_TTL_DAYS = content_cache_ttl_days;
+    $local_user_setting.CONTENT_CACHE_MAX_MB = content_cache_max_mb;
     $local_user_setting.MINIMIZE_APP = minimize_app;
     $local_user_setting.LONGITUDE = longitude;
     $local_user_setting.LATITUDE = latitude;
@@ -268,6 +338,10 @@
       BINDINGS: shortcut_bindings,
     };
     apply_document_language(language);
+
+    // Enforce the new limits immediately.
+    await purge_article_cache(content_cache_ttl_days, content_cache_max_mb);
+    clear_content_memory_cache();
 
     // Close Modal
     save_in_progress = false;
@@ -549,6 +623,89 @@
               bind:value={old_posts_save_period_in_days}
               disabled={!enable_auto_purge}
             />
+          </div>
+        </fieldset>
+
+        <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+          <!-- Content Cache -->
+          <div>
+            <legend class="fieldset-legend">{$t("settings.content_cache")}</legend>
+            <p class="label">{$t("settings.content_cache.hint")}</p>
+          </div>
+          <div class="flex justify-end">
+            <input
+              type="checkbox"
+              bind:checked={enable_content_cache}
+              class="toggle toggle-success"
+            />
+          </div>
+        </fieldset>
+
+        <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+          <!-- Cache Duration -->
+          <div>
+            <legend class="fieldset-legend">{$t("settings.cache_ttl")}</legend>
+            <p class="label">{$t("settings.cache_ttl.hint")}</p>
+          </div>
+          <div class="flex justify-end">
+            <input
+              type="number"
+              min="1"
+              class="input"
+              bind:value={content_cache_ttl_days}
+              disabled={!enable_content_cache}
+            />
+          </div>
+        </fieldset>
+
+        <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+          <!-- Cache Size Limit -->
+          <div>
+            <legend class="fieldset-legend">{$t("settings.cache_max_size")}</legend>
+            <p class="label">{$t("settings.cache_max_size.hint")}</p>
+          </div>
+          <div class="flex justify-end">
+            <input
+              type="number"
+              min="1"
+              class="input"
+              bind:value={content_cache_max_mb}
+              disabled={!enable_content_cache}
+            />
+          </div>
+        </fieldset>
+
+        <fieldset
+          class="fieldset grid grid-cols-1 md:grid-cols-2 items-center gap-2"
+        >
+          <!-- Cache Usage -->
+          <div>
+            <legend class="fieldset-legend">{$t("settings.cache_usage_title")}</legend>
+            <p class="label">
+              {#if cache_stats_loading}
+                {$t("settings.cache_loading")}
+              {:else}
+                {$t("settings.cache_usage", {
+                  count: cache_stats.count,
+                  size: (cache_stats.bytes / (1024 * 1024)).toFixed(1),
+                })}
+              {/if}
+            </p>
+          </div>
+          <div class="flex justify-end">
+            <button
+              class="btn btn-warning"
+              onclick={handleClearCache}
+              disabled={cache_stats_loading || cache_stats.count === 0}
+            >
+              {$t("settings.clear_cache")}
+            </button>
           </div>
         </fieldset>
       </div>

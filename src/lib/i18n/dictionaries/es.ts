@@ -46,6 +46,8 @@ const es: Record<TranslationKey, string> = {
         "No se pudo analizar la página. Accede al sitio directamente.",
     "content.ai_summary": "Resumen generado por IA",
     "content.min_read": "{n} min de lectura",
+    "content.cached": "En caché",
+    "content.cached.hint": "Cargado desde la caché local de contenido.",
     "content.previous_article": "Artículo anterior",
     "content.next_article": "Artículo siguiente",
     "content.copy_link": "Copiar enlace al portapapeles",
@@ -100,6 +102,19 @@ const es: Record<TranslationKey, string> = {
         "Eliminar automáticamente publicaciones antiguas (no favoritas y fuentes con más de 100 publicaciones).",
     "settings.post_duration": "Duración de la publicación",
     "settings.post_duration.hint": "Número de días para conservar una publicación.",
+    "settings.content_cache": "Caché de contenido",
+    "settings.content_cache.hint":
+        "Guardar el HTML extraído localmente para que reabrir un artículo sea instantáneo y funcione sin conexión.",
+    "settings.cache_ttl": "Duración de la caché (días)",
+    "settings.cache_ttl.hint":
+        "Se elimina el contenido en caché más antiguo que este período.",
+    "settings.cache_max_size": "Límite de tamaño de la caché (MB)",
+    "settings.cache_max_size.hint":
+        "Se eliminan los artículos en caché leídos hace más tiempo cuando la caché supera este tamaño.",
+    "settings.cache_usage_title": "Contenido en caché",
+    "settings.cache_usage": "{count} artículos, {size} MB",
+    "settings.cache_loading": "Comprobando caché…",
+    "settings.clear_cache": "Borrar caché",
 
     "settings.enable_llm": "Activar LLM",
     "settings.enable_llm.hint":
@@ -205,6 +220,7 @@ const es: Record<TranslationKey, string> = {
     "toast.edit_saved": "Cambios guardados.",
     "toast.edit_failed": "Error en la operación de edición.",
     "toast.feed_saved": "Fuente guardada correctamente.",
+    "toast.cache_cleared": "Caché de contenido borrada.",
     "toast.invalid_file_path": "Proporciona una ruta de archivo válida.",
     "toast.conflicting_shortcuts":
         "Atajos en conflicto. Reasigna o restablece antes de guardar.",

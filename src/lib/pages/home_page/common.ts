@@ -12,6 +12,7 @@ import {
     fetch_posts,
     fetch_old_post_count,
     delete_old_posts,
+    purge_article_cache,
     mark_post_as_read,
 } from "$lib/dao/post_db";
 
@@ -41,6 +42,8 @@ import {
     NO_OF_POST_PULLS_PER_TIME,
     TOAST_MESSAGE_TYPE,
     FEED_TYPE,
+    CONTENT_CACHE_TTL_DAYS,
+    CONTENT_CACHE_MAX_MB,
 } from "$lib/constants";
 
 import { get } from "svelte/store";
@@ -337,9 +340,17 @@ export const select_feed = async (feed_id: number) => {
 
 // Delete old posts
 export const auto_purge_old_posts = async () => {
-    const post_expiry_time = get(local_user_setting).POST_EXPIRY_TIME;
-    const is_auto_purge_enabled = get(local_user_setting).ENABLE_AUTO_PURGE;
+    const settings = get(local_user_setting);
+    const post_expiry_time = settings.POST_EXPIRY_TIME;
+    const is_auto_purge_enabled = settings.ENABLE_AUTO_PURGE;
     if (is_auto_purge_enabled) {
         await delete_old_posts(post_expiry_time);
     }
+
+    // Cache retention is independent of post retention: favorites and small
+    // feeds may outlive the post expiry window.
+    await purge_article_cache(
+        settings.CONTENT_CACHE_TTL_DAYS ?? CONTENT_CACHE_TTL_DAYS,
+        settings.CONTENT_CACHE_MAX_MB ?? CONTENT_CACHE_MAX_MB,
+    );
 }

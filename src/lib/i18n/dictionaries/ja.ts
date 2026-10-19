@@ -46,6 +46,8 @@ const ja: Record<TranslationKey, string> = {
         "ページを解析できません。サイトに直接アクセスしてください。",
     "content.ai_summary": "AI生成サマリー",
     "content.min_read": "読了 {n} 分",
+    "content.cached": "キャッシュ済み",
+    "content.cached.hint": "ローカルコンテンツキャッシュから読み込みました。",
     "content.previous_article": "前の記事",
     "content.next_article": "次の記事",
     "content.copy_link": "リンクをクリップボードにコピー",
@@ -100,6 +102,19 @@ const ja: Record<TranslationKey, string> = {
         "古い記事（お気に入り以外、100件超のフィード）を自動削除します。",
     "settings.post_duration": "記事の保持期間",
     "settings.post_duration.hint": "記事を保持する日数。",
+    "settings.content_cache": "コンテンツキャッシュ",
+    "settings.content_cache.hint":
+        "抽出した記事HTMLをローカルに保存し、再表示を高速化してオフラインでも読めるようにします。",
+    "settings.cache_ttl": "キャッシュ保持期間（日）",
+    "settings.cache_ttl.hint":
+        "これより古いキャッシュは削除されます。",
+    "settings.cache_max_size": "キャッシュ容量上限（MB）",
+    "settings.cache_max_size.hint":
+        "容量を超えた場合、最後に読んだのが古い記事から削除されます。",
+    "settings.cache_usage_title": "キャッシュ済みコンテンツ",
+    "settings.cache_usage": "{count}件、{size} MB",
+    "settings.cache_loading": "キャッシュを確認中…",
+    "settings.clear_cache": "キャッシュを削除",
 
     "settings.enable_llm": "LLMを有効化",
     "settings.enable_llm.hint":
@@ -204,6 +219,7 @@ const ja: Record<TranslationKey, string> = {
     "toast.edit_saved": "編集を保存しました。",
     "toast.edit_failed": "編集操作に失敗しました。",
     "toast.feed_saved": "フィードを正常に保存しました。",
+    "toast.cache_cleared": "コンテンツキャッシュを削除しました。",
     "toast.invalid_file_path": "有効なファイルパスを指定してください。",
     "toast.conflicting_shortcuts":
         "ショートカットが競合しています。保存前に再割り当てまたはリセットしてください。",
