@@ -42,7 +42,12 @@
 </script>
 
 <div class="dropdown dropdown-bottom flex justify-end">
-    <button tabindex="0" role="button" class="p-2 cursor-pointer">
+    <button
+        tabindex="0"
+        class="p-2 cursor-pointer max-md:flex max-md:h-11 max-md:w-11 max-md:items-center max-md:justify-center max-md:p-0"
+        aria-label={$t("common.edit")}
+        onclick={(event) => event.stopPropagation()}
+    >
         <Fa icon={faEllipsisVertical} />
     </button>
     <ul

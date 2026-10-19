@@ -2,6 +2,7 @@
     import {
         active_modal,
         active_post_id,
+        is_mobile,
         refreshing_feeds,
     } from "$lib/stores/app_store";
     import { MODAL_TYPE } from "$lib/constants";
@@ -28,29 +29,64 @@
     };
 </script>
 
-<div
-    class="sticky top-0 z-10 justify-end bg-base-100 p-2 flex space-x-1 border-b border-base-300"
->
-    <FeedSearch />
+{#if $is_mobile}
+    <div
+        class="mobile-bar-top sticky top-0 z-20 border-b border-base-300/80 bg-base-100/95 px-3 pb-2 backdrop-blur-xl"
+    >
+        <div class="flex items-center gap-0.5 pb-2">
+            <h1 class="grow px-1 text-2xl font-bold tracking-tight">
+                {$t("nav.feeds")}
+            </h1>
 
-    <div class="tooltip tooltip-bottom" data-tip={$t("feed.new_folder")}>
-        <button
-            onclick={handleNewFolder}
-            class="btn btn-ghost btn-sm btn-circle p-4 btn-press smooth-transition"
-        >
-            <Fa icon={faFolderPlus} size="lg" />
-        </button>
-    </div>
+            <button
+                type="button"
+                onclick={handleNewFolder}
+                class="btn btn-ghost btn-circle h-11 w-11"
+                aria-label={$t("feed.new_folder")}
+            >
+                <Fa icon={faFolderPlus} size="lg" />
+            </button>
 
-    <div class="tooltip tooltip-bottom" data-tip={$t("feed.refresh")}>
-        <button
-            onclick={handleRefresh}
-            class="btn btn-ghost btn-sm btn-circle p-4 btn-press smooth-transition"
-        >
-            <Fa icon={faRefresh} size="lg" />
-        </button>
+            <button
+                type="button"
+                onclick={handleRefresh}
+                class="btn btn-ghost btn-circle h-11 w-11"
+                aria-label={$t("feed.refresh")}
+                aria-busy={$refreshing_feeds}
+                disabled={$refreshing_feeds}
+            >
+                <Fa
+                    icon={faRefresh}
+                    size="lg"
+                    class={$refreshing_feeds ? "animate-spin" : ""}
+                />
+            </button>
+        </div>
+
+        <FeedSearch />
     </div>
-    <!-- <button class="btn btn-ghost btn-sm btn-circle p-4">
-        <Fa icon={faFolderPlus} size="lg"/>
-    </button> -->
-</div>
+{:else}
+    <div
+        class="sticky top-0 z-10 flex justify-end space-x-1 border-b border-base-300 bg-base-100 p-2"
+    >
+        <FeedSearch />
+
+        <div class="tooltip tooltip-bottom" data-tip={$t("feed.new_folder")}>
+            <button
+                onclick={handleNewFolder}
+                class="btn btn-ghost btn-sm btn-circle p-4 btn-press smooth-transition"
+            >
+                <Fa icon={faFolderPlus} size="lg" />
+            </button>
+        </div>
+
+        <div class="tooltip tooltip-bottom" data-tip={$t("feed.refresh")}>
+            <button
+                onclick={handleRefresh}
+                class="btn btn-ghost btn-sm btn-circle p-4 btn-press smooth-transition"
+            >
+                <Fa icon={faRefresh} size="lg" />
+            </button>
+        </div>
+    </div>
+{/if}

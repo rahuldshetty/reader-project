@@ -4,20 +4,29 @@
         posts_store,
         refreshing_posts,
         active_feed_id,
+        active_feed_name,
         active_folder_feed_ids,
         is_mobile,
         mobile_active_panel,
     } from "$lib/stores/app_store";
     import type { PostResult } from "$lib/types";
-    import Fa from "svelte-fa";
-    import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
     import { load_new_posts } from "$lib/pages/home_page/common";
     import { dateGroupLabel } from "$lib/utils/time";
     import PostItem from "./post_item.svelte";
     import LoadingSpinner from "$lib/components/loading_spinner.svelte";
     import PostBar from "./post_bar.svelte";
+    import MobileAppBar from "$lib/components/mobile_app_bar.svelte";
     import { t } from "$lib/i18n";
+
+    const header_title = $derived(
+        $active_feed_name ||
+            ($active_feed_id === -1
+                ? $t("nav.all_posts")
+                : $active_feed_id === -2
+                  ? $t("nav.my_favourites")
+                  : $t("nav.posts")),
+    );
 
     let listElement: HTMLDivElement;
 
@@ -65,19 +74,16 @@
 </script>
 
 <div
-    class="flex flex-col h-full w-full md:w-80 md:min-w-[280px] md:max-w-[400px] bg-base-100 md:border-r border-base-300 animate-fade-in"
+    class="flex h-full w-full flex-col border-base-300 bg-base-100 animate-fade-in {$is_mobile
+        ? ''
+        : 'md:w-80 md:min-w-[280px] md:max-w-[400px] md:border-r'}"
 >
-    <!-- Mobile back button -->
     {#if $is_mobile}
-        <div class="flex items-center gap-2 p-2 border-b border-base-300">
-            <button
-                class="btn btn-ghost btn-sm"
-                onclick={() => mobile_active_panel.set("feeds")}
-            >
-                <Fa icon={faArrowLeft} />
-                <span>{$t("nav.feeds")}</span>
-            </button>
-        </div>
+        <MobileAppBar
+            title={header_title}
+            onBack={() => mobile_active_panel.set("feeds")}
+            backLabel={$t("nav.feeds")}
+        />
     {/if}
     <PostBar />
     {#if $refreshing_posts}
@@ -88,12 +94,20 @@
         <div
             bind:this={listElement}
             onscroll={(e) => handleScrollEvent(e)}
-            class="overflow-auto overflow-x-hidden fade-transition"
+            class="{$is_mobile
+                ? 'mobile-scroll'
+                : ''} overflow-auto overflow-x-hidden fade-transition"
         >
-            <ul class="menu gap-1 bg-base-100 rounded-box">
+            <ul
+                class="list-none rounded-box bg-base-100 {$is_mobile
+                    ? 'flex flex-col gap-2 px-3 py-2'
+                    : 'menu gap-1'}"
+            >
                 {#each $grouped_posts as group}
                     <li
-                        class="menu-title px-3 pt-4 pb-1 text-xs uppercase tracking-wide text-base-content/50 select-none"
+                        class={$is_mobile
+                            ? "sticky top-0 z-10 bg-base-100/95 px-1 pb-1 pt-3 text-[11px] font-semibold uppercase tracking-wider text-base-content/50 select-none backdrop-blur"
+                            : "menu-title px-3 pt-4 pb-1 text-xs uppercase tracking-wide text-base-content/50 select-none"}
                     >
                         {group.label}
                     </li>

@@ -13,7 +13,7 @@
     } from "./renderers/detector";
     import YoutubeRender from "./renderers/youtube_render.svelte";
     import AiSummary from "./ai_summary.svelte";
-    import { reading_progress } from "$lib/stores/app_store";
+    import { is_mobile, reading_progress } from "$lib/stores/app_store";
     import { translate } from "$lib/i18n";
     // import { Menu } from "@tauri-apps/api/menu";
 
@@ -72,19 +72,25 @@
     });
 </script>
 
-<div class="flex-1 overflow-y-auto animate-fade-in" bind:this={scrollEl} onscroll={onScroll}>
+<div
+    class="flex-1 overflow-y-auto animate-fade-in {$is_mobile
+        ? 'mobile-scroll mobile-reader-bottom'
+        : ''}"
+    bind:this={scrollEl}
+    onscroll={onScroll}
+>
     <ContentBar {data} {post} />
     {#if typeof data.content === "string"}
         <AiSummary title={data.title} text={data.content} />
     {/if}
     {#if renderType == WEB_RENDER_TYPES.DEFAULT}
-        <div class="px-6 py-8 md:px-10 md:py-12">
+        <div class="article-reader px-6 py-8 md:px-10 md:py-12">
             <div class="mx-auto max-w-prose">
                 {#if data.image || post.image}
                     <img
                         src={data.image || post.image}
                         alt={data.title}
-                        class="rounded-lg object-cover max-h-96 w-full mb-8"
+                        class="reader-hero rounded-lg object-cover max-h-96 w-full mb-8"
                     />
                 {/if}
 

@@ -201,19 +201,6 @@ export const convertToTimeStringForDB = (dateString: string) => {
     return date.toISOString();
 }
 
-export const escape_title = (str: string) => {
-    if (!str) return "";
-    return str.replace(/[']/g, function (char) {
-        switch (char) {
-            case "'":
-                return '"'; // prepends a backslash to backslash, percent,
-            // and double/single quotes
-            default:
-                return char;
-        }
-    });
-}
-
 export const fetch_user_setting = async (key: string) => {
     const val = await user_settings.get(key);
     if (val) return val;

@@ -3,9 +3,11 @@
     import { get } from "svelte/store";
     import { SCREEN } from "$lib/constants";
     import {
+        active_post_id,
         active_screen,
         is_mobile,
         mobile_active_panel,
+        MOBILE_MEDIA_QUERY,
         type MobilePanel,
     } from "$lib/stores/app_store";
     import { handle_keydown } from "$lib/services/keyboard_shortcuts";
@@ -19,16 +21,33 @@
     import BrowsePanel from "./browse_panel/browse_panel.svelte";
     import MobileNav from "$lib/components/mobile_nav.svelte";
 
-    // Mobile detection based on viewport width
-    const MOBILE_BREAKPOINT = 768;
-
     const updateMobileState = () => {
-        is_mobile.set(window.innerWidth < MOBILE_BREAKPOINT);
+        is_mobile.set(window.matchMedia(MOBILE_MEDIA_QUERY).matches);
     };
+
+    // The bottom bar is hidden while reading so the article owns the screen.
+    const hide_mobile_nav = $derived(
+        $is_mobile &&
+            (($active_screen === SCREEN.FEEDS &&
+                $mobile_active_panel === "content") ||
+                ($active_screen === SCREEN.BROWSE && $active_post_id !== -1)),
+    );
 
     // Handle browser/device back button on mobile
     const handleBackButton = (event: PopStateEvent) => {
         if (!get(is_mobile)) return;
+
+        if (get(active_screen) === SCREEN.BROWSE) {
+            event.preventDefault();
+            if (get(active_post_id) !== -1) {
+                active_post_id.set(-1);
+            } else {
+                active_screen.set(SCREEN.FEEDS);
+                mobile_active_panel.set("feeds");
+            }
+            history.pushState({ screen: SCREEN.BROWSE }, "");
+            return;
+        }
 
         const currentPanel = get(mobile_active_panel);
 
@@ -65,6 +84,30 @@
         }
     });
 
+    // Browse is a separate screen on mobile, and an article inside Browse is
+    // an overlay. Register both in history so the Android back gesture closes
+    // the overlay/screen instead of leaving the app.
+    const unsubscribeScreen = active_screen.subscribe((screen) => {
+        if (
+            typeof window !== "undefined" &&
+            get(is_mobile) &&
+            screen === SCREEN.BROWSE
+        ) {
+            history.pushState({ screen }, "");
+        }
+    });
+
+    const unsubscribeBrowsePost = active_post_id.subscribe((post_id) => {
+        if (
+            typeof window !== "undefined" &&
+            get(is_mobile) &&
+            get(active_screen) === SCREEN.BROWSE &&
+            post_id !== -1
+        ) {
+            history.pushState({ screen: SCREEN.BROWSE, post_id }, "");
+        }
+    });
+
     onMount(() => {
         updateMobileState();
         window.addEventListener("resize", updateMobileState);
@@ -84,6 +127,8 @@
             window.removeEventListener("keydown", handle_keydown);
         }
         unsubscribePanel();
+        unsubscribeScreen();
+        unsubscribeBrowsePost();
     });
 </script>
 
@@ -91,13 +136,18 @@
 <ToastManager />
 
 <div
-    class="flex h-screen w-full overflow-hidden md:pt-[var(--titlebar-height)]"
-    class:pb-14={$is_mobile}
+    class="flex h-[100dvh] w-full overflow-hidden {$is_mobile
+        ? ''
+        : 'md:pt-[var(--titlebar-height)]'}"
+    class:mobile-shell={$is_mobile}
+    class:mobile-shell-reading={hide_mobile_nav}
 >
     <!-- Desktop: Show sidebar -->
-    <div class="hidden md:flex">
-        <SideBar />
-    </div>
+    {#if !$is_mobile}
+        <div class="hidden md:flex">
+            <SideBar />
+        </div>
+    {/if}
 
     {#if $active_screen == SCREEN.FEEDS}
         <!-- Desktop: Show all panels, Mobile: Show only active panel -->

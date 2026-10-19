@@ -66,19 +66,6 @@ export const renderHTML = (content: string, url: string) => {
 }
 
 
-export const escape_title = (str: string) => {
-  if (!str) return "";
-  return str.replace(/[']/g, function (char) {
-    switch (char) {
-      case "'":
-        return '"'; // prepends a backslash to backslash, percent,
-      // and double/single quotes
-      default:
-        return char;
-    }
-  });
-}
-
 export const validate_url_secure = (url: string) => {
   return url.startsWith('https://');
 }

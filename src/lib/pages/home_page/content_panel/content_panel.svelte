@@ -2,8 +2,6 @@
     import { fetch_post_data } from "$lib/dao/post_db";
     import {
         active_post_id,
-        is_mobile,
-        mobile_active_panel,
         reading_progress,
     } from "$lib/stores/app_store";
     import { hybrid_parser } from "$lib/services/content_parser";
@@ -14,7 +12,7 @@
     import DefaultRenderer from "./default_renderer.svelte";
     import type { PostResult } from "$lib/types";
     import Fa from "svelte-fa";
-    import { faBookOpen, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+    import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
     import { t, translate } from "$lib/i18n";
 
     const prepareDefaultContent = (post: PostResult) => {
@@ -40,20 +38,6 @@
                 class="h-full bg-primary transition-[width] duration-150"
                 style:width={`${$reading_progress * 100}%`}
             ></div>
-        </div>
-    {/if}
-    <!-- Mobile back button -->
-    {#if $is_mobile && $active_post_id != -1}
-        <div
-            class="flex items-center gap-2 p-2 border-b border-base-300 shrink-0"
-        >
-            <button
-                class="btn btn-ghost btn-sm"
-                onclick={() => mobile_active_panel.set("posts")}
-            >
-                <Fa icon={faArrowLeft} />
-                <span>{$t("nav.posts")}</span>
-            </button>
         </div>
     {/if}
     {#if $active_post_id != -1}

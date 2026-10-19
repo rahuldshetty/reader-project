@@ -105,5 +105,15 @@ export const search_keywords = writable<string[]>([]);
 
 // Mobile Navigation
 export type MobilePanel = 'feeds' | 'posts' | 'content';
-export const is_mobile = writable(false);
+// Phones in portrait fall below 768px; landscape phones are wider than that,
+// so a short coarse-pointer viewport also counts as mobile.
+export const MOBILE_MEDIA_QUERY =
+    "(max-width: 767px), ((max-height: 500px) and (pointer: coarse))";
+
+// Reading the viewport at module init avoids rendering the desktop panels for
+// a frame on Android.
+export const is_mobile = writable(
+    typeof window !== "undefined" &&
+        window.matchMedia(MOBILE_MEDIA_QUERY).matches,
+);
 export const mobile_active_panel = writable<MobilePanel>('feeds');

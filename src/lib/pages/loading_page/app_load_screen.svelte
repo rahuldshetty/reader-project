@@ -15,9 +15,9 @@
 </script>
 
 <div
-    class="flex items-center justify-center h-screen bg-gradient-to-br from-blue-500 to-purple-600 text-white"
+    class="flex min-h-[100dvh] items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 px-6 pb-[calc(2.5rem+var(--safe-area-inset-bottom))] pt-[calc(2.5rem+var(--safe-area-inset-top))] text-white"
 >
-    <div class="text-center">
+    <div class="w-full max-w-sm text-center">
         <img src={icon} alt={$t("loading.logo_alt")} class="mx-auto mb-4 w-24 h-24" />
         <div class="inline-block">
             <h1 class="prose-xl font-bold">Reader-Project</h1>
@@ -55,7 +55,7 @@
         {/if}
 
         <div id="block-content" class="block">
-            <blockquote class="italic w-md">
+            <blockquote class="w-full max-w-md italic">
                 <p>
                     {$t("loading.quote")}
                 </p>

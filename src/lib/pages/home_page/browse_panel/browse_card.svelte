@@ -56,7 +56,7 @@
   <button
     type="button"
     onclick={onclick}
-    class="group w-full text-left rounded-lg overflow-hidden border border-base-300 bg-base-100 hover:shadow-lg hover-lift smooth-transition cursor-pointer flex flex-col md:flex-row"
+    class="group w-full text-left rounded-lg max-md:rounded-xl overflow-hidden border border-base-300 bg-base-100 hover:shadow-lg hover-lift smooth-transition cursor-pointer flex flex-col md:flex-row"
   >
     <div
       class="md:w-3/5 shrink-0 aspect-[16/9] md:aspect-auto md:min-h-72 bg-base-200 overflow-hidden"
@@ -73,12 +73,12 @@
       {/if}
     </div>
 
-    <div class="p-6 md:p-8 flex flex-col gap-3 md:w-2/5">
+    <div class="p-6 max-md:p-4 flex flex-col gap-3 md:p-8 md:w-2/5">
       <div class="text-xs uppercase tracking-wide text-primary font-semibold">
         {source?.title ?? $t("browse.article")}
       </div>
       <h2
-        class="text-2xl md:text-3xl font-bold leading-tight line-clamp-4 {post.read
+        class="text-2xl max-md:text-xl md:text-3xl font-bold leading-tight line-clamp-4 {post.read
           ? 'text-base-content/80'
           : 'text-base-content'}"
       >
@@ -132,9 +132,11 @@
   <button
     type="button"
     onclick={onclick}
-    class="group w-full text-left rounded-lg overflow-hidden border border-base-300 bg-base-100 hover:shadow-sm hover-lift smooth-transition cursor-pointer flex flex-col h-full"
+    class="group flex h-full w-full cursor-pointer flex-col overflow-hidden rounded-lg border border-base-300 bg-base-100 text-left hover:shadow-sm hover-lift smooth-transition max-md:h-auto max-md:flex-row max-md:items-stretch max-md:rounded-xl"
   >
-    <div class="h-28 overflow-hidden bg-base-200">
+    <div
+      class="h-28 overflow-hidden bg-base-200 max-md:order-2 max-md:h-auto max-md:min-h-24 max-md:w-28 max-md:shrink-0"
+    >
       {#if post.image}
         <img
           src={post.image}
@@ -147,7 +149,7 @@
       {/if}
     </div>
 
-    <div class="p-3 flex flex-col gap-1.5 flex-1">
+    <div class="p-3 flex flex-col gap-1.5 flex-1 max-md:order-1">
       {@render meta()}
       <h3
         class="font-semibold leading-snug line-clamp-2 {post.read

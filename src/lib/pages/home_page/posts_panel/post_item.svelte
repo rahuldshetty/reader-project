@@ -6,6 +6,7 @@
   import {
     active_post_id,
     cursor_post_id,
+    is_mobile,
     local_user_setting,
     feed_by_id,
     feed_view,
@@ -29,28 +30,37 @@
 </script>
 
 <li
-  class="stagger-item rounded-lg hover-lift smooth-transition"
+  class="stagger-item smooth-transition {$is_mobile
+    ? ''
+    : 'rounded-lg hover-lift'}"
   data-post-id={post.id}
 >
   <button
     type="button"
     onclick={handleOnPostClick}
-    class="w-full text-left cursor-pointer flex gap-3 p-3 rounded-lg transition-colors duration-200 {$active_post_id ==
-    post.id
-      ? 'menu-active active-glow'
-      : ''} {is_cursor_target ? 'ring-2 ring-primary/60' : ''}"
+    class="w-full text-left cursor-pointer flex gap-3 p-3 transition-colors duration-200 {$is_mobile
+      ? $active_post_id == post.id
+        ? 'rounded-xl bg-primary/10 ring-1 ring-primary/20'
+        : 'rounded-xl border border-base-300/70 bg-base-100 active:bg-base-200/70'
+      : $active_post_id == post.id
+        ? 'rounded-lg menu-active active-glow'
+        : 'rounded-lg'} {is_cursor_target ? 'ring-2 ring-primary/60' : ''}"
   >
     {#if !compact && post.image}
       <img
         src={post.image}
         loading="lazy"
         alt=""
-        class="w-18 h-18 rounded object-cover transition-transform duration-200 hover:scale-105 shrink-0"
+        class="h-24 w-24 shrink-0 rounded-xl object-cover transition-transform duration-200 hover:scale-105 md:h-18 md:w-18 md:rounded"
       />
     {/if}
 
-    <div class="flex flex-col gap-0.5 min-w-0 flex-1">
-      <p class="line-clamp-2 {post.read ? 'font-normal' : 'font-semibold'}">
+    <div class="flex min-w-0 flex-1 flex-col gap-1">
+      <p
+        class="line-clamp-3 text-[15px] leading-snug md:line-clamp-2 md:text-base {post.read
+          ? 'font-normal'
+          : 'font-semibold'}"
+      >
         {#if !post.read}
           <span
             class="inline-block w-2 h-2 rounded-full bg-primary shrink-0 mr-1.5 align-middle"
@@ -60,10 +70,14 @@
       </p>
 
       {#if !compact && snippet}
-        <span class="text-sm opacity-70 line-clamp-2">{snippet}</span>
+        <span class="line-clamp-2 text-sm opacity-70 max-md:text-[13px]"
+          >{snippet}</span
+        >
       {/if}
 
-      <span class="text-xs opacity-60 flex items-center gap-1.5 min-w-0">
+      <span
+        class="mt-auto flex min-w-0 items-center gap-1.5 text-xs opacity-60"
+      >
         {#if source?.favicon}
           <img
             src={source.favicon}

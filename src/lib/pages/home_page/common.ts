@@ -24,7 +24,6 @@ import {
     filter_unread_posts,
     filter_liked_posts,
     active_post_id,
-    user_settings,
     refreshing_posts,
     refreshing_feeds,
     feed_load_progress,
@@ -40,7 +39,6 @@ import {
 import {
     NO_FEED_SELECTED,
     NO_OF_POST_PULLS_PER_TIME,
-    SETTINGS,
     TOAST_MESSAGE_TYPE,
     FEED_TYPE,
 } from "$lib/constants";
@@ -190,7 +188,8 @@ export const refresh_post_data = async (
 
         // update new post data in store
         await refresh_posts(feed_id);
-    } catch {
+    } catch (error) {
+        console.error(`Failed to refresh feed ${feed_id}:`, error);
         toastStore.add(TOAST_MESSAGE_TYPE.ERROR, translate("toast.unable_to_fetch"));
     } finally {
         refreshing_posts.set(false);
@@ -202,8 +201,10 @@ export const check_and_pull_latest_feed_data = async (
     feed_id: number,
     url: string
 ) => {
-    // Checks first if setting is enabled to check for latest feeds when selecting the feed.
-    if (await user_settings.get(SETTINGS.REFRESH_FEED_ON_SELECT)) {
+    // Read the loaded settings, not the raw store: on a fresh install the
+    // store has no key yet and get() would return undefined, silently
+    // skipping the first refresh for every newly added feed.
+    if (get(local_user_setting).REFRESH_FEED_ON_SELECT) {
         // Check if given feed is expired
         if (await check_feed_expired(feed_id)) {
             // Pull new data from feed

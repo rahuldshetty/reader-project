@@ -7,7 +7,6 @@ import {
     ROOT_PARENT_FEED_ID
 } from '$lib/constants';
 import { convertToTimeStringForDB } from '$lib/utils/time';
-import { escape_title } from '$lib/utils/html';
 
 const db = await Database.load(DB_PATH);
 
@@ -193,8 +192,19 @@ export const add_posts = async (feedMetadata: FeedMetadata) => {
             const date = convertToTimeStringForDB(post.pubDate);
 
             await db.execute(
-                `INSERT OR IGNORE INTO articles (feed_id, title, link, pub_date, image_url) 
-                VALUES (${feedMetadata.id}, '${escape_title(post.title)}', '${post.link}', '${date}', '${escape_title(post.image)}')`
+                `INSERT INTO articles (feed_id, title, link, pub_date, image_url)
+                VALUES ($1, $2, $3, $4, $5)
+                ON CONFLICT(link) DO UPDATE SET
+                    title = excluded.title,
+                    pub_date = excluded.pub_date,
+                    image_url = excluded.image_url`,
+                [
+                    feedMetadata.id,
+                    post.title,
+                    post.link,
+                    date,
+                    post.image,
+                ],
             );
 
             feedsSet.add(feedMetadata.id);

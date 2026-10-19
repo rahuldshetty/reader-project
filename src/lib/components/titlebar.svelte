@@ -8,7 +8,7 @@
         faXmark,
     } from "@fortawesome/free-solid-svg-icons";
 
-    import { local_user_setting } from "$lib/stores/app_store";
+    import { is_mobile, local_user_setting } from "$lib/stores/app_store";
     import { exit } from "@tauri-apps/plugin-process";
     import { t } from "$lib/i18n";
 
@@ -26,6 +26,7 @@
     };
 </script>
 
+{#if !$is_mobile}
 <div
     data-tauri-drag-region
     class="titlebar fixed top-0 left-0 right-0 z-50 h-[var(--titlebar-height)] hidden md:flex items-center justify-end px-3 bg-base-100 border-b border-base-300"
@@ -66,3 +67,4 @@
         </button>
     </div>
 </div>
+{/if}

@@ -9,7 +9,7 @@
         ROOT_PARENT_FEED_ID,
         BROWSE_WINDOW_WEEKS,
     } from "$lib/constants";
-    import { active_post_id } from "$lib/stores/app_store";
+    import { active_post_id, is_mobile } from "$lib/stores/app_store";
     import { select_post } from "../common";
     import ContentPanel from "../content_panel/content_panel.svelte";
     import BrowseCard from "./browse_card.svelte";
@@ -75,18 +75,33 @@
     class="relative flex-1 w-full h-full overflow-hidden flex flex-col bg-base-100 animate-fade-in"
 >
     <div
-        class="shrink-0 px-5 py-4 border-b border-base-300 flex items-center gap-2"
+        class="{$is_mobile
+            ? 'mobile-page-header'
+            : ''} flex shrink-0 items-center gap-2 border-b border-base-300/80 bg-base-100/95 px-5 pb-4 backdrop-blur-xl max-md:px-4"
     >
-        <Fa icon={faCompass} class="text-primary" />
-        <h1 class="text-lg font-semibold">{$t("browse.title")}</h1>
-        <span class="text-sm opacity-50"
-            >{$t("browse.last_weeks", { n: BROWSE_WINDOW_WEEKS })}</span
+        <span
+            class="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary"
         >
+            <Fa icon={faCompass} />
+        </span>
+        <div class="min-w-0 flex-1">
+            <h1 class="text-2xl font-bold tracking-tight md:text-lg md:font-semibold">
+                {$t("browse.title")}
+            </h1>
+            <span class="block text-xs text-base-content/50 md:inline md:text-sm"
+                >{$t("browse.last_weeks", { n: BROWSE_WINDOW_WEEKS })}</span
+            >
+        </div>
     </div>
 
     <!-- Grid stays mounted so its scroll position and loaded posts survive
          opening a reader. The reader overlays it absolutely. -->
-    <div onscroll={handleScroll} class="flex-1 overflow-y-auto p-4 md:p-6">
+    <div
+        onscroll={handleScroll}
+        class="{$is_mobile
+            ? 'mobile-scroll'
+            : ''} flex-1 overflow-y-auto p-4 max-md:p-3 md:p-6"
+    >
         {#if posts.length === 0 && loading}
             <div
                 class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-7xl mx-auto"
@@ -161,14 +176,16 @@
 
     {#if $active_post_id != -1}
         <div class="absolute inset-0 z-10 flex flex-col bg-base-100">
-            <div
-                class="shrink-0 flex items-center gap-2 p-2 border-b border-base-300 bg-base-100"
-            >
-                <button class="btn btn-ghost btn-sm" onclick={backToBrowse}>
-                    <Fa icon={faArrowLeft} />
-                    <span>{$t("browse.title")}</span>
-                </button>
-            </div>
+            {#if !$is_mobile}
+                <div
+                    class="shrink-0 flex items-center gap-2 p-2 border-b border-base-300 bg-base-100"
+                >
+                    <button class="btn btn-ghost btn-sm" onclick={backToBrowse}>
+                        <Fa icon={faArrowLeft} />
+                        <span>{$t("browse.title")}</span>
+                    </button>
+                </div>
+            {/if}
             <ContentPanel />
         </div>
     {/if}
