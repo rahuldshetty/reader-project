@@ -21,7 +21,10 @@ export const SHARE_MAX_URL_LENGTH = 2048;
 export const SHARE_MAX_ENVELOPE_BYTES = 2 * 1024 * 1024;
 
 // Host waits this long for a phone, then tears the session down on its own.
-export const SHARE_WAIT_TTL_MS = 120_000;
+// Phone-side setup (unlock, app cold start, camera permission, scan) routinely
+// takes longer than two minutes, and expiring mid-handshake looks like a
+// network failure on the receiver.
+export const SHARE_WAIT_TTL_MS = 300_000;
 // A connected peer must finish the transfer within this window.
 export const SHARE_TRANSFER_TTL_MS = 45_000;
 
@@ -53,6 +56,29 @@ export class ShareError extends Error {
         this.code = code;
     }
 }
+
+// PeerJS only ships one Google STUN server by default. Extra servers improve
+// candidate gathering; a TURN relay is still required when both peers sit
+// behind symmetric NAT, which PeerJS cannot traverse on its own.
+export const SHARE_ICE_SERVERS: RTCIceServer[] = [
+    { urls: ["stun:stun.l.google.com:19302", "stun:stun1.l.google.com:19302"] },
+    { urls: "stun:stun.cloudflare.com:3478" },
+];
+
+type ShareLogLevel = "info" | "warn" | "error";
+
+/**
+ * Mirrors share-session events into the app log. The connection can only fail
+ * on the other device, so the local log is the only way to tell signalling
+ * failures apart from ICE/NAT failures.
+ */
+export const share_log = (level: ShareLogLevel, message: string): void => {
+    console[level](`[feed-share] ${message}`);
+    // The plain web build has no Tauri host; tracing must never break sharing.
+    void import("@tauri-apps/plugin-log")
+        .then((logger) => logger[level](`[feed-share] ${message}`))
+        .catch(() => {});
+};
 
 export interface SharedFeed {
     title: string;

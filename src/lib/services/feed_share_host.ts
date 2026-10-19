@@ -1,9 +1,11 @@
 import type { DataConnection, Peer } from "peerjs";
 import {
+    SHARE_ICE_SERVERS,
     SHARE_TRANSFER_TTL_MS,
     SHARE_WAIT_TTL_MS,
     format_share_token,
     pack_share_payload,
+    share_log,
     unpack_share_message,
     type ShareClientInfo,
     type SharePayload,
@@ -95,6 +97,13 @@ export const start_share_host = (
     const finish = (state: ShareHostState) => {
         if (stopped) return;
         stopped = true;
+        if (state.status === "error") {
+            share_log("error", `host failed: ${state.message}`);
+        } else if (state.status === "stopped") {
+            share_log("info", `host stopped: ${state.reason}`);
+        } else {
+            share_log("info", `host finished: ${state.status}`);
+        }
         teardown();
         on_state(state);
     };
@@ -141,6 +150,10 @@ export const start_share_host = (
         if (message.t === "hello") {
             if (connected) return;
             connected = true;
+            share_log(
+                "info",
+                `host hello from ${message.client.platform}, ${payload.feeds.length} feeds`,
+            );
             clearTimeout(wait_timer);
             clearTimeout(hello_timer);
             wait_timer = undefined;
@@ -161,6 +174,10 @@ export const start_share_host = (
                 const envelope = await pack_share_payload(payload, secret);
                 if (stopped || !connection) return;
                 connection.send(envelope);
+                share_log(
+                    "info",
+                    `host payload sent: ${envelope.length} bytes`,
+                );
                 ack_timer = window.setTimeout(
                     () => finish({ status: "done" }),
                     SHARE_TRANSFER_TTL_MS,
@@ -176,6 +193,7 @@ export const start_share_host = (
         }
 
         if (message.t === "ack") {
+            share_log("info", "host ack received");
             finish({ status: "done" });
         }
     };
@@ -205,6 +223,11 @@ export const start_share_host = (
             }
         }
         connection = incoming;
+        share_log("info", "host data connection opened");
+
+        incoming.on("iceStateChanged", (state) => {
+            share_log("info", `host ice: ${state}`);
+        });
 
         clearTimeout(hello_timer);
         hello_timer = window.setTimeout(() => {
@@ -247,13 +270,18 @@ export const start_share_host = (
         }
         if (stopped) return;
 
-        const current = new peer_module.Peer();
+        const current = new peer_module.Peer({
+            config: { iceServers: SHARE_ICE_SERVERS },
+        });
         peer = current;
         let opened = false;
 
         open_timer = window.setTimeout(() => {
             if (opened || stopped) return;
-            finish({ status: "error", message: "signalling-timeout" });
+            finish({
+                status: "error",
+                message: "Signaling server unreachable",
+            });
         }, PEER_OPEN_TIMEOUT_MS);
 
         current.on("open", (id) => {
@@ -261,6 +289,7 @@ export const start_share_host = (
             opened = true;
             clearTimeout(open_timer);
             open_timer = undefined;
+            share_log("info", `host signalling open: ${id}`);
             on_state({
                 status: "waiting",
                 token: format_share_token(id, secret),
@@ -281,6 +310,10 @@ export const start_share_host = (
             clearTimeout(open_timer);
             open_timer = undefined;
             const type = peer_error_type(error);
+            share_log(
+                "error",
+                `host peer error: ${type ?? error.message ?? "unknown"}`,
+            );
             if (type === "unavailable-id" && attempt < 2) {
                 try {
                     current.destroy();

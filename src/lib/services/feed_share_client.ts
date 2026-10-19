@@ -1,8 +1,10 @@
 import type { DataConnection, Peer } from "peerjs";
 import {
+    SHARE_ICE_SERVERS,
     SHARE_TRANSFER_TTL_MS,
     ShareError,
     pack_share_message,
+    share_log,
     unpack_share_payload,
     type SharePayload,
     type ShareToken,
@@ -58,6 +60,11 @@ const map_peer_error = (error: unknown): ShareError => {
             return new ShareError(
                 "network",
                 "Unable to reach the signaling server",
+            );
+        case "webrtc":
+            return new ShareError(
+                "network",
+                "Could not establish a direct connection",
             );
         default:
             return new ShareError(
@@ -121,15 +128,19 @@ export const receive_share = async (
     const fail = (error: unknown) => {
         if (settled) return;
         settled = true;
-        payload_waiter?.reject(error);
+        const mapped =
+            error instanceof ShareError ? error : map_peer_error(error);
+        share_log("error", `client failed: ${mapped.code}: ${mapped.message}`);
+        payload_waiter?.reject(mapped);
         payload_waiter = null;
         cleanup();
-        reject(error instanceof ShareError ? error : map_peer_error(error));
+        reject(mapped);
     };
 
     const succeed = (payload: SharePayload) => {
         if (settled) return;
         settled = true;
+        share_log("info", `client received ${payload.feeds.length} feeds`);
         on_state?.({ status: "done" });
         cleanup();
         resolve(payload);
@@ -157,22 +168,35 @@ export const receive_share = async (
         if (settled) return;
 
         on_state?.({ status: "connecting" });
-        const current = new peer_module.Peer();
+        const current = new peer_module.Peer({
+            config: { iceServers: SHARE_ICE_SERVERS },
+        });
         peer = current;
 
         current.on("error", (error) => {
             if (current !== peer) return;
+            share_log(
+                "error",
+                `client peer error: ${peer_error_type(error) ?? error.message}`,
+            );
             fail(map_peer_error(error));
         });
 
         const opened = Promise.withResolvers<void>();
         connect_timer = window.setTimeout(
-            () => opened.reject(new ShareError("timeout", "Signaling timed out")),
+            () =>
+                opened.reject(
+                    new ShareError(
+                        "network",
+                        "Signaling server unreachable",
+                    ),
+                ),
             PEER_OPEN_TIMEOUT_MS,
         );
         current.on("open", () => {
             clearTimeout(connect_timer);
             connect_timer = undefined;
+            share_log("info", "client signalling open");
             opened.resolve();
         });
         await opened.promise;
@@ -181,6 +205,10 @@ export const receive_share = async (
 
         const conn = current.connect(token.peerId, { reliable: true });
         connection = conn;
+        share_log("info", `client dialing ${token.peerId}`);
+        conn.on("iceStateChanged", (state) => {
+            share_log("info", `client ice: ${state}`);
+        });
 
         const waiter = Promise.withResolvers<SharePayload>();
         payload_waiter = waiter;
@@ -193,13 +221,23 @@ export const receive_share = async (
                     bytes,
                     token.secret,
                 );
+                share_log(
+                    "info",
+                    `client payload received: ${bytes.length} bytes`,
+                );
                 waiter.resolve(payload);
             } catch {
                 // Ignore non-payload frames; the host only sends one payload
                 // and closes afterwards.
             }
         });
-        conn.on("error", (error) => waiter.reject(error));
+        conn.on("error", (error) => {
+            share_log(
+                "error",
+                `client data error: ${peer_error_type(error) ?? String(error)}`,
+            );
+            waiter.reject(error);
+        });
         conn.on("close", () =>
             waiter.reject(
                 new ShareError(
@@ -213,13 +251,14 @@ export const receive_share = async (
         connect_timer = window.setTimeout(
             () =>
                 connected.reject(
-                    new ShareError("timeout", "Connection timed out"),
+                    new ShareError("network", "Direct connection timed out"),
                 ),
             CONNECT_TIMEOUT_MS,
         );
         conn.on("open", () => {
             clearTimeout(connect_timer);
             connect_timer = undefined;
+            share_log("info", "client data connection opened");
             connected.resolve();
         });
         await connected.promise;
