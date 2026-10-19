@@ -36,6 +36,10 @@ jobs:
           echo "skip=$skip" >> "$GITHUB_OUTPUT"
 
   publish-tauri:
+    # Without this, GitHub names the job after every matrix key, including the
+    # asset-name pattern, which is how `[name]_[platform]_[arch]-[mode][ext]`
+    # ended up in the UI.
+    name: publish-tauri (${{ matrix.platform }}, ${{ matrix.mobile || matrix.args || 'desktop' }})
     needs: guard
     if: needs.guard.outputs.skip != 'true'
     permissions:
@@ -83,7 +87,8 @@ jobs:
         if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev libappindicator3-dev librsvg2-dev patchelf xdg-utils libxdo-dev
+          # libappindicator3-dev conflicts with libayatana-appindicator3-dev; Tauri 2 uses the latter.
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev patchelf xdg-utils libxdo-dev
 
       - name: setup bun
         uses: oven-sh/setup-bun@v2
