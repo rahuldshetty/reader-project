@@ -48,6 +48,8 @@ const hi: Record<TranslationKey, string> = {
     "posts.empty.search": "इस खोज के लिए कोई परिणाम नहीं।",
     "posts.empty.unread": "कोई अपठित लेख नहीं।",
     "posts.empty.filters": "फ़िल्टर समायोजित करें।",
+    "posts.pull_to_refresh": "रीफ़्रेश करने के लिए खींचें",
+    "posts.release_to_refresh": "रीफ़्रेश करने के लिए छोड़ें",
 
     "content.select_article": "पढ़ने के लिए एक लेख चुनें",
     "content.unable_to_parse":

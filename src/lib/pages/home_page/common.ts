@@ -49,6 +49,7 @@ import {
 
 import { get } from "svelte/store";
 import { fetchFeedDataFromFeedURL } from "$lib/services/feed_gather";
+import { asyncPool } from "$lib/utils/async_job";
 import { toastStore } from "$lib/stores/toast_store";
 import { validate_url_secure } from "$lib/utils/html";
 import type { Feed, FeedResult, PostResult } from "$lib/types";
@@ -141,6 +142,74 @@ export const refresh_active_posts = async () => {
         get(active_folder_feed_ids),
         feed_selection_revision,
     );
+}
+
+// Pull-to-refresh: fetch the feeds that contribute to the current source once,
+// then reload the post list. Favourites has no feed to fetch.
+export const refresh_current_source = async () => {
+    if (get(refreshing_posts)) return;
+
+    const feed_id = get(active_feed_id);
+    const folder_ids = get(active_folder_feed_ids);
+    const revision = feed_selection_revision;
+
+    const feeds_by_id = new Map<number, Feed>();
+    for (const feed of get(feeds_store)) {
+        if (feed.type == FEED_TYPE.FEED) feeds_by_id.set(feed.id, feed);
+        for (const child of feed.children ?? []) {
+            feeds_by_id.set(child.id, child);
+        }
+    }
+
+    let targets: Feed[] = [];
+    if (folder_ids.length > 0) {
+        targets = folder_ids
+            .map((id) => feeds_by_id.get(id))
+            .filter((feed): feed is Feed => feed !== undefined);
+    } else if (feed_id >= 0) {
+        const feed = feeds_by_id.get(feed_id);
+        if (feed) targets.push(feed);
+    } else if (feed_id == -1) {
+        targets = Array.from(feeds_by_id.values());
+    }
+
+    let failures = 0;
+    if (targets.length > 0) {
+        refreshing_posts.set(true);
+        await asyncPool(4, targets.map((feed) => [feed] as [Feed]), async (feed) => {
+            try {
+                const metadata = await fetchFeedDataFromFeedURL(
+                    feed.id,
+                    feed.url,
+                    undefined,
+                    false,
+                );
+                await add_posts(metadata);
+            } catch (error) {
+                failures++;
+                console.log(`|| Pull-to-refresh failed for ${feed.url}: ${error} ||`);
+            }
+        });
+    }
+
+    if (revision !== feed_selection_revision) return;
+
+    await refresh_posts(
+        feed_id,
+        null,
+        NO_OF_POST_PULLS_PER_TIME,
+        "",
+        null,
+        folder_ids,
+        revision,
+    );
+
+    if (targets.length > 0 && failures === targets.length) {
+        toastStore.add(
+            TOAST_MESSAGE_TYPE.ERROR,
+            translate("toast.unable_to_fetch"),
+        );
+    }
 }
 
 

@@ -48,6 +48,8 @@ const ja: Record<TranslationKey, string> = {
     "posts.empty.search": "この検索の結果はありません。",
     "posts.empty.unread": "未読の記事はありません。",
     "posts.empty.filters": "フィルターを調整してください。",
+    "posts.pull_to_refresh": "引っ張って更新",
+    "posts.release_to_refresh": "離して更新",
 
     "content.select_article": "読む記事を選択してください",
     "content.unable_to_parse":

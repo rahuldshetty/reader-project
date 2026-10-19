@@ -55,6 +55,8 @@ const en = {
     "posts.empty.search": "No results for this search.",
     "posts.empty.unread": "No unread posts.",
     "posts.empty.filters": "Try adjusting your filters.",
+    "posts.pull_to_refresh": "Pull to refresh",
+    "posts.release_to_refresh": "Release to refresh",
 
     // Content panel
     "content.select_article": "Select an article to read",
