@@ -67,6 +67,9 @@ export enum SETTINGS {
 
     // Keyboard Shortcuts
     SHORTCUTS = "SHORTCUTS",
+
+    // Mobile navigation: hidden feed/folder ids and their display order
+    SIDE_PANEL = "SIDE_PANEL",
 }
 
 export enum THEMES {
@@ -250,4 +253,11 @@ export const DEFAULT_SHORTCUT_BINDINGS: Record<SHORTCUT_ACTION, ShortcutBinding>
 export const DEFAULT_SHORTCUTS = {
     ENABLED: SHORTCUTS_ENABLED_DEFAULT,
     BINDINGS: DEFAULT_SHORTCUT_BINDINGS,
+};
+
+// ORDER is the top-level folder/unfiled-feed order. Hidden ids apply to both
+// folders and child feeds. Empty values mean "database order, all visible".
+export const DEFAULT_SIDE_PANEL = {
+    HIDDEN_IDS: [] as number[],
+    ORDER: [] as number[],
 };

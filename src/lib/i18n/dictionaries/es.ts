@@ -23,6 +23,7 @@ const es: Record<TranslationKey, string> = {
     "nav.browse": "Explorar",
     "nav.settings": "Ajustes",
     "nav.add": "Añadir",
+    "nav.menu": "Menú",
     "nav.about": "Acerca de",
     "nav.collapse": "Contraer",
     "nav.posts": "Publicaciones",
@@ -64,11 +65,21 @@ const es: Record<TranslationKey, string> = {
 
     "settings.title": "Ajustes",
     "settings.tab.general": "General",
+    "settings.tab.side_panel": "Panel lateral",
     "settings.tab.feeds": "Fuentes",
     "settings.tab.storage": "Almacenamiento",
     "settings.tab.llm": "LLM",
     "settings.tab.fonts": "Tipografía",
     "settings.tab.shortcuts": "Atajos",
+
+    // Panel lateral
+    "settings.side_panel": "Panel lateral",
+    "settings.side_panel.hint":
+        "Elige qué carpetas y fuentes aparecen en el panel lateral del móvil.",
+    "settings.side_panel.visible": "Mostrar en el panel lateral",
+    "settings.side_panel.move_up": "Mover arriba",
+    "settings.side_panel.move_down": "Mover abajo",
+    "settings.side_panel.reset": "Restablecer",
 
     "settings.language": "Idioma",
     "settings.language.hint": "Elige el idioma de la interfaz de la aplicación.",

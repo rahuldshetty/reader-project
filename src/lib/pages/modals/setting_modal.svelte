@@ -17,6 +17,7 @@
     DEFAULT_SHORTCUT_BINDINGS,
     CONTENT_CACHE_TTL_DAYS,
     CONTENT_CACHE_MAX_MB,
+    FEED_TYPE,
   } from "$lib/constants";
   import {
     clear_article_cache,
@@ -35,7 +36,7 @@
   import { toastStore } from "$lib/stores/toast_store";
   import { convertFeedDataToOPML } from "$lib/services/opml_gather";
   import ModalShell from "$lib/components/modals/ModalShell.svelte";
-  import type { ShortcutBindings } from "$lib/types";
+  import type { FeedResult, ShortcutBindings } from "$lib/types";
   import {
     t,
     translate,
@@ -71,6 +72,13 @@
   let minimize_app = $state($local_user_setting.MINIMIZE_APP);
   let longitude = $state($local_user_setting.LONGITUDE);
   let latitude = $state($local_user_setting.LATITUDE);
+
+  let side_panel_hidden_ids = $state<number[]>([
+    ...$local_user_setting.SIDE_PANEL.HIDDEN_IDS,
+  ]);
+  let side_panel_order = $state<number[]>([
+    ...$local_user_setting.SIDE_PANEL.ORDER,
+  ]);
 
   let llm_enable = $state($local_user_setting.LLM_ENABLE);
   let openai_url = $state($local_user_setting.OPENAI_URL);
@@ -155,6 +163,42 @@
     stopRecording();
   };
 
+  const side_panel_top_level = $derived.by(() => {
+    const by_id = new Map($feeds_store.map((feed) => [feed.id, feed]));
+    const result: FeedResult[] = [];
+
+    for (const id of side_panel_order) {
+      const feed = by_id.get(id);
+      if (!feed) continue;
+      result.push(feed);
+      by_id.delete(id);
+    }
+    for (const feed of $feeds_store) {
+      if (by_id.has(feed.id)) result.push(feed);
+    }
+    return result;
+  });
+
+  const toggle_side_panel_item = (id: number) => {
+    side_panel_hidden_ids = side_panel_hidden_ids.includes(id)
+      ? side_panel_hidden_ids.filter((hidden_id) => hidden_id !== id)
+      : [...side_panel_hidden_ids, id];
+  };
+
+  const move_side_panel_item = (id: number, direction: -1 | 1) => {
+    const ids = side_panel_top_level.map((feed) => feed.id);
+    const index = ids.indexOf(id);
+    const target = index + direction;
+    if (index < 0 || target < 0 || target >= ids.length) return;
+    [ids[index], ids[target]] = [ids[target], ids[index]];
+    side_panel_order = ids;
+  };
+
+  const reset_side_panel = () => {
+    side_panel_hidden_ids = [];
+    side_panel_order = [];
+  };
+
   // Captures the next key press while a shortcut is being remapped. The
   // global keyboard handler yields to this via is_recording().
   const handleCaptureKeydown = (event: KeyboardEvent) => {
@@ -211,6 +255,10 @@
     minimize_app = $local_user_setting.MINIMIZE_APP;
     longitude = $local_user_setting.LONGITUDE;
     latitude = $local_user_setting.LATITUDE;
+    side_panel_hidden_ids = [
+      ...$local_user_setting.SIDE_PANEL.HIDDEN_IDS,
+    ];
+    side_panel_order = [...$local_user_setting.SIDE_PANEL.ORDER];
 
     llm_enable = $local_user_setting.LLM_ENABLE;
     openai_url = $local_user_setting.OPENAI_URL;
@@ -307,6 +355,10 @@
       ENABLED: shortcuts_enabled,
       BINDINGS: shortcut_bindings,
     });
+    await user_settings.set(SETTINGS.SIDE_PANEL, {
+      HIDDEN_IDS: side_panel_hidden_ids,
+      ORDER: side_panel_order,
+    });
 
     // Update local store
     $local_user_setting.THEME_MODE = color_theme;
@@ -336,6 +388,10 @@
     $local_user_setting.SHORTCUTS = {
       ENABLED: shortcuts_enabled,
       BINDINGS: shortcut_bindings,
+    };
+    $local_user_setting.SIDE_PANEL = {
+      HIDDEN_IDS: [...side_panel_hidden_ids],
+      ORDER: [...side_panel_order],
     };
     apply_document_language(language);
 
@@ -381,7 +437,7 @@
   footer={settingsFooter}
 >
   <!-- name of each tab group should be unique -->
-  <div class="tabs tabs-border">
+  <div class="tabs tabs-border overflow-x-auto">
       <!-- General Setting -->
       <input
         type="radio"
@@ -516,6 +572,89 @@
               >
             </div>
           </fieldset>
+        </div>
+      </div>
+
+      <!-- Side panel -->
+      <input
+        type="radio"
+        name="setting_tabs"
+        class="tab"
+        aria-label={$t("settings.tab.side_panel")}
+      />
+      <div class="tab-content bg-base-100 p-4">
+        <div class="flex flex-col gap-3">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h3 class="font-semibold">{$t("settings.side_panel")}</h3>
+              <p class="label whitespace-normal">
+                {$t("settings.side_panel.hint")}
+              </p>
+            </div>
+            <button
+              type="button"
+              class="btn btn-ghost btn-sm shrink-0"
+              onclick={reset_side_panel}
+            >
+              {$t("settings.side_panel.reset")}
+            </button>
+          </div>
+
+          <ul class="divide-y divide-base-300">
+            {#each side_panel_top_level as item, index (item.id)}
+              <li class="py-2">
+                <div class="flex items-center gap-2">
+                  <span class="min-w-0 flex-1 truncate font-medium"
+                    >{item.title}</span
+                  >
+                  <input
+                    type="checkbox"
+                    class="toggle toggle-sm"
+                    checked={!side_panel_hidden_ids.includes(item.id)}
+                    onchange={() => toggle_side_panel_item(item.id)}
+                    aria-label={$t("settings.side_panel.visible")}
+                  />
+                  <button
+                    type="button"
+                    class="btn btn-ghost btn-xs"
+                    disabled={index === 0}
+                    onclick={() => move_side_panel_item(item.id, -1)}
+                    aria-label={$t("settings.side_panel.move_up")}
+                  >
+                    ↑
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-ghost btn-xs"
+                    disabled={index === side_panel_top_level.length - 1}
+                    onclick={() => move_side_panel_item(item.id, 1)}
+                    aria-label={$t("settings.side_panel.move_down")}
+                  >
+                    ↓
+                  </button>
+                </div>
+
+                {#if item.type == FEED_TYPE.FOLDER && item.children.length > 0}
+                  <ul class="ml-5 mt-1 space-y-1">
+                    {#each item.children as child (child.id)}
+                      <li class="flex items-center gap-2">
+                        <span class="min-w-0 flex-1 truncate text-sm"
+                          >{child.title}</span
+                        >
+                        <input
+                          type="checkbox"
+                          class="toggle toggle-xs"
+                          checked={!side_panel_hidden_ids.includes(child.id)}
+                          onchange={() => toggle_side_panel_item(child.id)}
+                          aria-label={$t("settings.side_panel.visible")}
+                        />
+                      </li>
+                    {/each}
+                  </ul>
+                {/if}
+              </li>
+            {/each}
+          </ul>
         </div>
       </div>
 

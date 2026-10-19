@@ -1,12 +1,16 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
     import { get } from "svelte/store";
-    import { SCREEN } from "$lib/constants";
+    import Fa from "svelte-fa";
+    import { faPlus } from "@fortawesome/free-solid-svg-icons";
+    import { MODAL_TYPE, SCREEN } from "$lib/constants";
     import {
+        active_modal,
         active_post_id,
         active_screen,
         is_mobile,
         mobile_active_panel,
+        mobile_drawer_open,
         MOBILE_MEDIA_QUERY,
         type MobilePanel,
     } from "$lib/stores/app_store";
@@ -19,14 +23,15 @@
     import ContentPanel from "./content_panel/content_panel.svelte";
     import ToastManager from "../toast_manager/toast_manager.svelte";
     import BrowsePanel from "./browse_panel/browse_panel.svelte";
-    import MobileNav from "$lib/components/mobile_nav.svelte";
+    import MobileDrawer from "$lib/components/mobile_drawer.svelte";
+    import { t } from "$lib/i18n";
 
     const updateMobileState = () => {
         is_mobile.set(window.matchMedia(MOBILE_MEDIA_QUERY).matches);
     };
 
-    // The bottom bar is hidden while reading so the article owns the screen.
-    const hide_mobile_nav = $derived(
+    // Floating actions are hidden while reading so the article owns the screen.
+    const hide_mobile_chrome = $derived(
         $is_mobile &&
             (($active_screen === SCREEN.FEEDS &&
                 $mobile_active_panel === "content") ||
@@ -37,47 +42,44 @@
     const handleBackButton = (event: PopStateEvent) => {
         if (!get(is_mobile)) return;
 
+        if (get(mobile_drawer_open)) {
+            event.preventDefault();
+            mobile_drawer_open.set(false);
+            history.pushState({ panel: get(mobile_active_panel) }, "");
+            return;
+        }
+
         if (get(active_screen) === SCREEN.BROWSE) {
             event.preventDefault();
             if (get(active_post_id) !== -1) {
                 active_post_id.set(-1);
             } else {
                 active_screen.set(SCREEN.FEEDS);
-                mobile_active_panel.set("feeds");
+                mobile_active_panel.set("posts");
             }
             history.pushState({ screen: SCREEN.BROWSE }, "");
             return;
         }
 
-        const currentPanel = get(mobile_active_panel);
-
-        if (currentPanel === "content") {
+        if (get(mobile_active_panel) === "content") {
             event.preventDefault();
             mobile_active_panel.set("posts");
             // Push a new state so back button works again
             history.pushState({ panel: "posts" }, "");
-        } else if (currentPanel === "posts") {
-            event.preventDefault();
-            mobile_active_panel.set("feeds");
-            // Push a new state so back button works again
-            history.pushState({ panel: "feeds" }, "");
         }
-        // If on feeds panel, let the default behavior happen (could close app or do nothing)
+        // At the posts root, let the default behavior close the app.
     };
 
     // Push initial history state and listen for panel changes
-    let previousPanel: MobilePanel = "feeds";
+    let previousPanel: MobilePanel = "posts";
     const unsubscribePanel = mobile_active_panel.subscribe((panel) => {
         if (
             typeof window !== "undefined" &&
             get(is_mobile) &&
             panel !== previousPanel
         ) {
-            // Push state when navigating forward (feeds→posts, posts→content)
-            if (
-                (previousPanel === "feeds" && panel === "posts") ||
-                (previousPanel === "posts" && panel === "content")
-            ) {
+            // Push state when navigating forward (posts → content).
+            if (previousPanel === "posts" && panel === "content") {
                 history.pushState({ panel }, "");
             }
             previousPanel = panel;
@@ -116,7 +118,7 @@
 
         // Push initial state
         if (get(is_mobile)) {
-            history.pushState({ panel: "feeds" }, "");
+            history.pushState({ panel: "posts" }, "");
         }
     });
 
@@ -140,7 +142,6 @@
         ? ''
         : 'md:pt-[var(--titlebar-height)]'}"
     class:mobile-shell={$is_mobile}
-    class:mobile-shell-reading={hide_mobile_nav}
 >
     <!-- Desktop: Show sidebar -->
     {#if !$is_mobile}
@@ -155,11 +156,9 @@
             <FeedPanel />
             <PostsPanel />
             <ContentPanel />
-        {:else if $mobile_active_panel === "feeds"}
-            <FeedPanel />
         {:else if $mobile_active_panel === "posts"}
             <PostsPanel />
-        {:else if $mobile_active_panel === "content"}
+        {:else}
             <ContentPanel />
         {/if}
     {:else if $active_screen == SCREEN.BROWSE}
@@ -167,5 +166,15 @@
     {/if}
 </div>
 
-<!-- Mobile bottom navigation -->
-<MobileNav />
+{#if $is_mobile && !hide_mobile_chrome}
+    <button
+        type="button"
+        class="btn btn-primary btn-circle fixed bottom-[calc(1.25rem+var(--safe-area-inset-bottom))] right-4 z-40 h-14 w-14 shadow-xl"
+        onclick={() => active_modal.set(MODAL_TYPE.ADD)}
+        aria-label={$t("nav.add")}
+    >
+        <Fa icon={faPlus} size="lg" />
+    </button>
+{/if}
+
+<MobileDrawer />

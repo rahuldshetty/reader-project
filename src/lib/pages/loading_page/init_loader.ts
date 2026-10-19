@@ -1,6 +1,8 @@
+import { get } from "svelte/store";
 import {
     local_user_setting,
     is_loading_splashscreen,
+    is_mobile,
     feed_view,
     feed_load_progress,
 } from "$lib/stores/app_store";
@@ -13,7 +15,8 @@ import { FEED_VIEW } from "$lib/constants";
 import { 
     refresh_app_data,
     pull_feed_and_refresh_post_data,
-    auto_purge_old_posts 
+    auto_purge_old_posts,
+    select_feed,
 } from "$lib/pages/home_page/common";
 
 export const init_app = async () => {
@@ -40,6 +43,12 @@ export const init_app = async () => {
     await pull_feed_and_refresh_post_data();
 
     await refresh_app_data();
+
+    // Mobile opens directly on the reading surface. Desktop keeps the
+    // three-column layout with no source selected until the user picks one.
+    if (get(is_mobile)) {
+        await select_feed(-1);
+    }
 
     is_loading_splashscreen.set(false);
 }

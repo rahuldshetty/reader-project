@@ -189,28 +189,10 @@ article p {
    --------------------------------------------------------------------------- */
 .mobile-shell {
     height: 100dvh;
-    padding-bottom: calc(4rem + var(--safe-area-inset-bottom));
-}
-
-/* Reader and browse-overlay views hide the bottom bar to maximise the page. */
-.mobile-shell.mobile-shell-reading {
-    padding-bottom: 0;
 }
 
 .mobile-appbar {
     padding-top: var(--safe-area-inset-top);
-}
-
-.mobile-bar-top {
-    padding-top: calc(var(--safe-area-inset-top) + 0.5rem);
-}
-
-.mobile-page-header {
-    padding-top: calc(var(--safe-area-inset-top) + 0.75rem);
-}
-
-.mobile-tabbar {
-    padding-bottom: var(--safe-area-inset-bottom);
 }
 
 .mobile-reader-bottom {
@@ -330,9 +312,9 @@ details[open] > .folder-summary .folder-chevron {
         padding-bottom: calc(1.25rem + var(--safe-area-inset-bottom));
     }
 
-    /* Keep feedback above the fixed navigation bar. */
+    /* Keep feedback above the floating add button. */
     .toast {
-        bottom: calc(4.5rem + var(--safe-area-inset-bottom));
+        bottom: calc(5.5rem + var(--safe-area-inset-bottom));
     }
 
     .toast.toast-top {

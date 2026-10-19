@@ -23,6 +23,7 @@ const de: Record<TranslationKey, string> = {
     "nav.browse": "Durchsuchen",
     "nav.settings": "Einstellungen",
     "nav.add": "Hinzufügen",
+    "nav.menu": "Menü",
     "nav.about": "Über",
     "nav.collapse": "Einklappen",
     "nav.posts": "Beiträge",
@@ -64,11 +65,21 @@ const de: Record<TranslationKey, string> = {
 
     "settings.title": "Einstellungen",
     "settings.tab.general": "Allgemein",
+    "settings.tab.side_panel": "Seitenleiste",
     "settings.tab.feeds": "Feeds",
     "settings.tab.storage": "Speicher",
     "settings.tab.llm": "LLM",
     "settings.tab.fonts": "Schriftarten",
     "settings.tab.shortcuts": "Tastenkürzel",
+
+    // Seitenleiste
+    "settings.side_panel": "Seitenleiste",
+    "settings.side_panel.hint":
+        "Wähle aus, welche Ordner und Feeds in der mobilen Seitenleiste erscheinen.",
+    "settings.side_panel.visible": "In der Seitenleiste anzeigen",
+    "settings.side_panel.move_up": "Nach oben",
+    "settings.side_panel.move_down": "Nach unten",
+    "settings.side_panel.reset": "Zurücksetzen",
 
     "settings.language": "Sprache",
     "settings.language.hint":

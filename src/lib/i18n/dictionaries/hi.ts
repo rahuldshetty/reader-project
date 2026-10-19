@@ -23,6 +23,7 @@ const hi: Record<TranslationKey, string> = {
     "nav.browse": "ब्राउज़ करें",
     "nav.settings": "सेटिंग्स",
     "nav.add": "जोड़ें",
+    "nav.menu": "मेन्यू",
     "nav.about": "परिचय",
     "nav.collapse": "समेटें",
     "nav.posts": "लेख",
@@ -64,11 +65,21 @@ const hi: Record<TranslationKey, string> = {
 
     "settings.title": "सेटिंग्स",
     "settings.tab.general": "सामान्य",
+    "settings.tab.side_panel": "साइड पैनल",
     "settings.tab.feeds": "फ़ीड्स",
     "settings.tab.storage": "भंडारण",
     "settings.tab.llm": "LLM",
     "settings.tab.fonts": "फ़ॉन्ट",
     "settings.tab.shortcuts": "शॉर्टकट",
+
+    // साइड पैनल
+    "settings.side_panel": "साइड पैनल",
+    "settings.side_panel.hint":
+        "चुनें कि मोबाइल साइड पैनल में कौन से फ़ोल्डर और फ़ीड दिखें.",
+    "settings.side_panel.visible": "साइड पैनल में दिखाएँ",
+    "settings.side_panel.move_up": "ऊपर ले जाएँ",
+    "settings.side_panel.move_down": "नीचे ले जाएँ",
+    "settings.side_panel.reset": "रीसेट करें",
 
     "settings.language": "भाषा",
     "settings.language.hint": "ऐप इंटरफ़ेस के लिए भाषा चुनें।",

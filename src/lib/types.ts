@@ -24,6 +24,11 @@ export interface ShortcutSettings {
     BINDINGS: ShortcutBindings;
 }
 
+export interface SidePanelSettings {
+    HIDDEN_IDS: number[];
+    ORDER: number[];
+}
+
 export interface UserSettings {
     LAST_REFRESH_TIME: number;
     THEME_MODE: string;
@@ -52,6 +57,7 @@ export interface UserSettings {
 
     FONT_SETTINGS: FontSettings;
     SHORTCUTS: ShortcutSettings;
+    SIDE_PANEL: SidePanelSettings;
 }
 
 export interface ToastMessage {

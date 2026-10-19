@@ -13,6 +13,7 @@
     import { select_post } from "../common";
     import ContentPanel from "../content_panel/content_panel.svelte";
     import BrowseCard from "./browse_card.svelte";
+    import MobileTopBar from "$lib/components/mobile_top_bar.svelte";
     import Fa from "svelte-fa";
     import { faArrowLeft, faCompass } from "@fortawesome/free-solid-svg-icons";
     import { t } from "$lib/i18n";
@@ -74,10 +75,11 @@
 <section
     class="relative flex-1 w-full h-full overflow-hidden flex flex-col bg-base-100 animate-fade-in"
 >
+    {#if $is_mobile && $active_post_id === -1}
+        <MobileTopBar />
+    {/if}
     <div
-        class="{$is_mobile
-            ? 'mobile-page-header'
-            : ''} flex shrink-0 items-center gap-2 border-b border-base-300/80 bg-base-100/95 px-5 pb-4 backdrop-blur-xl max-md:px-4"
+        class="flex shrink-0 items-center gap-2 border-b border-base-300/80 bg-base-100/95 px-5 pb-4 backdrop-blur-xl max-md:px-4"
     >
         <span
             class="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary"
@@ -100,7 +102,7 @@
         onscroll={handleScroll}
         class="{$is_mobile
             ? 'mobile-scroll'
-            : ''} flex-1 overflow-y-auto p-4 max-md:p-3 md:p-6"
+            : ''} flex-1 overflow-y-auto p-4 max-md:px-3 max-md:pb-24 max-md:pt-3 md:p-6"
     >
         {#if posts.length === 0 && loading}
             <div

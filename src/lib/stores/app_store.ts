@@ -27,6 +27,7 @@ import {
     DEFAULT_LETTER_SPACING,
     DEFAULT_PARAGRAPH_GAP,
     DEFAULT_SHORTCUTS,
+    DEFAULT_SIDE_PANEL,
 } from '$lib/constants';
 
 // UI States
@@ -71,6 +72,7 @@ export const local_user_setting = writable<UserSettings>({
         "PARAGRAPH_GAP": DEFAULT_PARAGRAPH_GAP,
     },
     "SHORTCUTS": DEFAULT_SHORTCUTS,
+    "SIDE_PANEL": DEFAULT_SIDE_PANEL,
 });
 
 // Feed Configuration
@@ -115,7 +117,7 @@ export const search_text = writable('');
 export const open_folder_ids = writable<Set<number>>(new Set());
 
 // Mobile Navigation
-export type MobilePanel = 'feeds' | 'posts' | 'content';
+export type MobilePanel = 'posts' | 'content';
 // Phones in portrait fall below 768px; landscape phones are wider than that,
 // so a short coarse-pointer viewport also counts as mobile.
 export const MOBILE_MEDIA_QUERY =
@@ -127,4 +129,5 @@ export const is_mobile = writable(
     typeof window !== "undefined" &&
         window.matchMedia(MOBILE_MEDIA_QUERY).matches,
 );
-export const mobile_active_panel = writable<MobilePanel>('feeds');
+export const mobile_active_panel = writable<MobilePanel>('posts');
+export const mobile_drawer_open = writable(false);

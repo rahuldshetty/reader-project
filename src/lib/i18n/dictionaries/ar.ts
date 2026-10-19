@@ -23,6 +23,7 @@ const ar: Record<TranslationKey, string> = {
     "nav.browse": "تصفح",
     "nav.settings": "الإعدادات",
     "nav.add": "إضافة",
+    "nav.menu": "القائمة",
     "nav.about": "حول",
     "nav.collapse": "طي",
     "nav.posts": "المقالات",
@@ -64,11 +65,21 @@ const ar: Record<TranslationKey, string> = {
 
     "settings.title": "الإعدادات",
     "settings.tab.general": "عام",
+    "settings.tab.side_panel": "اللوحة الجانبية",
     "settings.tab.feeds": "الخلاصات",
     "settings.tab.storage": "التخزين",
     "settings.tab.llm": "LLM",
     "settings.tab.fonts": "الخطوط",
     "settings.tab.shortcuts": "الاختصارات",
+
+    // اللوحة الجانبية
+    "settings.side_panel": "اللوحة الجانبية",
+    "settings.side_panel.hint":
+        "اختر المجلدات والخلاصات التي تظهر في اللوحة الجانبية للهاتف.",
+    "settings.side_panel.visible": "إظهار في اللوحة الجانبية",
+    "settings.side_panel.move_up": "نقل لأعلى",
+    "settings.side_panel.move_down": "نقل لأسفل",
+    "settings.side_panel.reset": "إعادة تعيين",
 
     "settings.language": "اللغة",
     "settings.language.hint": "اختر لغة واجهة التطبيق.",

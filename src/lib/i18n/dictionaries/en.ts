@@ -28,6 +28,7 @@ const en = {
     "nav.browse": "Browse",
     "nav.settings": "Settings",
     "nav.add": "Add",
+    "nav.menu": "Menu",
     "nav.about": "About",
     "nav.collapse": "Collapse",
     "nav.posts": "Posts",
@@ -74,11 +75,21 @@ const en = {
     // Settings modal
     "settings.title": "Settings",
     "settings.tab.general": "General",
+    "settings.tab.side_panel": "Side panel",
     "settings.tab.feeds": "Feeds",
     "settings.tab.storage": "Storage",
     "settings.tab.llm": "LLM",
     "settings.tab.fonts": "Fonts",
     "settings.tab.shortcuts": "Shortcuts",
+
+    // Side panel
+    "settings.side_panel": "Side panel",
+    "settings.side_panel.hint":
+        "Choose which folders and feeds appear in the mobile side panel.",
+    "settings.side_panel.visible": "Show in side panel",
+    "settings.side_panel.move_up": "Move up",
+    "settings.side_panel.move_down": "Move down",
+    "settings.side_panel.reset": "Reset",
 
     // General
     "settings.language": "Language",

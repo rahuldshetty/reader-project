@@ -14,10 +14,11 @@ import {
     DEFAULT_LETTER_SPACING,
     DEFAULT_PARAGRAPH_GAP,
     DEFAULT_SHORTCUTS,
+    DEFAULT_SIDE_PANEL,
     SHORTCUT_ACTION,
 } from "$lib/constants";
 
-import type { ShortcutSettings } from "$lib/types";
+import type { ShortcutSettings, SidePanelSettings } from "$lib/types";
 import { fontFamilies } from "$lib/utils";
 
 // Stored settings may predate the SHORTCUTS key or a new action, so merge
@@ -48,6 +49,23 @@ const merge_shortcut_settings = (stored: unknown): ShortcutSettings => {
 // The picker's family list changes over time (families get added or dropped).
 // A stored value that is no longer offered would render in the browser's
 // default font instead of a bundled one, so fall back to the default family.
+// Persisted ids can refer to deleted feeds; the drawer filters them against
+// the live feed tree, so only the shape needs normalizing here.
+const normalize_side_panel = (stored: unknown): SidePanelSettings => {
+    if (!stored || typeof stored !== "object") {
+        return DEFAULT_SIDE_PANEL;
+    }
+    const partial = stored as Partial<SidePanelSettings>;
+    const ids = (value: unknown): number[] =>
+        Array.isArray(value)
+            ? value.filter((id): id is number => typeof id === "number")
+            : [];
+    return {
+        HIDDEN_IDS: ids(partial.HIDDEN_IDS),
+        ORDER: ids(partial.ORDER),
+    };
+};
+
 const normalize_font_family = (stored: unknown): string => {
     return typeof stored === "string" && fontFamilies.includes(stored)
         ? stored
@@ -84,6 +102,7 @@ export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
     const letter_spacing = await user_settings.get(SETTINGS.LETTER_SPACING);
     const paragraph_gap = await user_settings.get(SETTINGS.PARAGRAPH_GAP);
     const shortcuts = await user_settings.get(SETTINGS.SHORTCUTS);
+    const side_panel = await user_settings.get(SETTINGS.SIDE_PANEL);
 
     return {
         "LAST_REFRESH_TIME":  lrt as number ?? LAST_REFRESH_TIME,
@@ -114,5 +133,6 @@ export const fetch_latest_user_settings = async () : Promise<UserSettings>  => {
             "PARAGRAPH_GAP": paragraph_gap as number ?? DEFAULT_PARAGRAPH_GAP,
         },
         "SHORTCUTS": merge_shortcut_settings(shortcuts),
+        "SIDE_PANEL": normalize_side_panel(side_panel),
     }
 }

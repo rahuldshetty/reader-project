@@ -7,7 +7,6 @@
         active_feed_name,
         active_folder_feed_ids,
         is_mobile,
-        mobile_active_panel,
     } from "$lib/stores/app_store";
     import type { PostResult } from "$lib/types";
 
@@ -16,7 +15,7 @@
     import PostItem from "./post_item.svelte";
     import LoadingSpinner from "$lib/components/loading_spinner.svelte";
     import PostBar from "./post_bar.svelte";
-    import MobileAppBar from "$lib/components/mobile_app_bar.svelte";
+    import MobileTopBar from "$lib/components/mobile_top_bar.svelte";
     import { t } from "$lib/i18n";
 
     const header_title = $derived(
@@ -79,11 +78,12 @@
         : 'md:w-80 md:min-w-[280px] md:max-w-[400px] md:border-r'}"
 >
     {#if $is_mobile}
-        <MobileAppBar
-            title={header_title}
-            onBack={() => mobile_active_panel.set("feeds")}
-            backLabel={$t("nav.feeds")}
-        />
+        <MobileTopBar />
+        <div class="shrink-0 px-4 pb-1 pt-2">
+            <h1 class="truncate text-xl font-bold tracking-tight">
+                {header_title}
+            </h1>
+        </div>
     {/if}
     <PostBar />
     {#if $refreshing_posts}
@@ -100,7 +100,7 @@
         >
             <ul
                 class="list-none rounded-box bg-base-100 {$is_mobile
-                    ? 'flex flex-col gap-2 px-3 py-2'
+                    ? 'flex flex-col gap-2 px-3 pb-24 pt-2'
                     : 'menu gap-1'}"
             >
                 {#each $grouped_posts as group}

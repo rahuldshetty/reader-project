@@ -23,6 +23,7 @@ const fr: Record<TranslationKey, string> = {
     "nav.browse": "Parcourir",
     "nav.settings": "Paramètres",
     "nav.add": "Ajouter",
+    "nav.menu": "Menu",
     "nav.about": "À propos",
     "nav.collapse": "Réduire",
     "nav.posts": "Publications",
@@ -64,11 +65,21 @@ const fr: Record<TranslationKey, string> = {
 
     "settings.title": "Paramètres",
     "settings.tab.general": "Général",
+    "settings.tab.side_panel": "Panneau latéral",
     "settings.tab.feeds": "Flux",
     "settings.tab.storage": "Stockage",
     "settings.tab.llm": "LLM",
     "settings.tab.fonts": "Polices",
     "settings.tab.shortcuts": "Raccourcis",
+
+    // Panneau latéral
+    "settings.side_panel": "Panneau latéral",
+    "settings.side_panel.hint":
+        "Choisissez les dossiers et flux affichés dans le panneau latéral mobile.",
+    "settings.side_panel.visible": "Afficher dans le panneau latéral",
+    "settings.side_panel.move_up": "Monter",
+    "settings.side_panel.move_down": "Descendre",
+    "settings.side_panel.reset": "Réinitialiser",
 
     "settings.language": "Langue",
     "settings.language.hint":

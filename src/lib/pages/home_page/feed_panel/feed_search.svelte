@@ -1,18 +1,22 @@
 <script lang="ts">
-  import { ROOT_PARENT_FEED_ID, SHORTCUT_ACTION } from "$lib/constants";
+  import { ROOT_PARENT_FEED_ID, SCREEN, SHORTCUT_ACTION } from "$lib/constants";
   import { get } from "svelte/store";
   import {
     search_keywords,
     search_text,
     active_feed_id,
+    active_feed_name,
     active_folder_feed_ids,
+    active_post_id,
+    active_screen,
     filter_unread_posts,
     is_mobile,
     mobile_active_panel,
+    mobile_drawer_open,
   } from "$lib/stores/app_store";
   import { get_binding_label } from "$lib/services/keyboard_shortcuts";
   import { refresh_active_posts, refresh_posts } from "../common";
-  import { t } from "$lib/i18n";
+  import { t, translate } from "$lib/i18n";
 
   let debounce_timer: ReturnType<typeof setTimeout> | undefined;
   let last_user_input = "";
@@ -30,6 +34,7 @@
     const text = raw_text.trim();
     if (text.length == 0) {
       $search_keywords = [];
+      $active_feed_name = "";
       // Emptying the box returns to whatever source is selected now.
       await refresh_active_posts();
       return;
@@ -38,10 +43,14 @@
     $filter_unread_posts = false;
     $active_folder_feed_ids = [];
     $active_feed_id = ROOT_PARENT_FEED_ID;
+    $active_feed_name = translate("common.search");
     $search_keywords = text.toLowerCase().split(/\s+/);
     await refresh_posts(ROOT_PARENT_FEED_ID);
     if (get(is_mobile)) {
+      active_screen.set(SCREEN.FEEDS);
+      active_post_id.set(-1);
       mobile_active_panel.set("posts");
+      mobile_drawer_open.set(false);
     }
   };
 

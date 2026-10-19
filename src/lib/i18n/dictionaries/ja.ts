@@ -23,6 +23,7 @@ const ja: Record<TranslationKey, string> = {
     "nav.browse": "ブラウズ",
     "nav.settings": "設定",
     "nav.add": "追加",
+    "nav.menu": "メニュー",
     "nav.about": "情報",
     "nav.collapse": "折りたたむ",
     "nav.posts": "記事",
@@ -64,11 +65,21 @@ const ja: Record<TranslationKey, string> = {
 
     "settings.title": "設定",
     "settings.tab.general": "一般",
+    "settings.tab.side_panel": "サイドパネル",
     "settings.tab.feeds": "フィード",
     "settings.tab.storage": "ストレージ",
     "settings.tab.llm": "LLM",
     "settings.tab.fonts": "フォント",
     "settings.tab.shortcuts": "ショートカット",
+
+    // サイドパネル
+    "settings.side_panel": "サイドパネル",
+    "settings.side_panel.hint":
+        "モバイルのサイドパネルに表示するフォルダーとフィードを選択します。",
+    "settings.side_panel.visible": "サイドパネルに表示",
+    "settings.side_panel.move_up": "上へ移動",
+    "settings.side_panel.move_down": "下へ移動",
+    "settings.side_panel.reset": "リセット",
 
     "settings.language": "言語",
     "settings.language.hint": "アプリのインターフェースの言語を選択します。",
