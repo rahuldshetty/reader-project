@@ -44,14 +44,19 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # - platform: 'macos-latest' # for Arm based macs (M1 and above).
-          #   args: '--target aarch64-apple-darwin'
-          # - platform: 'macos-latest' # for Intel based macs.
-          #   args: '--target x86_64-apple-darwin'
-          # - platform: 'ubuntu-22.04'
-          #   args: ''
+          - platform: 'macos-latest' # for Arm based macs (M1 and above).
+            args: '--target aarch64-apple-darwin'
+          - platform: 'macos-latest' # for Intel based macs.
+            args: '--target x86_64-apple-darwin'
+          - platform: 'ubuntu-22.04'
+            args: ''
           - platform: 'windows-latest'
             args: ''
+          - platform: 'ubuntu-latest' # Android APK (see `mobile` below)
+            mobile: 'android'
+            args: ''
+            # `--apk` skips the AAB; `--debug` is appended when no signing secrets exist.
+            assetNamePattern: '[name]_[platform]_[arch]-[mode][ext]'
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -78,7 +83,7 @@ jobs:
         if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libayatana-appindicator3-dev libappindicator3-dev librsvg2-dev patchelf xdg-utils libxdo-dev
 
       - name: setup bun
         uses: oven-sh/setup-bun@v2
@@ -88,8 +93,56 @@ jobs:
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable # Set this to dtolnay/rust-toolchain@nightly
         with:
-          # Those targets are only used on macos runners so it's in an `if` to slightly speed up windows and linux builds.
-          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+          # Apple targets only for macOS jobs, Android targets only for the Android job.
+          targets: ${{ matrix.mobile == 'android' && 'aarch64-linux-android,armv7-linux-androideabi' || (matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '') }}
+
+      # Android tooling is only needed by the `mobile: android` matrix entry.
+      - name: setup JDK
+        if: matrix.mobile == 'android'
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: setup Android SDK
+        if: matrix.mobile == 'android'
+        uses: android-actions/setup-android@v4
+
+      - name: install Android SDK packages
+        if: matrix.mobile == 'android'
+        run: sdkmanager --install "platforms;android-36" "build-tools;36.0.0"
+
+      - name: setup Android NDK
+        if: matrix.mobile == 'android'
+        id: setup-ndk
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r29
+          link-to-sdk: true
+
+      # Signs with the upload keystore when the secrets exist; otherwise builds a
+      # debug-signed APK so the workflow still produces an installable artifact.
+      - name: configure Android signing
+        if: matrix.mobile == 'android'
+        id: android-signing
+        env:
+          ANDROID_KEY_BASE64: ${{ secrets.ANDROID_KEY_BASE64 }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [ -n "$ANDROID_KEY_BASE64" ] && [ -n "$ANDROID_KEY_ALIAS" ] && [ -n "$ANDROID_KEY_PASSWORD" ]; then
+            printf '%s' "$ANDROID_KEY_BASE64" | base64 -d > "$RUNNER_TEMP/keystore.jks"
+            cat > src-tauri/gen/android/keystore.properties <<EOF
+          keyAlias=$ANDROID_KEY_ALIAS
+          password=$ANDROID_KEY_PASSWORD
+          storeFile=$RUNNER_TEMP/keystore.jks
+          EOF
+            echo "build_args=--apk --target aarch64 --target armv7" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::Android signing secrets are missing; building a debug-signed APK. Add ANDROID_KEY_BASE64, ANDROID_KEY_ALIAS and ANDROID_KEY_PASSWORD to publish a release-signed APK."
+            echo "build_args=--apk --debug --target aarch64 --target armv7" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Rust cache
         uses: swatinem/rust-cache@v2
@@ -103,6 +156,7 @@ jobs:
       - uses: tauri-apps/tauri-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
         with:
           tagName: v${{ env.VERSION }} # the tag drives the release, not a hardcoded config value
           releaseName: 'App v${{ env.VERSION }}'
@@ -111,5 +165,6 @@ jobs:
           prerelease: false
           # Version-free asset names so docs/index.html can link to
           # releases/latest/download/<name> and never need editing again.
-          releaseAssetNamePattern: '[name]_[platform]_[arch][setup][ext]'
-          args: ${{ matrix.args }}
+          releaseAssetNamePattern: ${{ matrix.assetNamePattern || '[name]_[platform]_[arch][setup][ext]' }}
+          args: ${{ matrix.mobile == 'android' && steps.android-signing.outputs.build_args || matrix.args }}
+          mobile: ${{ matrix.mobile }}
